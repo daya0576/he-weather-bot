@@ -24,4 +24,3 @@ def weather_forecast(request):
             return
         else:
             bot.sendMessage(chat_id=chat_id, text=default)
-
