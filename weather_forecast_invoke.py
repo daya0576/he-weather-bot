@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import logging
 import os
+from datetime import datetime
 
+import pytz
 import telegram
-
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 
 def weather_forecast(request):
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-
     default = "/start"
     bot = telegram.Bot(token=os.environ["TELEGRAM_TOKEN"])
 
@@ -20,7 +16,9 @@ def weather_forecast(request):
         chat_id = update.message.chat.id
 
         if update.message.text and update.message.text == '/start':
-            bot.send_photo(chat_id=chat_id, photo="http://wttr.in/上海浦东_0pq.png?2FnM&lang=zh-cn")
+            tz = pytz.timezone('Asia/Shanghai')
+            bot.send_photo(chat_id=chat_id,
+                           photo=f"http://wttr.in/上海浦东_0pq.png?2FnM&lang=zh-cn&{datetime.now(tz).timestamp()}")
             return
         else:
             bot.sendMessage(chat_id=chat_id, text=default)
