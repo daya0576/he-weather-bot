@@ -44,7 +44,7 @@ class Weather:
         lifestyle = self.get_lifestyle_weather()
 
         weather_data_today_str = f"上海今日{self.format_weather(d1)}{lifestyle}\n\n" \
-                                 f"明日，{get_tomorrow_day()}，{self.format_weather(d2)}"
+                                 f"明日{get_tomorrow_day()}，{self.format_weather(d2)}"
 
         return weather_data_today_str
 
