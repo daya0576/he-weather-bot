@@ -20,7 +20,7 @@ def index():
     return '^_^'
 
 
-@app.route('/cron', methods=['POST'])
+@app.route('/cron', methods=['GET'])
 def cron_handler():
     chat_ids = os.environ["CHAT_IDS"].split(',')
     for chat_id in chat_ids:
