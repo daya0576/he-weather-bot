@@ -17,7 +17,7 @@ bot = telegram.Bot(token=(os.environ['TELEGRAM_TOKEN']))
 
 @app.route('/', methods=['get'])
 def index():
-    return 'ok'
+    return '^_^'
 
 
 @app.route('/cron', methods=['POST'])
