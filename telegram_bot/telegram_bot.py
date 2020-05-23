@@ -7,12 +7,17 @@ import telegram
 from flask import Flask, request
 from telegram.ext import Dispatcher, MessageHandler, Filters
 
-from core.service.message import send_weather_forecast
+from telegram_bot.core.service.message import send_weather_forecast
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 app = Flask(__name__)
 bot = telegram.Bot(token=(os.environ['TELEGRAM_TOKEN']))
+
+
+@app.route('/', methods=['get'])
+def index():
+    return 'ok'
 
 
 @app.route('/cron', methods=['POST'])

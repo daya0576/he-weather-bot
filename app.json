@@ -1,0 +1,27 @@
+{
+  "name": "Weather Forecast Telegram Bot",
+  "description": "A telegram bot posting weather everyday.",
+  "image": "heroku/python",
+  "repository": "https://github.com/dayabot/TelegramWeatherBot",
+  "keywords": [
+    "python",
+    "flask"
+  ],
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "env": {
+    "SECRET_KEY": {
+      "description": "The secret key for the Django application.",
+      "generator": "secret"
+    }
+  },
+  "environments": {
+    "test": {
+      "scripts": {
+        "test-setup": "export FLASK_ENV=development; export TELEGRAM_TOKEN=XXX",
+        "test": "python manage.py test"
+      }
+    }
+  }
+}
