@@ -1,30 +1,26 @@
 # -*- coding: utf-8 -*-
 
-import logging
 import os
 
 import telegram
 from flask import Flask, request
 from telegram.ext import Dispatcher, MessageHandler, Filters
 
-from telegram_bot.core.service.message import send_weather_forecast
+from telegram_bot.core.service.message import send_weather_forecast, send_weather_forecast_to_channel
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-logger = logging.getLogger(__name__)
 app = Flask(__name__)
 bot = telegram.Bot(token=(os.environ['TELEGRAM_TOKEN']))
 
 
 @app.route('/', methods=['get'])
 def index():
-    return '^_^'
+    return 'OK'
 
 
 @app.route('/cron', methods=['GET'])
 def cron_handler():
-    chat_ids = os.environ["CHAT_IDS"].split(',')
-    for chat_id in chat_ids:
-        send_weather_forecast(bot, chat_id)
+    send_weather_forecast_to_channel(bot)
+    return 'ok'
 
 
 @app.route('/hook', methods=['POST'])
@@ -40,12 +36,8 @@ def webhook_handler():
 
 
 def reply_handler(bot, update):
-    # weather forecast
-    logger.info("Sending weather forecast...")
     chat_id = update.message.chat.id
-    logger.info("Sending weather forecast image...")
     send_weather_forecast(bot, chat_id)
-    logger.info("Sent!")
 
 
 dispatcher = Dispatcher(bot, None)
