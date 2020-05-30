@@ -4,7 +4,7 @@ import os
 
 import telegram
 from flask import Flask, request
-from telegram.ext import Dispatcher, MessageHandler, Filters
+from telegram.ext import Dispatcher, CommandHandler
 
 from telegram_bot.core.service.message import send_weather_forecast, send_weather_forecast_to_channel
 
@@ -41,4 +41,5 @@ def reply_handler(bot, update):
 
 
 dispatcher = Dispatcher(bot, None)
-dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
+# dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
+dispatcher.add_handler(CommandHandler("weather", reply_handler))
