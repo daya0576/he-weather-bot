@@ -17,13 +17,12 @@ class HeWeatherClient(WeatherClient):
         if r.status_code == 200:
             return r.json()
 
-    def get_lifestyle_weather(self):
-        data = self._fetch("weather", "lifestyle")
-        weather_data = data.get("HeWeather6", {})[0].get("lifestyle")
-        for d in weather_data:
-            if d['type'] == "sport":
-                return d['txt']
-        return ""
+    def _format_weather(self, d1):
+        d1_n_str = ""
+        if d1['cond_txt_n'] != d1['cond_txt_d']:
+            d1_n_str = f"，夜间{d1['cond_txt_n']}"
+
+        return f"{d1['cond_txt_d']}{d1_n_str}，{d1['tmp_min']}到{d1['tmp_max']}度。"
 
     def get_forecast_weather(self):
         data = self._fetch("weather", "forecast")
@@ -32,10 +31,8 @@ class HeWeatherClient(WeatherClient):
         # 天气预测：
         d1 = weather_data[0]
         d2 = weather_data[1]
-        # 获取
-        lifestyle = self.get_lifestyle_weather()
 
-        weather_data_today_str = f"上海今日{self.format_weather(d1)}{lifestyle}\n\n" \
-                                 f"明日{get_tomorrow_day()}，{self.format_weather(d2)}"
+        weather_data_today_str = f"上海今日{self._format_weather(d1)}\n\n" \
+                                 f"明日{get_tomorrow_day()}，{self._format_weather(d2)}"
 
         return weather_data_today_str
