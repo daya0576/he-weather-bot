@@ -1,7 +1,7 @@
 import requests
 
-from telegram_bot.core.service.utils import get_tomorrow_day
-from telegram_bot.intergration.base_weather_client import WeatherClient
+from telegram_bot.common.intergration.base_weather_client import WeatherClient
+from telegram_bot.common.util import DateUtil
 
 KEY = "10857fb2911441269e7c60e26b269adb"
 
@@ -33,6 +33,6 @@ class HeWeatherClient(WeatherClient):
         d2 = weather_data[1]
 
         weather_data_today_str = f"上海今日{self._format_weather(d1)}\n\n" \
-                                 f"明日{get_tomorrow_day()}，{self._format_weather(d2)}"
+                                 f"明日{DateUtil.get_tomorrow_day()}，{self._format_weather(d2)}"
 
         return weather_data_today_str
