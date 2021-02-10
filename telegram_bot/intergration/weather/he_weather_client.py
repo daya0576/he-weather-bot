@@ -1,14 +1,27 @@
 import requests
 
-from telegram_bot.common.intergration.base_weather_client import WeatherClient
-from telegram_bot.common.util import DateUtil
+from telegram_bot.intergration.weather.base_weather_client import WeatherClient
+from telegram_bot.util.date_util import DateUtil
 
 KEY = "10857fb2911441269e7c60e26b269adb"
 
 
 class HeWeatherClient(WeatherClient):
-    def get_weather_forecast(self):
+    def get_weather_photo(self) -> str:
         pass
+
+    def get_weather_forecast(self):
+        data = self._fetch("weather", "forecast")
+        weather_data = data.get("HeWeather6", {})[0].get("daily_forecast")
+
+        # 天气预测：
+        d1 = weather_data[0]
+        d2 = weather_data[1]
+
+        weather_data_today_str = f"上海今日{self._format_weather(d1)}\n\n" \
+                                 f"明日{DateUtil.get_tomorrow_day()}，{self._format_weather(d2)}"
+
+        return weather_data_today_str
 
     def _fetch(self, api_type, weather_type):
         location = "shanghai"
@@ -24,15 +37,4 @@ class HeWeatherClient(WeatherClient):
 
         return f"{d1['cond_txt_d']}{d1_n_str}，{d1['tmp_min']}到{d1['tmp_max']}度。"
 
-    def get_forecast_weather(self):
-        data = self._fetch("weather", "forecast")
-        weather_data = data.get("HeWeather6", {})[0].get("daily_forecast")
 
-        # 天气预测：
-        d1 = weather_data[0]
-        d2 = weather_data[1]
-
-        weather_data_today_str = f"上海今日{self._format_weather(d1)}\n\n" \
-                                 f"明日{DateUtil.get_tomorrow_day()}，{self._format_weather(d2)}"
-
-        return weather_data_today_str

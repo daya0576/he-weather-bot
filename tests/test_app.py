@@ -1,12 +1,12 @@
 import pytest
 
-from telegram_bot import telegram_bot
+from telegram_bot import app
 
 
 @pytest.fixture
 def client():
-    telegram_bot.app.config['TESTING'] = True
-    client = telegram_bot.app.test_client()
+    app.app.config['TESTING'] = True
+    client = app.app.test_client()
     yield client
 
 
