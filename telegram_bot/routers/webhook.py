@@ -1,4 +1,5 @@
 from typing import Any, Dict
+from urllib.parse import urljoin
 
 from aiogram import Dispatcher, Bot
 from aiogram.types import Update
@@ -25,6 +26,7 @@ async def webhook_handler(
     return Response(status_code=HTTP_200_OK)
 
 
+
 @router.on_event("startup")
 async def set_webhook() -> None:
     """
@@ -34,8 +36,11 @@ async def set_webhook() -> None:
     strong rate limit for `set_webhook` method.
     """
     bot = telegram_bot()
-    url = settings.TELEGRAM_BOT_WEBHOOK_ENDPOINT
+
+    webhook_endpoint = router.url_path_for('webhook_handler')
+    url = urljoin(settings.TELEGRAM_BOT_WEBHOOK_ENDPOINT, webhook_endpoint)
     current_url = (await bot.get_webhook_info())["url"]
+
     if current_url != url:
         await bot.set_webhook(url=url)
         logger.warn("webhook updated!")

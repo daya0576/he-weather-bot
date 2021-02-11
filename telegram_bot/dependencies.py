@@ -1,16 +1,16 @@
 from aiogram import Dispatcher, Bot
 
-from telegram_bot.telegram.dispatcher import dispatcher
+from telegram_bot.telegram.dispatcher import dp
 
 
 def bot_dispatcher() -> Dispatcher:
     """
     Set context manually for properly processing webhook updates.
     """
-    Bot.set_current(dispatcher.bot)
-    Dispatcher.set_current(dispatcher)
-    return dispatcher
+    Bot.set_current(dp.bot)
+    Dispatcher.set_current(dp)
+    return dp
 
 
 def telegram_bot() -> Bot:
-    return dispatcher.bot
+    return dp.bot

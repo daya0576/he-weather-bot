@@ -17,7 +17,6 @@ class HeWeatherClient(WeatherClient):
         # 天气预测：
         d1 = weather_data[0]
         d2 = weather_data[1]
-
         weather_data_today_str = f"上海今日{self._format_weather(d1)}\n\n" \
                                  f"明日{DateUtil.get_tomorrow_day()}，{self._format_weather(d2)}"
 
