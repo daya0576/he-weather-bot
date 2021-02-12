@@ -6,10 +6,12 @@ from .database import Base
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
-    chat_id = Column(Integer, index=True)
+    chat_id = Column(Integer, primary_key=True, index=True)
     is_active = Column(Boolean, default=True)
 
-    latitude = Column(Integer)
-    longitude = Column(Integer)
-    city = Column(String)
+    latitude = Column(String)
+    longitude = Column(String)
+    city = Column(String, nullable=False)
+    city_name = Column(String, nullable=False)
+
+    time_zone = Column(String, nullable=False)

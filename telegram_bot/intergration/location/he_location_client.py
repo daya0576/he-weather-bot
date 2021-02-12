@@ -10,8 +10,8 @@ KEY = settings.HE_WEATHER_API_TOKEN
 @dataclass
 class Location:
     name: str
-    lat: float
-    lon: float
+    lat: str
+    lon: str
     tz: str
 
 

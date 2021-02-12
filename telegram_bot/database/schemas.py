@@ -2,7 +2,11 @@ from pydantic import BaseModel
 
 
 class UserBase(BaseModel):
-    email: str
+    lat: str
+    lon: str
+    city: str
+    city_name: str
+    tz: str
 
 
 class UserCreate(UserBase):
