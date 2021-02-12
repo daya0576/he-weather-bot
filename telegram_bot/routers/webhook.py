@@ -21,10 +21,10 @@ async def webhook_handler(
 ) -> Response:
     """Set route /hook with POST method will trigger this method."""
     telegram_update = Update(**update_raw)
+    Dispatcher.set_current(dp)
     Bot.set_current(dp.bot)
     await dp.process_update(telegram_update)
     return Response(status_code=HTTP_200_OK)
-
 
 
 @router.on_event("startup")

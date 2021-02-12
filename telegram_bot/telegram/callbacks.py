@@ -7,7 +7,7 @@ from telegram_bot.telegram.dispatcher import dp
 
 @dp.message_handler(commands=['weather'])
 async def handle_weather(message: types.Message) -> None:
-    await message_service.send_weather_text_to_chat(dp.bot, message.chat.id)
+    await message_service.send_weather_text_to_chat(dp.bot, message.chat.id, location="shanghai")
 
 
 @dp.message_handler(commands=['help'])

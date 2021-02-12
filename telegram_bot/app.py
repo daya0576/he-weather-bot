@@ -2,7 +2,11 @@
 import uvicorn
 from fastapi import FastAPI
 
+from telegram_bot.database import models
+from telegram_bot.database.database import engine
 from telegram_bot.routers import webhook, cron
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 app.include_router(webhook.router)
