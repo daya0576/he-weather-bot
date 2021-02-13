@@ -13,6 +13,11 @@ async def index():
     return {"message": "Hello World"}
 
 
+@router.get("/users")
+async def users():
+    return crud.get_users(SessionLocal())
+
+
 @router.get("/cron")
 async def cron_handler():
     users = crud.get_users(SessionLocal())

@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     TELEGRAM_BOT_WEBHOOK_ENDPOINT: str
     PROXY: str
     HE_WEATHER_API_TOKEN: str
-    DB_URL: str
+    DATABASE_URL: str
 
 
 settings = Settings()
