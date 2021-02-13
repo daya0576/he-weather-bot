@@ -10,9 +10,8 @@ def get_user(db: Session, chat_id: str) -> models.User:
     return db.query(models.User).filter(models.User.chat_id == chat_id).first()
 
 
-def get_users(db: Session, skip: int = 0, limit: int = 100) -> List[models.User]:
+def get_users(db: Session, skip: int = 0, limit: int = 1000) -> List[models.User]:
     return db.query(models.User) \
-        .filter(models.User.is_active is True) \
         .offset(skip).limit(limit).all()
 
 

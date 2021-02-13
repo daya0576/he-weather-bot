@@ -28,7 +28,7 @@ class Form(StatesGroup):
 
 
 @dp.message_handler(commands='change_location')
-async def change_location(message: types.Message):
+async def update_location(message: types.Message):
     """
     Conversation's entry point
     """

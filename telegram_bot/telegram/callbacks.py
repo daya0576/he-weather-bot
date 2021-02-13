@@ -5,7 +5,7 @@ from telegram_bot.database import crud
 from telegram_bot.database.database import SessionLocal
 from telegram_bot.intergration import he_weather
 from telegram_bot.telegram.dispatcher import dp
-from telegram_bot.telegram.finite_state_machine import change_location
+from telegram_bot.telegram.finite_state_machine import update_location
 
 WELCOME_TEXT = """
 *和风天气预报小棉袄 ☁️* 
@@ -40,7 +40,7 @@ async def handle_weather(message: types.Message) -> None:
     chat_id = message.chat.id
     user = crud.get_user(SessionLocal(), chat_id)
     if not user:
-        await change_location(message)
+        return await update_location(message)
 
     text = he_weather.get_weather_forecast(user.location)
     await dp.bot.send_message(chat_id=chat_id, text=text)
@@ -54,8 +54,6 @@ async def inline_kb_answer_callback_handler(query: types.CallbackQuery):
     answer_data = query.data
 
     if answer_data == 'weather':
-        await query.answer(f'done')
         await handle_weather(query.message)
     elif answer_data == 'edit':
-        await query.answer(f'done')
-        await change_location(query.message)
+        await update_location(query.message)
