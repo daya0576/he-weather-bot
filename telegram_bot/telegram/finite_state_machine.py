@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
+from aiogram.types import ContentType
 
 from telegram_bot.database import crud
 from telegram_bot.database.database import SessionLocal
@@ -26,26 +27,28 @@ class Form(StatesGroup):
     location = State()
 
 
-@dp.message_handler(commands='start')
-async def cmd_start(message: types.Message):
+@dp.message_handler(commands='change_location')
+async def change_location(message: types.Message):
     """
     Conversation's entry point
     """
     # Set state
     await Form.location.set()
+    await dp.bot.send_message(message.chat.id, "Hi！输入您所在的城市，或者发送定位")
 
-    await message.reply("Hi！输入您所在的城市，或者发送定位")
 
-
-@dp.message_handler(state=Form.location)
+@dp.message_handler(state=Form.location, content_types=ContentType.LOCATION)
+@dp.message_handler(state=Form.location, content_types=ContentType.VENUE)
+@dp.message_handler(state=Form.location, content_types=ContentType.TEXT)
 async def process_location(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         location = _get_location_from_message(message)
         if not location:
             return await message.reply("找不到输入的城市，试试其他关键字")
 
-        crud.update_or_create_user(SessionLocal(), message.chat.id, location)
-        await message.reply(f"城市信息：{location}")
+        user = crud.update_or_create_user(SessionLocal(), message.chat.id, location)
+        await message.reply(f"城市信息已更新：{user.city_name}({user.latitude},{user.longitude})")
 
     # Finish conversation
     await state.finish()
+

@@ -10,8 +10,8 @@ KEY = settings.HE_WEATHER_API_TOKEN
 @dataclass
 class Location:
     name: str
-    lat: str
-    lon: str
+    lat: float
+    lon: float
     tz: str
 
 
@@ -32,8 +32,8 @@ class HeLocationClient:
         d_location = location_list[0]
         return Location(
             name=d_location["name"],
-            lat=d_location["lat"],
-            lon=d_location["lon"],
+            lat=float(d_location["lat"]),
+            lon=float(d_location["lon"]),
             tz=d_location["tz"]
         )
 
@@ -45,4 +45,4 @@ class HeLocationClient:
     def get_location_by_lat_lon(self, lat, lon) -> Optional[Location]:
         if not (lat or lon):
             return
-        return self._fetch(f"{lat},{lon}")
+        return self._fetch(f"{lon},{lat}")

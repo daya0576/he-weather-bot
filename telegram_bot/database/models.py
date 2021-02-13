@@ -1,6 +1,7 @@
 from sqlalchemy import Boolean, Column, Integer, String
 
 from .database import Base
+from ..intergration.location.he_location_client import Location
 
 
 class User(Base):
@@ -15,3 +16,7 @@ class User(Base):
     city_name = Column(String, nullable=False)
 
     time_zone = Column(String, nullable=False)
+
+    @property
+    def location(self):
+        return Location(name=self.city_name, lat=self.latitude, lon=self.longitude, tz=self.time_zone)

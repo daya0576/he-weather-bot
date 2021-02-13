@@ -1,25 +1,61 @@
 from aiogram import types
 from aiogram.types import ContentType
 
-from telegram_bot.service import message_service
+from telegram_bot.database import crud
+from telegram_bot.database.database import SessionLocal
+from telegram_bot.intergration import he_weather
 from telegram_bot.telegram.dispatcher import dp
+from telegram_bot.telegram.finite_state_machine import change_location
+
+WELCOME_TEXT = """
+*和风天气预报小棉袄 ☁️* 
+
+如有任何问题，请联系 @daya0576    
+"""
+
+
+@dp.message_handler(commands=['help'])
+@dp.message_handler(content_types=ContentType.ANY)
+async def handle_help(message: types.Message) -> None:
+    keyboard_markup = types.InlineKeyboardMarkup(row_width=6)
+
+    keyboard_markup.add(
+        types.InlineKeyboardButton('获取实时天气', callback_data='weather'),
+    )
+
+    inline_buttons = (
+        types.InlineKeyboardButton('更新位置', callback_data="edit"),
+        # types.InlineKeyboardButton('更新位置', callback_data="edit"),
+        types.InlineKeyboardButton('关注项目✨', url="https://github.com/daya0576/he_weather_bot"),
+        # ('开启订阅', 'enable'),
+        # ('关闭订阅', 'disable'),
+    )
+    keyboard_markup.row(*inline_buttons)
+
+    await dp.bot.send_message(message.chat.id, WELCOME_TEXT, parse_mode='Markdown', reply_markup=keyboard_markup)
 
 
 @dp.message_handler(commands=['weather'])
 async def handle_weather(message: types.Message) -> None:
-    await message_service.send_weather_text_to_chat(dp.bot, message.chat.id, location="shanghai")
+    chat_id = message.chat.id
+    user = crud.get_user(SessionLocal(), chat_id)
+    if not user:
+        await change_location(message)
+
+    text = he_weather.get_weather_forecast(user.location)
+    await dp.bot.send_message(chat_id=chat_id, text=text)
 
 
-@dp.message_handler(commands=['help'])
-async def handle_help(message: types.Message) -> None:
-    await message.reply("Hi!\nI'm EchoBot!\nPowered by aiogram.")
+@dp.callback_query_handler(text='weather')
+@dp.callback_query_handler(text='edit')
+@dp.callback_query_handler(text='enable')
+@dp.callback_query_handler(text='disable')
+async def inline_kb_answer_callback_handler(query: types.CallbackQuery):
+    answer_data = query.data
 
-
-@dp.message_handler(content_types=ContentType.LOCATION)
-@dp.message_handler(content_types=ContentType.VENUE)
-async def handle_location(message: types.Message) -> None:
-    if message.location:
-        await message.reply(f"latitude: {message.location.latitude}, "
-                            f"longitude: {message.location.longitude}")
-    else:
-        await message.reply("location is null!!")
+    if answer_data == 'weather':
+        await query.answer(f'done')
+        await handle_weather(query.message)
+    elif answer_data == 'edit':
+        await query.answer(f'done')
+        await change_location(query.message)
