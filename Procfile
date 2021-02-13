@@ -1,1 +1,1 @@
-web: gunicorn telegram_bot.telegram_bot:app --log-file -
+web: uvicorn telegram_bot.app:app

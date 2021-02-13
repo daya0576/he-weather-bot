@@ -1,11 +1,11 @@
 {
-  "name": "Weather Forecast Telegram Bot",
+  "name": "HeWeather Forecast Telegram Bot",
   "description": "A telegram bot posting weather everyday.",
   "image": "heroku/python",
-  "repository": "https://github.com/dayabot/TelegramWeatherBot",
+  "repository": "https://github.com/daya0576/he_weather_bot",
   "keywords": [
     "python",
-    "flask"
+    "fastapi"
   ],
   "addons": [
     "heroku-postgresql"
@@ -19,7 +19,7 @@
   "environments": {
     "test": {
       "scripts": {
-        "test-setup": "export FLASK_ENV=development; export TELEGRAM_TOKEN=XXX",
+        "test-setup": "python manage.py collectstatic --noinput",
         "test": "python manage.py test"
       }
     }
