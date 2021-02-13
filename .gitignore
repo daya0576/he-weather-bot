@@ -3,5 +3,5 @@
 .pytest_cache
 __pycache__/
 
-.env
-
+/sql_app.db
+/.env
