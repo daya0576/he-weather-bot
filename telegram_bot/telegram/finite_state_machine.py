@@ -41,17 +41,15 @@ async def update_location(message: types.Message):
 @dp.message_handler(state=Form.location, content_types=ContentType.VENUE)
 @dp.message_handler(state=Form.location, content_types=ContentType.TEXT)
 async def process_location(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        location = _get_location_from_message(message)
-        if not location:
-            return await message.reply("找不到输入的城市，试试其他关键字")
+    location = _get_location_from_message(message)
+    if not location:
+        return await message.reply("找不到输入的城市，试试其他关键字")
 
-        user = crud.update_or_create_user(SessionLocal(), message.chat.id, location)
-        await message.reply(f"城市信息已更新：{user.city_name}({user.latitude},{user.longitude})")
+    user = crud.update_or_create_user(SessionLocal(), message.chat.id, location)
+    await message.reply(f"城市信息已更新：{user.city_name}({user.latitude},{user.longitude})")
 
-        text = he_weather.get_weather_forecast(user.location)
-        await dp.bot.send_message(chat_id=message.chat.id, text=text)
+    text = he_weather.get_weather_forecast(user.location)
+    await dp.bot.send_message(chat_id=message.chat.id, text=text)
 
     # Finish conversation
     await state.finish()
-

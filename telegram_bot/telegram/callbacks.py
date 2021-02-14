@@ -1,4 +1,5 @@
 from aiogram import types
+from aiogram.dispatcher import FSMContext
 from aiogram.types import ContentType
 
 from telegram_bot.database import crud
@@ -17,7 +18,11 @@ WELCOME_TEXT = """
 
 @dp.message_handler(commands=['help', 'start'])
 @dp.message_handler(content_types=ContentType.ANY)
-async def handle_help(message: types.Message) -> None:
+async def handle_help(message: types.Message, state: FSMContext) -> None:
+    # debug only
+    current_state = await state.get_state()
+    await message.reply(current_state)
+
     keyboard_markup = types.InlineKeyboardMarkup(row_width=6)
 
     keyboard_markup.add(
