@@ -8,7 +8,8 @@ from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.finite_state_machine import update_location
 
 WELCOME_TEXT = """
-*和风天气预报小棉袄 ☁️* 
+*天气预报小棉袄 ☁️*   
+基于和风天气的天气预报小棉袄。根据用户地区查询实时天气，每天自动播报。
 
 如有任何问题，请联系 @daya0576    
 """
