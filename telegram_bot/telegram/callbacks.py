@@ -21,7 +21,7 @@ WELCOME_TEXT = """
 async def handle_help(message: types.Message, state: FSMContext) -> None:
     # debug only
     current_state = await state.get_state()
-    await message.reply(current_state)
+    await message.reply((str(current_state)))
 
     keyboard_markup = types.InlineKeyboardMarkup(row_width=6)
 
