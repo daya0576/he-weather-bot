@@ -9,13 +9,13 @@ from telegram_bot.telegram.finite_state_machine import update_location
 
 WELCOME_TEXT = """
 *天气预报小棉袄 ☁️*   
-基于和风天气的天气预报小棉袄。根据用户地区查询实时天气，每天自动播报。
+基于「和风」的天气预报机器人。根据用户地区查询实时天气，每天自动播报。
 
 如有任何问题，请联系 @daya0576    
 """
 
 
-@dp.message_handler(commands=['help'])
+@dp.message_handler(commands=['help', 'start'])
 @dp.message_handler(content_types=ContentType.ANY)
 async def handle_help(message: types.Message) -> None:
     keyboard_markup = types.InlineKeyboardMarkup(row_width=6)
@@ -53,6 +53,7 @@ async def handle_weather(message: types.Message) -> None:
 @dp.callback_query_handler(text='disable')
 async def inline_kb_answer_callback_handler(query: types.CallbackQuery):
     answer_data = query.data
+    await query.answer('')
 
     if answer_data == 'weather':
         await handle_weather(query.message)

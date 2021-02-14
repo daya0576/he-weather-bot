@@ -5,7 +5,7 @@ from aiogram.types import ContentType
 
 from telegram_bot.database import crud
 from telegram_bot.database.database import SessionLocal
-from telegram_bot.intergration import he_location_client
+from telegram_bot.intergration import he_location_client, he_weather
 from telegram_bot.intergration.location.he_location_client import Location
 from telegram_bot.telegram.dispatcher import dp
 
@@ -48,6 +48,9 @@ async def process_location(message: types.Message, state: FSMContext):
 
         user = crud.update_or_create_user(SessionLocal(), message.chat.id, location)
         await message.reply(f"城市信息已更新：{user.city_name}({user.latitude},{user.longitude})")
+
+        text = he_weather.get_weather_forecast(user.location)
+        await dp.bot.send_message(chat_id=message.chat.id, text=text)
 
     # Finish conversation
     await state.finish()
