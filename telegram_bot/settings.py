@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     PROXY: str
     HE_WEATHER_API_TOKEN: str
     DATABASE_URL: str
+    REDIS_URL: str
+
+    DEV: str
 
 
 settings = Settings()
