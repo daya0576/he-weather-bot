@@ -1,3 +1,4 @@
+import logging
 import re
 
 from aiogram import Dispatcher
@@ -13,12 +14,14 @@ async def handle_errors(*args, **partial_data):
     raise Exception(str(args))
 
 
-if settings.DEV is not None:
-    storage = MemoryStorage()
-else:
+if settings.REDIS_URL:
+    logging.info("init redis storage client...")
     m = re.match(r"redis://:(.+)@(.+):(.+)", settings.REDIS_URL)
     password, host, port = m.group(1), m.group(2), m.group(3)
     storage = RedisStorage(host=host, port=port, password=password)
+else:
+    logging.info("init memory storage client...")
+    storage = MemoryStorage()
 
 dp = Dispatcher(bot, storage=storage)
 # dp.register_errors_handler(handle_errors)

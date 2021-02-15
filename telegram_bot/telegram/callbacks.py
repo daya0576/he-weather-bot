@@ -53,9 +53,9 @@ async def handle_weather(message: types.Message) -> None:
 @dp.callback_query_handler(text='disable')
 async def inline_kb_answer_callback_handler(query: types.CallbackQuery):
     answer_data = query.data
-    await query.answer('')
-
     if answer_data == 'weather':
         await handle_weather(query.message)
     elif answer_data == 'edit':
         await update_location(query.message)
+
+    await query.answer('')

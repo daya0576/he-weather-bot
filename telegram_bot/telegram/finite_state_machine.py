@@ -32,8 +32,8 @@ class Form(StatesGroup):
 
 @dp.message_handler(commands='state')
 async def update_location(message: types.Message, state: FSMContext):
-    await Form.location.set()
-    await dp.bot.send_message(message.chat.id, "Hi！输入您所在的城市，或者发送定位")
+    current_state = await state.get_state()
+    await message.reply((str(current_state)))
 
 
 @dp.message_handler(commands='change_location')
