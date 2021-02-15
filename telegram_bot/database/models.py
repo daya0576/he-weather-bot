@@ -19,4 +19,4 @@ class User(Base):
 
     @property
     def location(self):
-        return Location(name=self.city_name, lat=self.latitude, lon=self.longitude, tz=self.time_zone)
+        return Location(name=self.city_name, lat=float(self.latitude), lon=float(self.longitude), tz=self.time_zone)

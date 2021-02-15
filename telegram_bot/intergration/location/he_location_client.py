@@ -13,6 +13,9 @@ class Location:
     lat: float
     lon: float
     tz: str
+    province: Optional[str] = ""
+    country: Optional[str] = ""
+    url: Optional[str] = ""
 
 
 class HeLocationClient:
@@ -34,7 +37,12 @@ class HeLocationClient:
             name=d_location["name"],
             lat=float(d_location["lat"]),
             lon=float(d_location["lon"]),
-            tz=d_location["tz"]
+            tz=d_location["tz"],
+
+            province=d_location["adm1"],
+            country=d_location["country"],
+
+            url=d_location["fxLink"],
         )
 
     def get_location_by_city_keywords(self, keywords) -> Optional[Location]:
