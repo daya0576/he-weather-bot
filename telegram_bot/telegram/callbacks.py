@@ -15,6 +15,17 @@ WELCOME_TEXT = """
 """
 
 
+@dp.message_handler(commands=['weather'])
+async def handle_weather(message: types.Message) -> None:
+    chat_id = message.chat.id
+    user = crud.get_user(SessionLocal(), chat_id)
+    if not user:
+        return await update_location(message)
+
+    text = he_weather.get_weather_forecast(user.location)
+    await dp.bot.send_message(chat_id=chat_id, text=text)
+
+
 @dp.message_handler(commands=['help', 'start'])
 @dp.message_handler(content_types=ContentType.ANY)
 async def handle_help(message: types.Message) -> None:
@@ -34,17 +45,6 @@ async def handle_help(message: types.Message) -> None:
     keyboard_markup.row(*inline_buttons)
 
     await dp.bot.send_message(message.chat.id, WELCOME_TEXT, parse_mode='Markdown', reply_markup=keyboard_markup)
-
-
-@dp.message_handler(commands=['weather'])
-async def handle_weather(message: types.Message) -> None:
-    chat_id = message.chat.id
-    user = crud.get_user(SessionLocal(), chat_id)
-    if not user:
-        return await update_location(message)
-
-    text = he_weather.get_weather_forecast(user.location)
-    await dp.bot.send_message(chat_id=chat_id, text=text)
 
 
 @dp.callback_query_handler(text='weather')

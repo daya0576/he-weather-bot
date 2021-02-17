@@ -23,6 +23,12 @@ else:
     logging.info("init memory storage client...")
     storage = MemoryStorage()
 
+"""
+weather - 实时天气
+change_location - 更新位置
+cancel - 取消
+help - 帮助
+"""
 dp = Dispatcher(bot, storage=storage)
 # dp.register_errors_handler(handle_errors)
 dp.middleware.setup(LoggingMiddleware())
