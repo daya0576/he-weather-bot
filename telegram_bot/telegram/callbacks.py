@@ -8,8 +8,7 @@ from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.finite_state_machine import update_location
 
 WELCOME_TEXT = """
-*天气预报小棉袄 ☁️*   
-基于「和风」的天气预报机器人。根据用户地区查询实时天气，每天自动播报。
+基于「和风」的天气预报机器人。根据用户位置查询实时天气，并每天自动播报。
 
 如有任何问题，请联系 @daya0576    
 """
