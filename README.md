@@ -4,7 +4,7 @@
 
 目前支持「个人」或「群组」进行交互：   
 
-<img src="https://i.loli.net/2021/02/17/zocBM1r7gyqpkJi.png" width="400">
+<img src="https://i.loli.net/2021/02/17/zocBM1r7gyqpkJi.png" width="450">
 
 ## TODO
 
