@@ -9,7 +9,5 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     REDIS_URL: str
 
-    DEV: str
-
 
 settings = Settings()

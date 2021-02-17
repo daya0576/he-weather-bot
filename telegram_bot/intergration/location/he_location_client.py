@@ -17,6 +17,10 @@ class Location:
     country: Optional[str] = ""
     url: Optional[str] = ""
 
+    def __str__(self):
+        city = f"{self.lon},{self.lat}" if self.lat and self.lon else self.name
+        return city
+
 
 class HeLocationClient:
     def __init__(self, http_client: HttpClient):
@@ -54,3 +58,4 @@ class HeLocationClient:
         if not (lat or lon):
             return
         return self._fetch(f"{lon},{lat}")
+

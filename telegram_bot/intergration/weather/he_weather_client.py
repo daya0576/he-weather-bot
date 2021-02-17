@@ -1,3 +1,5 @@
+from typing import Dict
+
 import requests
 
 from telegram_bot.intergration.location.he_location_client import Location
@@ -10,8 +12,11 @@ KEY = settings.HE_WEATHER_API_TOKEN
 
 class HeWeatherClient(WeatherClient):
 
-    def _fetch(self, api_type, weather_type, location):
-        url = f"https://devapi.qweather.com/v7/{api_type}/{weather_type}?location={location}&key={KEY}"
+    def _fetch(self, api_type, weather_type, params: Dict):
+        url = f"https://devapi.qweather.com/v7/{api_type}/{weather_type}?key={KEY}"
+        for k, v in params.items():
+            url += f"&{k}={v}"
+
         r = requests.get(url)
         if r.status_code == 200:
             return r.json()
@@ -20,21 +25,22 @@ class HeWeatherClient(WeatherClient):
         pass
 
     def get_weather_forecast(self, location: Location):
-        city = f"{location.lon},{location.lat}" if location.lat and location.lon else location.name
-        data = self._fetch("weather", "3d", city)
-        weather_data = data.get("daily")
-
         # 天气预测：
+        forecast_data = self._fetch("weather", "3d", {"location": location})
+        weather_data = forecast_data.get("daily")
         d1 = weather_data[0]
         d2 = weather_data[1]
-        weather_data_today_str = f"{location.name}今日{self._format_weather(d1)}\n\n" \
-                                 f"明日{DateUtil.get_tomorrow_day()}，{self._format_weather(d2)}"
 
-        return weather_data_today_str
+        # 生活指数
+        life_data = self._fetch("indices", "1d", {"location": location, "type": 8})
+        life_d1 = life_data["daily"][0]['text']
+
+        return f"{location.name}今日{self._format_weather(d1)}。{life_d1}\n\n" \
+               f"明日{DateUtil.get_tomorrow_day()}，{self._format_weather(d2)}。"
 
     def _format_weather(self, d1):
         d1_n_str = d1['textDay']
         if d1['textNight'] != d1['textDay']:
             d1_n_str += f"，夜间{d1['textNight']}"
 
-        return f"{d1_n_str}，{d1['tempMin']}到{d1['tempMax']}度。"
+        return f"{d1_n_str}，{d1['tempMin']}到{d1['tempMax']}度"

@@ -68,7 +68,7 @@ async def process_location(message: types.Message, state: FSMContext):
         return await message.reply("找不到输入的城市，试试其他关键字")
 
     user = crud.update_or_create_user(SessionLocal(), message.chat.id, location)
-    await message.reply(f"城市信息已更新：{location.province}{user.city_name}({user.latitude},{user.longitude})"
+    await message.reply(f"城市信息已更新：{location.province}{user.city_name}({user.latitude},{user.longitude})\n"
                         f"{location.url}")
 
     # Finish conversation

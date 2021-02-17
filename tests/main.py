@@ -12,5 +12,5 @@ if __name__ == '__main__':
     # bot = telegram.Bot(token=(os.environ['TELEGRAM_TOKEN']))
     # send_weather_forecast_to_channel(bot)
 
-    location = Location(name="北京", lat="116.41", lon="39.9212", tz="")
-    he_weather.get_weather_forecast(location)
+    location = Location(name="北京", lat=39.92, lon=116.41, tz="")
+    print(he_weather.get_weather_forecast(location))
