@@ -7,7 +7,8 @@ class Settings(BaseSettings):
     PROXY: str
     HE_WEATHER_API_TOKEN: str
     DATABASE_URL: str
-    REDIS_URL: str
+    REDIS_URL: str = ""
+    SENTRY_URL: str = ""
 
 
 settings = Settings()
