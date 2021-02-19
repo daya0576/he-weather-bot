@@ -1,7 +1,6 @@
 from typing import Dict
 
-import requests
-
+from telegram_bot.intergration import HttpClient
 from telegram_bot.intergration.location.he_location_client import Location
 from telegram_bot.intergration.weather.base_weather_client import WeatherClient
 from telegram_bot.settings import settings
@@ -11,13 +10,15 @@ KEY = settings.HE_WEATHER_API_TOKEN
 
 
 class HeWeatherClient(WeatherClient):
+    def __init__(self, http_client: HttpClient):
+        self.http_client = http_client
 
     def _fetch(self, api_type, weather_type, params: Dict):
         url = f"https://devapi.qweather.com/v7/{api_type}/{weather_type}?key={KEY}"
         for k, v in params.items():
             url += f"&{k}={v}"
 
-        r = requests.get(url)
+        r = self.http_client.get(url)
         if r.status_code == 200:
             return r.json()
 

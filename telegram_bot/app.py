@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+import logging
+
 import sentry_sdk
 import uvicorn
 from fastapi import FastAPI
+from fastapi.logger import logger
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
 from telegram_bot.database import models
@@ -15,9 +18,16 @@ app = FastAPI()
 app.include_router(webhook.router)
 app.include_router(cron.router)
 
+# sentry middleware
 if settings.SENTRY_URL:
-    sentry_sdk.init(dsn="https://22cf74145c784a35b0f5ce69b9df2bf2@o527049.ingest.sentry.io/5642886")
+    sentry_sdk.init(dsn=settings.SENTRY_URL)
     app = SentryAsgiMiddleware(app)
 
+gunicorn_logger = logging.getLogger('gunicorn.error')
+logger.handlers = gunicorn_logger.handlers
+
 if __name__ == '__main__':
+    logger.setLevel(logging.DEBUG)
     uvicorn.run("app:app", host="0.0.0.0", port=5000, log_level="info", reload=True)
+else:
+    logger.setLevel(logging.INFO)

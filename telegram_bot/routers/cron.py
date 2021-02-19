@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from fastapi.logger import logger
 
 from telegram_bot.database import crud
 from telegram_bot.database.database import SessionLocal
@@ -10,6 +11,7 @@ router = APIRouter()
 
 @router.get("/")
 async def index():
+    logger.info("test...")
     return {"message": "Hello World"}
 
 

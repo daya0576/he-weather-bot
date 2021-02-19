@@ -5,7 +5,7 @@ from telegram_bot.intergration.weather.wttr_weather_client import AsciiWeatherCl
 
 http_cli = HttpClient()
 
-he_weather = HeWeatherClient()
+he_weather = HeWeatherClient(http_cli)
 ascii_weather = AsciiWeatherClient()
 he_location_client = HeLocationClient(http_cli)
 
