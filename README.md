@@ -4,7 +4,7 @@
 
 👉戳链接调戏我：   https://t.me/he_weather_bot  
 
-<img src="https://media.giphy.com/media/aYB4sboCC7L1mT5IHg/source.gif" width="500">
+<img src="https://media.giphy.com/media/NCGR8ei7sAt7OJeSie/giphy.gif" width="500">
 
 实现原理：《如何零成本制作一个 telegram 机器人》
 
