@@ -5,7 +5,7 @@
 目前支持「个人」或「群组」进行交互。
 
 👉戳链接调戏我：   https://t.me/he_weather_bot  
-<img src="https://i.loli.net/2021/02/17/zocBM1r7gyqpkJi.png" width="450">
+![image.png](https://i.loli.net/2021/02/21/V8lvk2TNHPpWtFK.png)
 
 实现原理：《如何零成本制作一个 telegram 机器人》
 
