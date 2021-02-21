@@ -7,6 +7,8 @@
 👉戳链接调戏我：   https://t.me/he_weather_bot  
 <img src="https://i.loli.net/2021/02/17/zocBM1r7gyqpkJi.png" width="450">
 
+实现原理：《如何零成本制作一个 telegram 机器人》
+
 ## TODO
 
 - [ ] 多语言支持

@@ -11,6 +11,10 @@ def get_user(db: Session, chat_id: str) -> models.User:
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 1000) -> List[models.User]:
+    """
+
+    :rtype: object
+    """
     return db.query(models.User) \
         .offset(skip).limit(limit).all()
 
