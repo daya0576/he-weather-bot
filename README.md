@@ -6,7 +6,7 @@
 
 <img src="https://media.giphy.com/media/NCGR8ei7sAt7OJeSie/giphy.gif" width="500">
 
-实现原理：《如何零成本制作一个 telegram 机器人》
+实现原理：[《如何零成本制作一个 telegram 机器人》](https://changchen.me/blog/20210221/buld-telegram-bot-from-scratch/)
 
 ## TODO
 
