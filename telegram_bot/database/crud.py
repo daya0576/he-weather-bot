@@ -10,6 +10,14 @@ def get_user(db: Session, chat_id: str) -> models.User:
     return db.query(models.User).filter(models.User.chat_id == chat_id).first()
 
 
+def update_user_status(db: Session, chat_id: str, is_active: bool):
+    user = db.query(models.User).filter(models.User.chat_id == chat_id).first()
+    if user:
+        user.is_active = is_active
+        db.merge(user)
+    db.commit()
+
+
 def get_users(db: Session, skip: int = 0, limit: int = 1000) -> List[models.User]:
     """
 

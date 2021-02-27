@@ -1,5 +1,4 @@
 from aiogram import types
-from aiogram.types import ContentType
 
 from telegram_bot.database import crud
 from telegram_bot.database.database import SessionLocal
@@ -27,20 +26,22 @@ async def handle_weather(message: types.Message) -> None:
 
 
 @dp.message_handler(commands=['help', 'start'])
-@dp.message_handler(content_types=ContentType.ANY)
 async def handle_help(message: types.Message) -> None:
-    keyboard_markup = types.InlineKeyboardMarkup(row_width=6)
+    user = crud.get_user(SessionLocal(), message.chat.id)
+    is_user_active = user and user.is_active
 
+    keyboard_markup = types.InlineKeyboardMarkup(row_width=6)
     keyboard_markup.add(
         types.InlineKeyboardButton('获取实时天气', callback_data='weather'),
     )
 
     inline_buttons = (
         types.InlineKeyboardButton('更新位置', callback_data="edit"),
-        # types.InlineKeyboardButton('更新位置', callback_data="edit"),
+        types.InlineKeyboardButton(
+            '关闭订阅' if is_user_active else '开启订阅',
+            callback_data="disable" if is_user_active else "enable"
+        ),
         types.InlineKeyboardButton('关注项目✨', url="https://github.com/daya0576/he_weather_bot"),
-        # ('开启订阅', 'enable'),
-        # ('关闭订阅', 'disable'),
     )
     keyboard_markup.row(*inline_buttons)
 
@@ -55,7 +56,12 @@ async def inline_kb_answer_callback_handler(query: types.CallbackQuery):
     answer_data = query.data
     if answer_data == 'weather':
         await handle_weather(query.message)
+        await query.answer('')
     elif answer_data == 'edit':
         await update_location(query.message)
-
-    await query.answer('')
+        await query.answer('')
+    elif answer_data == 'enable' or answer_data == "disable":
+        crud.update_user_status(SessionLocal(), query.message.chat.id, answer_data == 'enable')
+        text = "已开启订阅" if answer_data == 'enable' else "已关闭订阅"
+        await query.answer(text)
+        await handle_help(query.message)
