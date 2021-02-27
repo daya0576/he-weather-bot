@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 from aiogram import Dispatcher, Bot
 from aiogram.types import Update
 from fastapi import APIRouter, Body, Depends
-from fastapi.logger import logger
+from loguru import logger
 from starlette.responses import Response
 from starlette.status import HTTP_200_OK
 
@@ -43,7 +43,7 @@ async def set_webhook() -> None:
 
     if current_url != url:
         await bot.set_webhook(url=url)
-        logger.warn("webhook updated!")
+        logger.warning("webhook updated!")
 
 
 @router.on_event("shutdown")

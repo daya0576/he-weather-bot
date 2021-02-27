@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from fastapi.logger import logger
+from loguru import logger
 from requests_futures.sessions import FuturesSession
 
 

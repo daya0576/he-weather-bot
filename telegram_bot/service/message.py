@@ -2,7 +2,7 @@ import functools
 
 from aiogram import Bot
 from aiogram.utils.exceptions import BotBlocked
-from fastapi.logger import logger
+from loguru import logger
 
 
 def service_template(f):
@@ -11,7 +11,7 @@ def service_template(f):
         try:
             return await f(*args, **kwargs)
         except BotBlocked:
-            logger.warn(f"bot blocked by {args}")
+            logger.warning(f"bot blocked by {args}")
 
     return inner
 

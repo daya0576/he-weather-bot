@@ -1,7 +1,7 @@
 import asyncio
 
 from fastapi import APIRouter
-from fastapi.logger import logger
+from loguru import logger
 
 from telegram_bot.database import crud
 from telegram_bot.database.database import SessionLocal
@@ -26,7 +26,7 @@ async def users():
 
 @router.get("/cron")
 async def cron_handler():
-    users = crud.get_users(SessionLocal())
+    all_users = crud.get_users(SessionLocal())
 
     async def _inner(user: User):
         text = await he_weather.get_weather_forecast(user.location)
@@ -34,7 +34,7 @@ async def cron_handler():
 
     # 并行处理，单个 exception 不中断其他任务
     results = await asyncio.gather(
-        *[_inner(user) for user in users],
+        *[_inner(user) for user in all_users],
         return_exceptions=True
     )
     # 汇总异常处理
