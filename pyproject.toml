@@ -15,6 +15,8 @@ psycopg2 = "^2.8.6"
 aioredis = "^1.3.1"
 sentry-sdk = "^0.20.3"
 loguru = "^0.5.3"
+pytest = "^6.2.2"
+requests-futures = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 

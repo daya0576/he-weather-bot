@@ -16,43 +16,51 @@ class HeWeatherClient(WeatherClient):
     def __init__(self, http_client: HttpClient):
         self.http_client = http_client
 
-    def _fetch(self, api_type, weather_type, params: Dict):
+    def _url(self, api_type, weather_type, params: Dict) -> str:
         url = f"https://devapi.qweather.com/v7/{api_type}/{weather_type}?key={KEY}"
         for k, v in params.items():
             url += f"&{k}={v}"
 
-        return self.http_client.get(url)
+        return url
 
-    def get_weather_photo(self, location) -> str:
+    async def get_weather_photo(self, location) -> str:
         pass
 
-    def get_weather_forecast(self, location: Location):
+    async def get_weather_forecast(self, location: Location):
+        urls = [
+            self._url("weather", "now", {"location": location}),
+            self._url("weather", "3d", {"location": location}),
+            self._url("indices", "1d", {"location": location, "type": random.choice(self.LIFE_OPTIONS)})
+        ]
+        weather_now, forecast_data, life_data_now = self.http_client.get_responses(urls)
+
         # 天气预测：
-        forecast_data = self._fetch("weather", "3d", {"location": location})
-        weather_data = forecast_data.get("daily")
-        d1 = weather_data[0]
-        d1_pretty = self._format_weather_forecast(d1)
-        d2 = weather_data[1]
+        d1, d2, _ = forecast_data.get("daily")
+        d1_pretty = self._format_weather_forecast(d1, weather_now.get("now"))
         d2_pretty = self._format_weather_forecast(d2)
-
         # 生活指数
-        life_data_d = self._fetch("indices", "1d", {"location": location, "type": random.choice(self.LIFE_OPTIONS)})
-        life_pretty = self._format_life_weahter(life_data_d)
+        life_pretty = self._format_life_weather(life_data_now)
 
-        return f"{location.name}今日{d1_pretty}。{life_pretty}\n\n" \
+        return f"{location.name}{d1_pretty}。{life_pretty}\n\n" \
                f"明日{DateUtil.get_tomorrow_day()}，{d2_pretty}。"
 
     @staticmethod
-    def _format_weather_forecast(d1):
-        d1_n_str = d1['textDay']
-        if d1['textNight'] != d1['textDay']:
-            d1_n_str += f"，夜间{d1['textNight']}"
+    def _format_weather_forecast(d, d_now=None) -> str:
+        if not d or 'textDay' not in d:
+            return ""
 
-        return f"{d1_n_str}，{d1['tempMin']}到{d1['tempMax']}度"
+        d_str = f"今天白天{d['textDay']}（{d['tempMin']}°~{d['tempMax']}°）"
+
+        if d_now and 'temp' in d_now:
+            d_str += f"，当前气温{d_now['temp']}°"
+        if d['textNight'] != d['textDay']:
+            d_str += f"，夜晚{d['textNight']}"
+
+        return d_str
 
     @staticmethod
-    def _format_life_weahter(life_data: Dict):
-        if "daily" in life_data:
+    def _format_life_weather(life_data: Dict) -> "":
+        if life_data and "daily" in life_data:
             life_data_list = life_data["daily"]
             if life_data_list and 'text' in life_data_list[0]:
                 return life_data_list[0]['text']

@@ -4,6 +4,7 @@ from aiogram.types import ContentType
 from telegram_bot.database import crud
 from telegram_bot.database.database import SessionLocal
 from telegram_bot.intergration import he_weather
+from telegram_bot.service.message import TelegramMessageService
 from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.finite_state_machine import update_location
 
@@ -21,8 +22,8 @@ async def handle_weather(message: types.Message) -> None:
     if not user:
         return await update_location(message)
 
-    text = he_weather.get_weather_forecast(user.location)
-    await dp.bot.send_message(chat_id=chat_id, text=text)
+    text = await he_weather.get_weather_forecast(user.location)
+    await TelegramMessageService.send_text(dp.bot, chat_id, text)
 
 
 @dp.message_handler(commands=['help', 'start'])
@@ -43,7 +44,7 @@ async def handle_help(message: types.Message) -> None:
     )
     keyboard_markup.row(*inline_buttons)
 
-    await dp.bot.send_message(message.chat.id, WELCOME_TEXT, parse_mode='Markdown', reply_markup=keyboard_markup)
+    await TelegramMessageService.send_keyboard_markup(dp.bot, message.chat.id, WELCOME_TEXT, keyboard_markup)
 
 
 @dp.callback_query_handler(text='weather')

@@ -10,6 +10,7 @@ from telegram_bot.database import crud
 from telegram_bot.database.database import SessionLocal
 from telegram_bot.intergration import he_location_client
 from telegram_bot.intergration.location.he_location_client import Location
+from telegram_bot.service.message import TelegramMessageService
 from telegram_bot.telegram.dispatcher import dp
 
 
@@ -56,7 +57,7 @@ async def update_location(message: types.Message, state: FSMContext):
 @dp.message_handler(commands='change_location')
 async def update_location(message: types.Message):
     await Form.location.set()
-    await dp.bot.send_message(message.chat.id, "Hi！发送当前定位，或者输入城市关键字")
+    await TelegramMessageService.send_text(dp.bot, message.chat.id, "Hi！发送当前定位，或者输入城市关键字")
 
 
 @dp.message_handler(state=Form.location, content_types=ContentType.LOCATION)
