@@ -1,6 +1,6 @@
 # 和风天气预报机器人 HeWeatherBot
 
-基于[「和风」](https://www.qweather.com/)的天气预报小棉袄。根据用户位置查询实时天气，并每天自动播报
+基于[「和风」](https://www.qweather.com/)的天气预报小棉袄。根据用户位置查询实时天气，并每天自动播报～
 
 👉 戳链接调戏我：https://t.me/he_weather_bot  
 
