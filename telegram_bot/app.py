@@ -24,7 +24,7 @@ app.include_router(cron.router)
 
 # sentry middleware
 if settings.SENTRY_URL:
-    sentry_sdk.init(dsn=settings.SENTRY_URL)
+    sentry_sdk.init(dsn=settings.SENTRY_URL, environment=settings.ENV)
     app = SentryAsgiMiddleware(app)
 
 if __name__ == '__main__':

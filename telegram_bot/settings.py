@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     REDIS_URL: str = ""
     SENTRY_URL: str = ""
+    ENV: str = "production"
 
 
 settings = Settings()
