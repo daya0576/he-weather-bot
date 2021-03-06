@@ -4,6 +4,7 @@ from telegram_bot.database import crud
 from telegram_bot.database.database import SessionLocal
 from telegram_bot.intergration import he_weather
 from telegram_bot.service.message import TelegramMessageService
+from telegram_bot.telegram.components.keyboard_markup_factory import KeyboardMarkUp
 from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.finite_state_machine import update_location
 
@@ -28,23 +29,7 @@ async def handle_weather(message: types.Message) -> None:
 @dp.message_handler(commands=['help', 'start'])
 async def handle_help(message: types.Message) -> None:
     user = crud.get_user(SessionLocal(), message.chat.id)
-    is_user_active = user and user.is_active
-
-    keyboard_markup = types.InlineKeyboardMarkup(row_width=6)
-    keyboard_markup.add(
-        types.InlineKeyboardButton('获取实时天气', callback_data='weather'),
-    )
-
-    inline_buttons = (
-        types.InlineKeyboardButton('更新位置', callback_data="edit"),
-        types.InlineKeyboardButton(
-            '关闭订阅' if is_user_active else '开启订阅',
-            callback_data="disable" if is_user_active else "enable"
-        ),
-        types.InlineKeyboardButton('关注项目✨', url="https://github.com/daya0576/he_weather_bot"),
-    )
-    keyboard_markup.row(*inline_buttons)
-
+    keyboard_markup = KeyboardMarkUp.get(user)
     await TelegramMessageService.send_keyboard_markup(dp.bot, message.chat.id, WELCOME_TEXT, keyboard_markup)
 
 
@@ -63,5 +48,8 @@ async def inline_kb_answer_callback_handler(query: types.CallbackQuery):
     elif answer_data == 'enable' or answer_data == "disable":
         crud.update_user_status(SessionLocal(), query.message.chat.id, answer_data == 'enable')
         text = "已开启订阅" if answer_data == 'enable' else "已关闭订阅"
+        user = crud.get_user(SessionLocal(), query.message.chat.id)
         await query.answer(text)
-        await handle_help(query.message)
+        await query.message.edit_reply_markup(KeyboardMarkUp.get(user))
+
+    await query.answer("")
