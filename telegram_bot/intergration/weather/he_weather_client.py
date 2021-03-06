@@ -41,15 +41,17 @@ class HeWeatherClient(WeatherClient):
         # 生活指数
         life_pretty = self._format_life_weather(life_data_now)
 
-        return f"{location.name}{d1_pretty}。{life_pretty}\n\n" \
-               f"明日{DateUtil.get_tomorrow_day()}，{d2_pretty}。"
+        return f"今天{location.name}{d1_pretty}。\n" \
+               f"明日{DateUtil.get_tomorrow_day()}，{d2_pretty}。\n" \
+               f"\n" \
+               f"{life_pretty}"
 
     @staticmethod
     def _format_weather_forecast(d, d_now=None) -> str:
         if not d or 'textDay' not in d:
             return ""
 
-        d_str = f"今天白天{d['textDay']}（{d['tempMin']}°~{d['tempMax']}°）"
+        d_str = f"白天{d['textDay']}（{d['tempMin']}°~{d['tempMax']}°）"
 
         if d_now and 'temp' in d_now:
             d_str += f"，当前气温{d_now['temp']}°"
