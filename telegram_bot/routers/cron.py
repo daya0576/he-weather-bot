@@ -32,14 +32,15 @@ async def cron_handler(db: Session = Depends(get_db)):
         text = await he_weather.get_weather_forecast(user.location)
         await TelegramMessageService.send_text(dp.bot, user.chat_id, text)
 
-    # 并行处理，单个 exception 不中断其他任务
+    # 并行处理，单个任务 exception 不中断其他任务
     results = await asyncio.gather(
-        *[_inner(user) for user in all_users],
+        *[_inner(user) for user in all_users if user.is_active],
         return_exceptions=True
     )
+
     # 汇总异常处理
     for result in results:
         if isinstance(result, Exception):
             raise Exception(result)
 
-    return 'ok'
+    return {"count": len(results)}

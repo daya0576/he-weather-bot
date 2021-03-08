@@ -24,10 +24,11 @@ else:
     storage = MemoryStorage()
 
 """
-weather - 实时天气
-change_location - 更新位置
-cancel - 取消
 help - 帮助
+weather - 获取实时天气
+change_location - 更新位置
+sub - 订阅天气预报
+unsub - 关闭订阅
 """
 dp = Dispatcher(bot, storage=storage)
 # dp.register_errors_handler(handle_errors)

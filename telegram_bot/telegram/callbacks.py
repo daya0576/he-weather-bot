@@ -36,6 +36,20 @@ async def handle_help(message: types.Message) -> None:
     await TelegramMessageService.send_keyboard_markup(dp.bot, message.chat.id, WELCOME_TEXT, reply_markup)
 
 
+@dp.message_handler(commands=['sub'])
+async def handle_help(message: types.Message) -> None:
+    with get_db_session() as db:
+        crud.update_user_status(db, message.chat.id, True)
+    await TelegramMessageService.send_text(dp.bot, message.chat.id, "已开启定时订阅")
+
+
+@dp.message_handler(commands=['unsub'])
+async def handle_help(message: types.Message) -> None:
+    with get_db_session() as db:
+        crud.update_user_status(db, message.chat.id, False)
+    await TelegramMessageService.send_text(dp.bot, message.chat.id, "已关闭定时订阅")
+
+
 @dp.callback_query_handler(text='weather')
 @dp.callback_query_handler(text='edit')
 @dp.callback_query_handler(text='enable')
@@ -55,5 +69,3 @@ async def inline_kb_answer_callback_handler(query: types.CallbackQuery):
             user = crud.get_user(db, query.message.chat.id)
             await query.answer(text)
             await query.message.edit_reply_markup(KeyboardMarkUpFactory.build(user))
-
-    await query.answer("")

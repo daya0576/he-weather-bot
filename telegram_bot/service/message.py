@@ -14,7 +14,7 @@ def service_template(f):
         try:
             return await f(bot, chat_id, *args, **kwargs)
         except BotBlocked:
-            logger.warning(f"bot blocked by {args}")
+            logger.warning(f"bot blocked by {chat_id}")
             with get_db_session() as db:
                 crud.update_user_status(db, chat_id, False)
 
