@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy import Boolean, Column, String, BigInteger
 
 from .database import Base
 from ..intergration.location.he_location_client import Location
@@ -7,7 +7,7 @@ from ..intergration.location.he_location_client import Location
 class Chat(Base):
     __tablename__ = "users"
 
-    chat_id = Column(Integer, primary_key=True, index=True)
+    chat_id = Column(BigInteger, primary_key=True, index=True)
     is_active = Column(Boolean, default=True)
 
     latitude = Column(String)
