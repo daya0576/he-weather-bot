@@ -1,11 +1,11 @@
 import asyncio
 
-from fastapi import APIRouter
-from loguru import logger
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
 from telegram_bot.database import crud
-from telegram_bot.database.database import SessionLocal
-from telegram_bot.database.models import User
+from telegram_bot.database.database import get_db, get_db_session
+from telegram_bot.database.models import Chat
 from telegram_bot.intergration import he_weather
 from telegram_bot.service.message import TelegramMessageService
 from telegram_bot.telegram.dispatcher import dp
@@ -15,20 +15,20 @@ router = APIRouter()
 
 @router.get("/")
 async def index():
-    logger.info("test...")
     return {"message": "Hello World"}
 
 
 @router.get("/users")
 async def users():
-    return crud.get_users(SessionLocal())
+    with get_db_session() as db:
+        return crud.get_users(db)
 
 
 @router.get("/cron")
-async def cron_handler():
-    all_users = crud.get_users(SessionLocal())
+async def cron_handler(db: Session = Depends(get_db)):
+    all_users = crud.get_users(db)
 
-    async def _inner(user: User):
+    async def _inner(user: Chat):
         text = await he_weather.get_weather_forecast(user.location)
         await TelegramMessageService.send_text(dp.bot, user.chat_id, text)
 

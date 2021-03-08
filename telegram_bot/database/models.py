@@ -4,7 +4,7 @@ from .database import Base
 from ..intergration.location.he_location_client import Location
 
 
-class User(Base):
+class Chat(Base):
     __tablename__ = "users"
 
     chat_id = Column(Integer, primary_key=True, index=True)

@@ -7,7 +7,7 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import ContentType
 
 from telegram_bot.database import crud
-from telegram_bot.database.database import SessionLocal
+from telegram_bot.database.database import get_db
 from telegram_bot.intergration import he_location_client
 from telegram_bot.intergration.location.he_location_client import Location
 from telegram_bot.service.message import TelegramMessageService
@@ -68,7 +68,7 @@ async def process_location(message: types.Message, state: FSMContext):
     if not location:
         return await message.reply("找不到输入的城市，试试其他关键字")
 
-    user = crud.update_or_create_user(SessionLocal(), message.chat.id, location)
+    user = crud.update_or_create_user(get_db(), message.chat.id, location)
     await message.reply(f"城市信息已更新：{location.province}{user.city_name}({user.latitude},{user.longitude})\n"
                         f"{location.url}")
 

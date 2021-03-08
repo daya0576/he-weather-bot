@@ -3,9 +3,9 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from telegram_bot.database import models
 
 
-class KeyboardMarkUp:
+class KeyboardMarkUpFactory:
     @staticmethod
-    def get(user: "models.User") -> InlineKeyboardMarkup:
+    def build(user: "models.Chat") -> InlineKeyboardMarkup:
         keyboard_markup = InlineKeyboardMarkup(row_width=6)
 
         keyboard_markup.add(

@@ -4,14 +4,19 @@ from aiogram import Bot
 from aiogram.utils.exceptions import BotBlocked
 from loguru import logger
 
+from telegram_bot.database import crud
+from telegram_bot.database.database import get_db_session
+
 
 def service_template(f):
     @functools.wraps(f)
-    async def inner(*args, **kwargs):
+    async def inner(bot: Bot, chat_id: str, *args, **kwargs):
         try:
-            return await f(*args, **kwargs)
+            return await f(bot, chat_id, *args, **kwargs)
         except BotBlocked:
             logger.warning(f"bot blocked by {args}")
+            with get_db_session() as db:
+                crud.update_user_status(db, chat_id, False)
 
     return inner
 
@@ -19,10 +24,10 @@ def service_template(f):
 class TelegramMessageService:
     @staticmethod
     @service_template
-    async def send_text(bot: Bot, chat_id, text):
+    async def send_text(bot: Bot, chat_id: str, text: str):
         await bot.send_message(chat_id=chat_id, text=text)
 
     @staticmethod
     @service_template
-    async def send_keyboard_markup(bot: Bot, chat_id, text, keyboard_markup):
-        await bot.send_message(chat_id, text, parse_mode='Markdown', reply_markup=keyboard_markup)
+    async def send_keyboard_markup(bot: Bot, chat_id: str, text: str, reply_markup=None):
+        await bot.send_message(chat_id=chat_id, text=text, parse_mode='Markdown', reply_markup=reply_markup)
