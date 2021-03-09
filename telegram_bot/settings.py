@@ -11,5 +11,9 @@ class Settings(BaseSettings):
     SENTRY_URL: str = ""
     ENV: str = "production"
 
+    @property
+    def is_production(self):
+        return self.ENV == "production"
+
 
 settings = Settings()

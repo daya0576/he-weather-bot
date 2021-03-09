@@ -12,7 +12,7 @@ def service_template(f):
     @functools.wraps(f)
     async def inner(bot: Bot, chat_id: str, *args, **kwargs):
         try:
-            return await f(bot, chat_id, *args, **kwargs)
+            await f(bot, chat_id, *args, **kwargs)
         except BotBlocked:
             logger.warning(f"bot blocked by {chat_id}")
             with get_db_session() as db:

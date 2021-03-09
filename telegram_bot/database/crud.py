@@ -17,8 +17,6 @@ def update_user_status(db: Session, chat_id: str, is_active: bool):
         db.merge(user)
     db.commit()
 
-    return user
-
 
 def get_users(db: Session, skip: int = 0, limit: int = 1000) -> List[models.Chat]:
     return db.query(models.Chat) \
