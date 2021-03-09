@@ -26,7 +26,7 @@ class HeWeatherClient(WeatherClient):
     async def get_weather_photo(self, location) -> str:
         pass
 
-    async def get_weather_forecast(self, location: Location):
+    def get_weather_forecast(self, location: Location):
         urls = [
             self._url("weather", "now", {"location": location}),
             self._url("weather", "3d", {"location": location}),
@@ -41,7 +41,8 @@ class HeWeatherClient(WeatherClient):
         # 生活指数
         life_pretty = self._format_life_weather(life_data_now)
 
-        return f"今天{location.name}{d1_pretty}。\n" \
+        return f"{location.name}" \
+               f"今天{d1_pretty}。\n" \
                f"明日{DateUtil.get_tomorrow_day()}，{d2_pretty}。\n" \
                f"\n" \
                f"{life_pretty}"

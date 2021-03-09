@@ -1,6 +1,7 @@
 import asyncio
 
 from fastapi import APIRouter, Depends
+from sentry_sdk import capture_exception
 from sqlalchemy.orm import Session
 
 from telegram_bot.database import crud
@@ -26,21 +27,21 @@ async def users():
 
 @router.get("/cron")
 async def cron_handler(db: Session = Depends(get_db)):
-    all_users = crud.get_users(db)
+    all_users = (user for user in crud.get_users(db) if user.is_active)
 
     async def _inner(user: Chat):
-        text = await he_weather.get_weather_forecast(user.location)
+        text = he_weather.get_weather_forecast(user.location)
         await TelegramMessageService.send_text(dp.bot, user.chat_id, text)
 
     # 并行处理，单个任务 exception 不中断其他任务
     results = await asyncio.gather(
-        *[_inner(user) for user in all_users if user.is_active],
+        *(_inner(user) for user in all_users),
         return_exceptions=True
     )
 
     # 汇总异常处理
     for result in results:
         if isinstance(result, Exception):
-            raise Exception(result)
+            capture_exception(result)
 
     return {"count": len(results)}

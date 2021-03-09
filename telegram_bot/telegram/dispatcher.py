@@ -9,11 +9,6 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from telegram_bot.settings import settings
 from telegram_bot.telegram.bot import bot
 
-
-async def handle_errors(*args, **partial_data):
-    raise Exception(str(args))
-
-
 if settings.REDIS_URL:
     logging.info("init redis storage client...")
     m = re.match(r"redis://:(.+)@(.+):(.+)", settings.REDIS_URL)

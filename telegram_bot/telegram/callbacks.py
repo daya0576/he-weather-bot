@@ -24,7 +24,7 @@ async def handle_weather(message: types.Message) -> None:
     if not user:
         return await update_location(message)
 
-    text = await he_weather.get_weather_forecast(user.location)
+    text = he_weather.get_weather_forecast(user.location)
     await TelegramMessageService.send_text(dp.bot, chat_id, text)
 
 

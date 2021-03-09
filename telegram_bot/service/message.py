@@ -17,6 +17,8 @@ def service_template(f):
             logger.warning(f"bot blocked by {chat_id}")
             with get_db_session() as db:
                 crud.update_user_status(db, chat_id, False)
+        else:
+            logger.info(f"message send to {chat_id}")
 
     return inner
 
