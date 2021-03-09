@@ -1,10 +1,9 @@
-import logging
-
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import ContentType
+from aiogram.utils import exceptions
+from loguru import logger
 
 from telegram_bot.database import crud
 from telegram_bot.database.database import get_db_session
@@ -31,29 +30,6 @@ class Form(StatesGroup):
     location = State()
 
 
-@dp.message_handler(state='*', commands='cancel')
-@dp.message_handler(Text(equals='cancel', ignore_case=True), state='*')
-async def cancel_handler(message: types.Message, state: FSMContext):
-    """
-    Allow user to cancel any action
-    """
-    current_state = await state.get_state()
-    if current_state is None:
-        return
-
-    logging.info('Cancelling state %r', current_state)
-    # Cancel state and inform user about it
-    await state.finish()
-    # And remove keyboard (just in case)
-    await message.reply('Cancelled.', reply_markup=types.ReplyKeyboardRemove())
-
-
-@dp.message_handler(commands='state')
-async def update_location(message: types.Message, state: FSMContext):
-    current_state = await state.get_state()
-    await message.reply((str(current_state)))
-
-
 @dp.message_handler(commands='change_location')
 async def update_location(message: types.Message):
     await Form.location.set()
@@ -71,9 +47,13 @@ async def process_location(message: types.Message, state: FSMContext):
     # 更新用户所属位置
     with get_db_session() as db:
         user = crud.update_or_create_user(db, message.chat.id, location)
-    await message.reply(f"城市信息已更新：{location.province}{user.city_name}"
-                        f"({user.latitude},{user.longitude})\n"
-                        f"{location.url}")
+
+    # TODO: global error handler or service template
+    try:
+        await message.reply(f"城市信息已更新：{location.province}{user.city_name}"
+                            f"({user.latitude},{user.longitude})\n{location.url}")
+    except exceptions.BotBlocked:
+        logger.warning("bot blocked by user..")
 
     # Finish conversation
     await state.finish()
