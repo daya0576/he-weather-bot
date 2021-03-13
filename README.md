@@ -1,4 +1,4 @@
-## 🌤 HeWeatherBot
+## he-weather-bot
 
 基于和风天气 API 的私讯 Telegram 机器人
 
@@ -11,7 +11,7 @@
 
 👉 戳链接调戏我：https://t.me/he_weather_bot
 
-<img src="https://raw.githubusercontent.com/daya0576/he_weather_bot/master/img/2021-02-21%2015-49-06.gifcask.2021-02-21%2017_20_45.gif" width="600">
+<img src="https://github.com/daya0576/he-weather-bot/blob/fdd4d924943ab6036646cc6d7b7888fc71b9d3e2/img/2021-02-21%2015-49-06.gifcask.2021-02-21%2017_20_45.gif" width="600">
 
 ## 🚀 实现原理
 
