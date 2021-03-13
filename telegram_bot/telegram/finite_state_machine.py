@@ -11,14 +11,14 @@ from telegram_bot.service.message import TelegramMessageService
 from telegram_bot.telegram.dispatcher import dp
 
 
-def _get_location_from_message(message: types.Message) -> "Location":
+async def _get_location_from_message(message: types.Message) -> "Location":
     if message.location:
-        return he_location_client.get_location_by_lat_lon(
+        return await he_location_client.get_location_by_lat_lon(
             message.location.latitude,
             message.location.longitude
         )
 
-    return he_location_client.get_location_by_city_keywords(
+    return await he_location_client.get_location_by_city_keywords(
         message.text.strip()
     )
 
@@ -38,7 +38,7 @@ async def update_location(message: types.Message):
 @dp.message_handler(state=Form.location, content_types=ContentType.VENUE)
 @dp.message_handler(state=Form.location, content_types=ContentType.TEXT)
 async def process_location(message: types.Message, state: FSMContext):
-    location = _get_location_from_message(message)
+    location = await _get_location_from_message(message)
     if not location:
         return await message.reply("找不到输入的城市，试试其他关键字")
 

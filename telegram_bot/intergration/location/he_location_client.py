@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from telegram_bot.intergration.http import HttpClient
+from telegram_bot.intergration.http.base_http_client import HttpClient
 from telegram_bot.settings import settings
 
 KEY = settings.HE_WEATHER_API_TOKEN
@@ -28,9 +28,9 @@ class HeLocationClient:
 
     URL = f"https://geoapi.qweather.com/v2/city/lookup?location={{}}&key={KEY}"
 
-    def _fetch(self, location) -> Optional[Location]:
+    async def _fetch(self, location) -> Optional[Location]:
         url = self.URL.format(location)
-        d = self.http_client.get(url)
+        d = await self.http_client.get(url)
 
         location_list = d.get("location")
         if not location_list:
@@ -49,13 +49,12 @@ class HeLocationClient:
             url=d_location["fxLink"],
         )
 
-    def get_location_by_city_keywords(self, keywords) -> Optional[Location]:
+    async def get_location_by_city_keywords(self, keywords) -> Optional[Location]:
         if not keywords:
             return
-        return self._fetch(keywords)
+        return await self._fetch(keywords)
 
-    def get_location_by_lat_lon(self, lat, lon) -> Optional[Location]:
+    async def get_location_by_lat_lon(self, lat, lon) -> Optional[Location]:
         if not (lat or lon):
             return
-        return self._fetch(f"{lon},{lat}")
-
+        return await self._fetch(f"{lon},{lat}")

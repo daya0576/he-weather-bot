@@ -30,7 +30,7 @@ async def cron_handler(db: Session = Depends(get_db)):
     all_users = (user for user in crud.get_users(db) if user.is_active)
 
     async def _inner(user: Chat):
-        text = he_weather.get_weather_forecast(user.location)
+        text = await he_weather.get_weather_forecast(user.location)
         await TelegramMessageService.send_text(dp.bot, user.chat_id, text)
 
     # 并行处理，单个任务 exception 不中断其他任务
