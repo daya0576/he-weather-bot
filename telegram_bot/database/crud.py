@@ -30,7 +30,8 @@ def update_or_create_user(db: Session, chat_id: str, location: Location) -> mode
         longitude="{:.2f}".format(location.lon),
         city=location.name,
         city_name=location.name,
-        time_zone=location.tz
+        time_zone=location.tz,
+        is_active=False
     )
 
     db_user = db.merge(new_user)

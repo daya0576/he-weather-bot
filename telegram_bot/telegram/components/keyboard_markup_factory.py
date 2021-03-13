@@ -2,6 +2,12 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from telegram_bot.database import models
 
+WELCOME_TEXT = """
+基于「和风」的天气预报机器人。根据用户位置查询实时天气，并每天自动播报。
+
+如有任何问题，请联系 @daya0576    
+"""
+
 
 class KeyboardMarkUpFactory:
     @staticmethod

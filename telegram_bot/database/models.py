@@ -8,7 +8,7 @@ class Chat(Base):
     __tablename__ = "users"
 
     chat_id = Column(BigInteger, primary_key=True, index=True)
-    is_active = Column(Boolean, default=True)
+    is_active = Column(Boolean, default=False)
 
     latitude = Column(String)
     longitude = Column(String)

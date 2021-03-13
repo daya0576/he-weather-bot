@@ -4,15 +4,9 @@ from telegram_bot.database import crud
 from telegram_bot.database.database import get_db_session
 from telegram_bot.intergration import he_weather
 from telegram_bot.service.message import TelegramMessageService
-from telegram_bot.telegram.components.keyboard_markup_factory import KeyboardMarkUpFactory
+from telegram_bot.telegram.components.keyboard_markup_factory import KeyboardMarkUpFactory, WELCOME_TEXT
 from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.finite_state_machine import update_location
-
-WELCOME_TEXT = """
-基于「和风」的天气预报机器人。根据用户位置查询实时天气，并每天自动播报。
-
-如有任何问题，请联系 @daya0576    
-"""
 
 
 @dp.message_handler(commands=['weather'])
