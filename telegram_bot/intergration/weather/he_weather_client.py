@@ -2,6 +2,8 @@ import asyncio
 import random
 from typing import Dict
 
+from aiocache import cached
+
 from telegram_bot.intergration.http.base_http_client import HttpClient
 from telegram_bot.intergration.location.he_location_client import Location
 from telegram_bot.intergration.weather.base_weather_client import WeatherClient
@@ -19,8 +21,11 @@ WEATHER_MESSAGE_TEMPLATE = """
 
 
 class HeWeatherClient(WeatherClient):
-    """ 和风生活指数选项，随机选择 """
+    """ 和风天气客户端 """
+
+    # 和风生活指数选项，随机选择
     LIFE_OPTIONS = (1, 3, 5, 6, 8, 9, 10, 15, 16)
+    ONE_HOUR = 60 * 60
 
     def __init__(self, http_client: HttpClient):
         self.http_client = http_client
@@ -36,6 +41,7 @@ class HeWeatherClient(WeatherClient):
     async def get_weather_photo(self, location) -> str:
         pass
 
+    @cached(ttl=ONE_HOUR)
     async def get_weather_forecast(self, location: Location):
         urls = (
             self._build_url("weather", "now", {"location": location}),

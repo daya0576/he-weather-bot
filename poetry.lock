@@ -1,4 +1,23 @@
 [[package]]
+name = "aiocache"
+version = "0.11.1"
+description = "multi backend asyncio cache"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+dev = ["asynctest (>=0.11.0)", "codecov", "coverage", "flake8", "ipdb", "marshmallow", "pystache", "pytest", "pytest-asyncio", "pytest-mock", "sphinx", "sphinx-autobuild", "sphinx-rtd-theme", "black"]
+memcached = ["aiomcache (>=0.5.2)"]
+msgpack = ["msgpack (>=0.5.5)"]
+redis = ["aioredis (>=0.3.3)", "aioredis (>=1.0.0)"]
+
+[package.source]
+type = "legacy"
+url = "https://pypi.doubanio.com/simple"
+reference = "douban"
+
+[[package]]
 name = "aiogram"
 version = "2.11.2"
 description = "Is a pretty simple and fully asynchronous framework for Telegram Bot API"
@@ -698,9 +717,13 @@ reference = "douban"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "b05c5a781d8c6d12f95ede1dc915b07247598891203e35f1bfb3cf5bdbeb9da8"
+content-hash = "9055d817037f4b1fc8479f0957b717e90a6648abf4c25f5ad1c74cb62ecca45f"
 
 [metadata.files]
+aiocache = [
+    {file = "aiocache-0.11.1-py2.py3-none-any.whl", hash = "sha256:e55c7caaa5753794fd301c3a2e592737fa1d036db9f8d04ae154facdfb48a157"},
+    {file = "aiocache-0.11.1.tar.gz", hash = "sha256:f2ebe0b05cec45782e7b5ea0bb74640f157dd4bb1028b4565364dda9fe33be7f"},
+]
 aiogram = [
     {file = "aiogram-2.11.2-py3-none-any.whl", hash = "sha256:ba09c4ed165d7ad2ee75f1e2c2886976c38400632b5c9127d88b3d778a354f8e"},
     {file = "aiogram-2.11.2.tar.gz", hash = "sha256:851cdb583b9fb546d13bb4f8cd0ae0c01aaca398dcc1687d1223618490a91228"},
