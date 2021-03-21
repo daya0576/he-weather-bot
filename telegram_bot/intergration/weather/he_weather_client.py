@@ -2,12 +2,10 @@ import asyncio
 import random
 from typing import Dict
 
-from aiocache import cached
-
 from telegram_bot.intergration.http.base_http_client import HttpClient
 from telegram_bot.intergration.location.he_location_client import Location
 from telegram_bot.intergration.weather.base_weather_client import WeatherClient
-from telegram_bot.settings import settings
+from telegram_bot.settings import aio_lru_cache, settings
 from telegram_bot.util.date_util import DateUtil
 
 KEY = settings.HE_WEATHER_API_TOKEN
@@ -41,7 +39,7 @@ class HeWeatherClient(WeatherClient):
     async def get_weather_photo(self, location) -> str:
         pass
 
-    @cached(ttl=ONE_HOUR)
+    @aio_lru_cache
     async def get_weather_forecast(self, location: Location):
         urls = (
             self._build_url("weather", "now", {"location": location}),
