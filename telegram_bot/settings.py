@@ -14,7 +14,7 @@ class RedisConfig:
     password: str
 
     def __init__(self, url) -> None:
-        m = re.match(r"redis://:(.+)@(.+):(.+)", url)
+        m = re.match(r"redis://:(.*)@(.*):(.*)", url)
         self.password, self.host, self.port = m.group(1), m.group(2), m.group(3)
 
 

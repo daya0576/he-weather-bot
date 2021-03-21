@@ -49,7 +49,7 @@ async def process_location(message: types.Message, state: FSMContext):
     await message.reply(f"城市信息已更新：{location.province}{user.city_name}"
                         f"({user.latitude},{user.longitude})\n{location.url}")
 
-    reply_markup = KeyboardMarkUpFactory.build(user)
+    reply_markup = KeyboardMarkUpFactory.build_main_menu(user)
     await TelegramMessageService.send_keyboard_markup(dp.bot, message.chat.id, WELCOME_TEXT, reply_markup)
 
     # Finish conversation

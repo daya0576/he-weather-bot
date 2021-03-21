@@ -15,5 +15,5 @@ async def global_error_handler(update: types.Update, e):
 @dp.errors_handler(exception=Exception)
 async def global_error_handler(update: types.Update, e: Exception):
     capture_exception(e)
-    logger.error(e)
+    logger.exception(e)
     return True
