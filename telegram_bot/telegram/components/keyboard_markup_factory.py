@@ -55,8 +55,6 @@ class KeyboardMarkUpFactory:
                 inline_btn_list.append(btn)
             keyboard_markup.row(*inline_btn_list)
 
-        sub_text, sub_callback_data = ('关闭订阅', DISABLE_SUB) if chat.is_active else ('开启订阅', ENABLE_SUB)
-        sub_button = InlineKeyboardButton(sub_text, callback_data=sub_callback_data)
         back_btn = InlineKeyboardButton("返回", callback_data=BACK)
-        keyboard_markup.add(sub_button, back_btn)
+        keyboard_markup.add(back_btn)
         return keyboard_markup
