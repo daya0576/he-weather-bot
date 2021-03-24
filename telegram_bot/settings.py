@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     REDIS_URL: str = ""
     SENTRY_URL: str = ""
     ENV: str = "production"
-    CACHE_TTL: int = 60 * 60
+    CACHE_TTL: int = 60 * 10
     DEFAULT_TIMEZONE: str = "Asia/Shanghai"
 
     @property
