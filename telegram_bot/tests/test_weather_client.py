@@ -3,8 +3,8 @@ import asyncio
 
 from telegram_bot.intergration import he_weather
 from telegram_bot.intergration.location.he_location_client import Location
-from telegram_bot.service.message import TelegramMessageService
 from telegram_bot.telegram.dispatcher import dp
+from telegram_bot.telegram.service.message import TelegramMessageService
 
 
 def test_beijin_weather():

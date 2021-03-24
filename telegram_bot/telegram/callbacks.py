@@ -3,11 +3,11 @@ from aiogram import types
 from telegram_bot.database import crud
 from telegram_bot.database.database import get_db_session
 from telegram_bot.intergration import he_weather
-from telegram_bot.service.message import TelegramMessageService
 from telegram_bot.telegram.components.keyboard_markup_factory import KeyboardMarkUpFactory, WELCOME_TEXT, GET_WEATHER, \
-    UPDATE_LOCATION, ENABLE_SUB, DISABLE_SUB, UPDATE_SUB_CRON, EXIT
+    UPDATE_LOCATION, ENABLE_SUB, DISABLE_SUB, UPDATE_SUB_CRON, BACK, HOURS
 from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.finite_state_machine import update_location
+from telegram_bot.telegram.service.message import TelegramMessageService
 
 
 @dp.message_handler(commands=['weather'])
@@ -66,20 +66,20 @@ async def update_subscription_callback_handler(query: types.CallbackQuery):
         text = "已开启订阅" if is_enable else "已关闭订阅"
         user = crud.get_user(db, query.message.chat.id)
         await query.answer(text)
-        await query.message.edit_reply_markup(
-            KeyboardMarkUpFactory.build_main_menu(user)
-        )
+        await query.message.edit_reply_markup(KeyboardMarkUpFactory.build_cron_options(user))
 
 
 @dp.callback_query_handler(text=UPDATE_SUB_CRON)
 async def sub_cron_callback_handler(query: types.CallbackQuery):
-    await query.message.edit_reply_markup(
-        KeyboardMarkUpFactory.build_cron_options()
-    )
-    await query.answer('')
+    with get_db_session() as db:
+        user = crud.get_user(db, query.message.chat.id)
+        await query.message.edit_reply_markup(
+            KeyboardMarkUpFactory.build_cron_options(user)
+        )
+        await query.answer('')
 
 
-@dp.callback_query_handler(text=EXIT)
+@dp.callback_query_handler(text=BACK)
 async def exit_callback_handler(query: types.CallbackQuery):
     with get_db_session() as db:
         user = crud.get_user(db, query.message.chat.id)
@@ -87,3 +87,23 @@ async def exit_callback_handler(query: types.CallbackQuery):
             KeyboardMarkUpFactory.build_main_menu(user)
         )
         await query.answer('')
+
+
+@dp.callback_query_handler(lambda callback_query: callback_query.data in HOURS)
+async def sub_cron_update_callback_handler(query: types.CallbackQuery):
+    hour = query.data
+    chat_id = query.message.chat.id
+
+    with get_db_session() as db:
+        user = crud.get_user(db, query.message.chat.id)
+
+        # 新增/删除订阅
+        cron_job, created = crud.create_or_delete_cron_job(db, chat_id, hour)
+        if created:
+            await query.answer("订阅成功")
+        else:
+            await query.answer("已取消")
+
+        db.refresh(user)
+        cron_sub_menu = KeyboardMarkUpFactory.build_cron_options(user)
+        await query.message.edit_reply_markup(cron_sub_menu)

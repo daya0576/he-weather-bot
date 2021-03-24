@@ -10,6 +10,12 @@ def get_user(db: Session, chat_id: str) -> models.Chat:
     return db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first()
 
 
+def get_users(db: Session, skip: int = 0, limit: int = 10000) -> List[models.Chat]:
+    return db.query(models.Chat) \
+        .offset(skip) \
+        .limit(limit).all()
+
+
 def update_user_status(db: Session, chat_id: str, is_active: bool):
     user = db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first()
     if user:
@@ -18,24 +24,59 @@ def update_user_status(db: Session, chat_id: str, is_active: bool):
     db.commit()
 
 
-def get_users(db: Session, skip: int = 0, limit: int = 1000) -> List[models.Chat]:
-    return db.query(models.Chat) \
-        .offset(skip).limit(limit).all()
-
-
-def update_or_create_user(db: Session, chat_id: str, location: Location) -> models.Chat:
-    new_user = models.Chat(
+def update_or_create_user_by_location(db: Session, chat_id: str, location: Location) -> models.Chat:
+    chat = models.Chat(
         chat_id=int(chat_id),
         latitude="{:.2f}".format(location.lat),
         longitude="{:.2f}".format(location.lon),
         city=location.name,
         city_name=location.name,
         time_zone=location.tz,
-        is_active=False
     )
 
-    db_user = db.merge(new_user)
+    if db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first():
+        # update
+        chat = db.merge(chat)
+    else:
+        # create
+        chat.is_active = True
+        db.add(chat)
+        db.add(models.CronJobs(chat_id=chat.chat_id, hour=6))
+        db.add(models.CronJobs(chat_id=chat.chat_id, hour=18))
 
     db.commit()
-    db.refresh(db_user)
-    return db_user
+    db.refresh(chat)
+    return chat
+
+
+def get_cron_job(db, chat_id, hour):
+    return db.query(models.CronJobs) \
+        .filter(models.CronJobs.chat_id == chat_id) \
+        .filter(models.CronJobs.hour == hour) \
+        .first()
+
+
+def create_or_delete_cron_job(db: Session, chat_id: int, hour: str):
+    cron_job = db.query(models.CronJobs) \
+        .filter(models.CronJobs.chat_id == chat_id) \
+        .filter(models.CronJobs.hour == hour) \
+        .first()
+
+    if cron_job:
+        db.delete(cron_job)
+        created = False
+    else:
+        cron_job_to_create = models.CronJobs(chat_id=chat_id, hour=hour)
+        db.add(cron_job_to_create)
+        created = True
+
+    db.commit()
+
+    return cron_job, created
+
+
+def get_active_cron_jobs_by_hour(db: Session, hour: str):
+    return db.query(models.CronJobs) \
+        .filter(models.CronJobs.hour == hour) \
+        .filter(models.CronJobs.parent.is_active is True) \
+        .all()

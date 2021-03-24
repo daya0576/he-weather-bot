@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     SENTRY_URL: str = ""
     ENV: str = "production"
     CACHE_TTL: int = 60 * 60
+    DEFAULT_TIMEZONE: str = "Asia/Shanghai"
 
     @property
     def is_production(self):

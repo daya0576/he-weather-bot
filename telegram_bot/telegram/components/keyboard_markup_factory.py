@@ -1,3 +1,5 @@
+from typing import Optional
+
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from telegram_bot.database import models
@@ -11,9 +13,9 @@ WELCOME_TEXT = """
 ENABLE_SUB, DISABLE_SUB = "enable_sub", "disable_sub"
 GET_WEATHER, UPDATE_LOCATION = "weather", "edit"
 UPDATE_SUB_CRON = "update_cron"
-EXIT = "back"
+BACK = "back"
 
-HOURS = tuple(x for x in range(0, 24, 2))
+HOURS = tuple(str(x) for x in range(0, 24, 2))
 
 
 class KeyboardMarkUpFactory:
@@ -38,16 +40,23 @@ class KeyboardMarkUpFactory:
         return keyboard_markup
 
     @staticmethod
-    def build_cron_options() -> InlineKeyboardMarkup:
+    def build_cron_options(chat: "models.Chat") -> Optional[InlineKeyboardMarkup]:
+        if not chat:
+            return
+
         keyboard_markup = InlineKeyboardMarkup(row_width=6)
 
         chunk_size = 6
         for x in range(0, len(HOURS), chunk_size):
-            items = []
-            for i in HOURS[x:x + chunk_size]:
-                btn = InlineKeyboardButton(str(i), callback_data=str(i))
-                items.append(btn)
-            keyboard_markup.row(*items)
+            inline_btn_list = []
+            for hour in HOURS[x:x + chunk_size]:
+                hour_formatted = f"{hour}✓" if hour in chat.sub_hours else hour
+                btn = InlineKeyboardButton(hour_formatted, callback_data=hour)
+                inline_btn_list.append(btn)
+            keyboard_markup.row(*inline_btn_list)
 
-        keyboard_markup.add(InlineKeyboardButton("返回", callback_data=EXIT))
+        sub_text, sub_callback_data = ('关闭订阅', DISABLE_SUB) if chat.is_active else ('开启订阅', ENABLE_SUB)
+        sub_button = InlineKeyboardButton(sub_text, callback_data=sub_callback_data)
+        back_btn = InlineKeyboardButton("返回", callback_data=BACK)
+        keyboard_markup.add(sub_button, back_btn)
         return keyboard_markup

@@ -7,9 +7,9 @@ from telegram_bot.database import crud
 from telegram_bot.database.database import get_db_session
 from telegram_bot.intergration import he_location_client
 from telegram_bot.intergration.location.he_location_client import Location
-from telegram_bot.service.message import TelegramMessageService
 from telegram_bot.telegram.components.keyboard_markup_factory import KeyboardMarkUpFactory, WELCOME_TEXT
 from telegram_bot.telegram.dispatcher import dp
+from telegram_bot.telegram.service.message import TelegramMessageService
 
 
 async def _get_location_from_message(message: types.Message) -> "Location":
@@ -45,7 +45,7 @@ async def process_location(message: types.Message, state: FSMContext):
 
     # 更新用户所属位置
     with get_db_session() as db:
-        user = crud.update_or_create_user(db, message.chat.id, location)
+        user = crud.update_or_create_user_by_location(db, message.chat.id, location)
     await message.reply(f"城市信息已更新：{location.province}{user.city_name}"
                         f"({user.latitude},{user.longitude})\n{location.url}")
 

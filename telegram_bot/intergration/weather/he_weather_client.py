@@ -40,7 +40,7 @@ class HeWeatherClient(WeatherClient):
         pass
 
     @aio_lru_cache
-    async def get_weather_forecast(self, location: Location):
+    async def get_weather_forecast(self, location: Location) -> str:
         urls = (
             self._build_url("weather", "now", {"location": location}),
             self._build_url("weather", "3d", {"location": location}),
@@ -60,7 +60,7 @@ class HeWeatherClient(WeatherClient):
         return WEATHER_MESSAGE_TEMPLATE.format(
             Location=location.name,
             d1_pretty=d1_pretty,
-            tomorrow=DateUtil.get_tomorrow_day(),
+            tomorrow=DateUtil.get_tomorrow_day(location.tz),
             d2_pretty=d2_pretty,
             life_pretty=life_pretty
         )
