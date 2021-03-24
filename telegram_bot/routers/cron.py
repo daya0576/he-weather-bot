@@ -62,4 +62,4 @@ async def cron_handler(db: Session = Depends(get_db)):
         elif result:
             success += 1
 
-    return {"total": len(results), "failed": failed}
+    return {"total": len(results), "failed": failed, "success": success}
