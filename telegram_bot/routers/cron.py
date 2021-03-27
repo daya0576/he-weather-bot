@@ -36,7 +36,6 @@ async def users():
 async def send_weather_by(user: "models.Chat"):
     text = await he_weather.get_weather_forecast(user.location)
     await TelegramMessageService.send_text(dp.bot, user.chat_id, text)
-    return True
 
 
 @router.get("/cron")
@@ -59,7 +58,7 @@ async def cron_handler(db: Session = Depends(get_db)):
         if isinstance(result, Exception):
             failed += 1
             capture_exception(result)
-        elif result:
+        else:
             success += 1
 
     return {"total": len(results), "failed": failed, "success": success}

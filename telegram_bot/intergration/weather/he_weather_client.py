@@ -5,6 +5,7 @@ from typing import Dict
 from telegram_bot.intergration.http.base_http_client import HttpClient
 from telegram_bot.intergration.location.he_location_client import Location
 from telegram_bot.intergration.weather.base_weather_client import WeatherClient
+from telegram_bot.intergration.weather.models.he_weather_model import HeWeatherModel
 from telegram_bot.settings import aio_lru_cache, settings
 from telegram_bot.util.date_util import DateUtil
 
@@ -67,21 +68,11 @@ class HeWeatherClient(WeatherClient):
 
     @staticmethod
     def _format_weather_forecast(d, d_now=None) -> str:
-        if not d or 'textDay' not in d:
-            return ""
-
-        d_str = f"白天{d['textDay']}({d['tempMin']}°~{d['tempMax']}°)"
-
-        if d_now and 'temp' in d_now:
-            d_str += f"，当前气温{d_now['temp']}°C"
-
-        if d['textNight'] != d['textDay']:
-            d_str += f"，夜晚{d['textNight']}"
-
-        return d_str
+        weather_model = HeWeatherModel(d['textDay'], d['textNight'], d['tempMin'], d['tempMax'], d_now['temp'])
+        return str(weather_model)
 
     @staticmethod
-    def _format_life_weather(life_data: Dict) -> "":
+    def _format_life_weather(life_data: Dict) -> str:
         if not life_data:
             return ""
 

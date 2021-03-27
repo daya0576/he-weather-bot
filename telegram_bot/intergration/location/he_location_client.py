@@ -27,6 +27,8 @@ class Location:
         city = f"{self.lon},{self.lat}" if self.lat and self.lon else self.name
         return city
 
+    __repr__ = __str__
+
 
 class HeLocationClient:
     def __init__(self, http_client: HttpClient):
