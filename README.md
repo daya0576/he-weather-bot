@@ -1,6 +1,4 @@
-## he-weather-bot
-
-基于和风天气 API 的私讯 Telegram 机器人
+## 基于和风天气 API 的私讯 Telegram 机器人
 
 ⭐️ Features：
 
@@ -11,11 +9,10 @@
 
 👉 戳链接调戏我：https://t.me/he_weather_bot
 
+🚀 实现原理：[《如何零成本制作一个 telegram 机器人》](https://changchen.me/blog/20210221/buld-telegram-bot-from-scratch/)
+
 <img src="https://github.com/daya0576/he-weather-bot/blob/fdd4d924943ab6036646cc6d7b7888fc71b9d3e2/img/2021-02-21%2015-49-06.gifcask.2021-02-21%2017_20_45.gif" width="600">
 
-## 🚀 实现原理
-
-[《如何零成本制作一个 telegram 机器人》](https://changchen.me/blog/20210221/buld-telegram-bot-from-scratch/)
 
 ## WIP
 
