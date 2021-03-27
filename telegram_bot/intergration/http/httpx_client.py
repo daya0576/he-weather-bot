@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict
 
 import httpx
 from loguru import logger
@@ -11,7 +11,7 @@ class HttpxClient(HttpClient):
     def __init__(self):
         self.client = httpx.AsyncClient()
 
-    async def get(self, url: str, params: Dict = None) -> Optional[Dict]:
+    async def get(self, url: str, params: Dict = None) -> Dict:
         """
         异步请求外部资源
         """
@@ -21,3 +21,5 @@ class HttpxClient(HttpClient):
 
         if r.status_code == 200:
             return r.json()
+
+        return {}

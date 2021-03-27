@@ -12,7 +12,7 @@ from telegram_bot.util.date_util import DateUtil
 KEY = settings.HE_WEATHER_API_TOKEN
 
 WEATHER_MESSAGE_TEMPLATE = """
-{Location}今天{d1_pretty}
+{Location}今日{d1_pretty}
 明日{tomorrow}，{d2_pretty}
 
 {life_pretty}
@@ -42,42 +42,41 @@ class HeWeatherClient(WeatherClient):
     @aio_lru_cache
     async def get_weather_forecast(self, location: Location) -> str:
         urls = (
-            self._build_url("weather", "now", {"location": location}),
+            # self._build_url("weather", "now", {"location": location}),
             self._build_url("weather", "3d", {"location": location}),
-            self._build_url("indices", "1d", {"location": location, "type": random.choice(self.LIFE_OPTIONS)})
+            self._build_url("indices", "1d", {"location": location, "type": random.choice(self.LIFE_OPTIONS)}),
+            self._build_url("air", "5d", {"location": location})
         )
         tasks = [asyncio.create_task(self.http_client.get(url)) for url in urls]
         # TODO: pycharm warning
         # https://youtrack.jetbrains.com/issue/PY-47635
-        weather_now, forecast_data, life_data_now = await asyncio.gather(*tasks)
+        forecast_data, life_data_now, forecast_air = await asyncio.gather(*tasks)
 
         # 天气预测 & 生活指数
-        d1, d2, _ = forecast_data.get("daily")
-        d1_pretty = self._format_weather_forecast(d1, weather_now.get("now"))
-        d2_pretty = self._format_weather_forecast(d2)
-        life_pretty = self._format_life_weather(life_data_now)
+        d1_forecast, d2_forecast, _ = forecast_data.get("daily")
+        d1_air = self._get_latest_day(forecast_air)
+        d1_life = self._get_latest_day(life_data_now)
 
+        d1_life_pretty = d1_life.get("text", "")
+        d1_pretty = HeWeatherModel.build(d1_forecast, air=d1_air)
+        d2_pretty = HeWeatherModel.build(d2_forecast)
+
+        # 组装最终结果
         return WEATHER_MESSAGE_TEMPLATE.format(
             Location=location.name,
-            d1_pretty=d1_pretty,
             tomorrow=DateUtil.get_tomorrow_day(location.tz),
+            d1_pretty=d1_pretty,
             d2_pretty=d2_pretty,
-            life_pretty=life_pretty
+            life_pretty=d1_life_pretty
         )
 
     @staticmethod
-    def _format_weather_forecast(d, d_now=None) -> str:
-        if d_now is None:
-            d_now = {}
-        weather_model = HeWeatherModel(d['textDay'], d['textNight'], d['tempMin'], d['tempMax'], d_now.get('temp'))
-        return str(weather_model)
+    def _get_latest_day(data: Dict) -> dict:
+        if not data:
+            return {}
 
-    @staticmethod
-    def _format_life_weather(life_data: Dict) -> str:
-        if not life_data:
-            return ""
+        data_list = data.get("daily")
+        if not data_list:
+            return {}
 
-        if life_data_list := life_data.get("daily"):
-            return life_data_list[0].get('text')
-
-        return ""
+        return data_list[0]

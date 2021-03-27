@@ -14,7 +14,7 @@ from telegram_bot.settings import settings
 
 logger.remove()
 FORMAT = "<level>{level: <6}</level> <green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> <level>{message}</level>"
-logger.add(sys.stdout, colorize=True, format=FORMAT)
+logger.add(sys.stdout, colorize=True, format=FORMAT, diagnose=False)
 
 models.Base.metadata.create_all(bind=engine)
 
