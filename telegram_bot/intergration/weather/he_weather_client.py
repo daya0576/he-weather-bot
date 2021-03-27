@@ -12,7 +12,7 @@ from telegram_bot.util.date_util import DateUtil
 KEY = settings.HE_WEATHER_API_TOKEN
 
 WEATHER_MESSAGE_TEMPLATE = """
-{Location}今日{d1_pretty}
+{Location}今天{d1_pretty}
 明日{tomorrow}，{d2_pretty}
 
 {life_pretty}
@@ -24,7 +24,6 @@ class HeWeatherClient(WeatherClient):
 
     # 和风生活指数选项，随机选择
     LIFE_OPTIONS = (1, 3, 5, 6, 8, 9, 10, 15, 16)
-    ONE_HOUR = 60 * 60
 
     def __init__(self, http_client: HttpClient):
         self.http_client = http_client
@@ -68,7 +67,9 @@ class HeWeatherClient(WeatherClient):
 
     @staticmethod
     def _format_weather_forecast(d, d_now=None) -> str:
-        weather_model = HeWeatherModel(d['textDay'], d['textNight'], d['tempMin'], d['tempMax'], d_now['temp'])
+        if d_now is None:
+            d_now = {}
+        weather_model = HeWeatherModel(d['textDay'], d['textNight'], d['tempMin'], d['tempMax'], d_now.get('temp'))
         return str(weather_model)
 
     @staticmethod
