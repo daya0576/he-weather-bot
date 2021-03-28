@@ -12,10 +12,10 @@ from telegram_bot.util.date_util import DateUtil
 KEY = settings.HE_WEATHER_API_TOKEN
 
 WEATHER_MESSAGE_TEMPLATE = """
-{Location}今日{d1_pretty}
-明日{tomorrow}，{d2_pretty}
+{Location}今日{d1_pretty}。{life_pretty}
 
-{life_pretty}
+明日{d2} {d2_pretty}
+后天{d3} {d3_pretty}
 """
 
 
@@ -53,20 +53,19 @@ class HeWeatherClient(WeatherClient):
         forecast_data, life_data_now, forecast_air = await asyncio.gather(*tasks)
 
         # 天气预测 & 生活指数
-        d1_forecast, d2_forecast, _ = forecast_data.get("daily")
-        d1_air = self._get_latest_day(forecast_air)
+        d1_forecast, d2_forecast, d3_forecast = forecast_data.get("daily")[:3]
         d1_life = self._get_latest_day(life_data_now)
-
         d1_life_pretty = d1_life.get("text", "")
-        d1_pretty = HeWeatherModel.build(d1_forecast, air=d1_air)
-        d2_pretty = HeWeatherModel.build(d2_forecast)
+        d1_air = self._get_latest_day(forecast_air)
 
         # 组装最终结果
         return WEATHER_MESSAGE_TEMPLATE.format(
             Location=location.name,
-            tomorrow=DateUtil.get_tomorrow_day(location.tz),
-            d1_pretty=d1_pretty,
-            d2_pretty=d2_pretty,
+            d2=DateUtil.get_day(location.tz),
+            d3=DateUtil.get_day(location.tz, 2),
+            d1_pretty=HeWeatherModel.build(d1_forecast, air=d1_air),
+            d2_pretty=HeWeatherModel.build(d2_forecast),
+            d3_pretty=HeWeatherModel.build(d3_forecast),
             life_pretty=d1_life_pretty
         )
 
