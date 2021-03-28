@@ -12,10 +12,10 @@ from telegram_bot.util.date_util import DateUtil
 KEY = settings.HE_WEATHER_API_TOKEN
 
 WEATHER_MESSAGE_TEMPLATE = """
-{Location}今日{d1_pretty}。{life_pretty}
+{Location}今日{d1_pretty}
+明日{d2}，白天{d2_pretty}
 
-明日{d2} {d2_pretty}
-后天{d3} {d3_pretty}
+{life_pretty}
 """
 
 
