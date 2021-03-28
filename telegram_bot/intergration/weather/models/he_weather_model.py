@@ -47,7 +47,7 @@ class HeWeatherModel:
             return "☁️"
 
     def __str__(self) -> str:
-        d_str = f"白天{self.w_day_emoji}{self.w_day}({self.temp_min}°~{self.temp_max}°)"
+        d_str = f"{self.w_day}{self.w_day_emoji}({self.temp_min}°~{self.temp_max}°)"
 
         if self.w_night != self.w_day:
             d_str += f"，夜晚{self.w_night}"
