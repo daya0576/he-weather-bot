@@ -14,9 +14,9 @@ class RequestHttpClient(HttpClient):
         pass
 
     async def get(self, url, params=None) -> Dict:
-        logger.info(f"[http][get][request],{url}")
+        logger.info(f"[http][get][request]{url}")
         r = self.session.get(url).result()
-        logger.info(f"[http][get][response],{r.status_code},{r.json()}")
+        logger.info(f"[http][get][response]{url},{r.status_code},{r.json()}")
         if r.status_code == 200:
             return r.json()
 

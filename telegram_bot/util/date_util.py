@@ -7,6 +7,7 @@ import pytz
 class DateUtil:
     @staticmethod
     def get_day(time_zone, day=1):
+        """获取未来 N 天的周 X"""
         d = {0: "周一", 1: "周二", 2: "周三", 3: "周四", 4: "周五", 5: "周六", 6: "周日"}
 
         tz = pytz.timezone(time_zone)
@@ -15,5 +16,6 @@ class DateUtil:
 
     @staticmethod
     def get_cur_hour(time_zone: str = 'UTC') -> str:
+        """根据时区获取当前的小时"""
         tz = pytz.timezone(time_zone)
         return str(datetime.now(tz).hour)

@@ -12,7 +12,7 @@ class Chat(Base):
     __tablename__ = "users"
 
     chat_id = Column(BigInteger, primary_key=True, index=True)
-    is_active = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
 
     latitude = Column(String)
     longitude = Column(String)
@@ -34,10 +34,10 @@ class Chat(Base):
         return tuple(job.hour for job in self.cron_jobs)
 
     def __str__(self) -> str:
-        return f"bot[{self.chat_id}] {self.city_name}({self.location})"
+        return f"chat_{self.chat_id}_{self.city_name}({self.location})"
 
     def __repr__(self) -> str:
-        return f"bot[{self.chat_id}]"
+        return f"chat_{self.chat_id}"
 
 
 class CronJobs(Base):

@@ -10,17 +10,28 @@ from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from telegram_bot.database import models
 from telegram_bot.database.database import engine
 from telegram_bot.routers import webhook, cron
+from telegram_bot.scheduler import scheduler
 from telegram_bot.settings import settings
 
+# 日志格式设置
 logger.remove()
 FORMAT = "<level>{level: <6}</level> <green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> <level>{message}</level>"
 logger.add(sys.stdout, colorize=True, format=FORMAT, diagnose=False)
 
-models.Base.metadata.create_all(bind=engine)
-
 app = FastAPI()
 app.include_router(webhook.router)
 app.include_router(cron.router)
+
+
+@app.on_event("startup")
+async def startup_event():
+    # 定时任务
+    logger.info("starting scheduler.. ", scheduler)
+    scheduler.start()
+
+    # 数据库更新
+    models.Base.metadata.create_all(bind=engine)
+
 
 # sentry middleware
 if settings.SENTRY_URL:

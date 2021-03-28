@@ -19,6 +19,10 @@ pytest = "^6.2.2"
 requests-futures = "^1.0.0"
 httpx = "^0.17.0"
 aiocache = "^0.11.1"
+apscheduler = "^3.7.0"
+redis = "^3.5.3"
+msgpack = "^1.0.2"
+ujson = "^4.0.2"
 
 [tool.poetry.dev-dependencies]
 
