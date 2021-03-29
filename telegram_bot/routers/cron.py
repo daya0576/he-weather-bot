@@ -10,7 +10,7 @@ from telegram_bot.database.database import get_db, get_db_session
 from telegram_bot.database.models import Chat
 from telegram_bot.intergration import he_weather
 from telegram_bot.scheduler import scheduler
-from telegram_bot.scheduler.job import send_weather
+from telegram_bot.scheduler.job import CronJobsExecutor
 from telegram_bot.settings import aio_lru_cache
 from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.service.message import TelegramMessageService
@@ -63,7 +63,7 @@ async def cron_handler(db: Session = Depends(get_db)):
             continue
 
         job = scheduler.add_job(
-            send_weather,
+            CronJobsExecutor.send_weather,
             args=(user.chat_id, user_cur_hour),
             trigger="date",
             run_date=datetime.now(pytz.utc) + timedelta(milliseconds=i * mil_seconds_interval),

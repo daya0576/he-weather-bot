@@ -21,9 +21,9 @@ job_defaults = {}
 def my_listener(event: JobExecutionEvent):
     if event.exception:
         capture_exception(event.exception)
-        logger.exception(event.exception, 'The job crashed :(', event)
+        logger.exception(event.exception, 'The job crashed :(')
     else:
-        logger.info('The job worked :)', event)
+        logger.info('The job worked :)')
 
 
 scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=utc)

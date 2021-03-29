@@ -26,8 +26,8 @@ app.include_router(cron.router)
 @app.on_event("startup")
 async def startup_event():
     # 定时任务
-    logger.info("starting scheduler.. ", scheduler)
     scheduler.start()
+    logger.info("scheduler started.. ", scheduler)
 
     # 数据库更新
     models.Base.metadata.create_all(bind=engine)
