@@ -28,21 +28,29 @@ class HeWeatherModel:
             air_now.get("category"),
         )
 
-    @property
-    def w_day_emoji(self):
+    @staticmethod
+    def with_emoji(day_text):
         emoji_map = {"晴": "☀️", "晴间多云": "🌤", "雷阵雨": "⛈"}
-        if emoji := emoji_map.get(self.w_day):
+        if emoji := emoji_map.get(day_text):
             return emoji
 
-        if "雪" in self.w_day:
+        if "雪" in day_text:
             return "❄️"
-        if "雨" in self.w_day:
+        if "雨" in day_text:
             return "🌧"
-        if "云" in self.w_day or "阴" in self.w_day:
+        if "云" in day_text or "阴" in day_text:
             return "☁️"
 
+    @property
+    def w_day_with_emoji(self):
+        return self.w_day + self.with_emoji(self.w_day)
+
+    @property
+    def w_night_with_emoji(self):
+        return self.w_night + self.with_emoji(self.w_night)
+
     def __str__(self) -> str:
-        d_str = f"{self.w_day}{self.w_day_emoji}({self.temp_min}°~{self.temp_max}°)"
+        d_str = f"{self.w_day_with_emoji}({self.temp_min}°~{self.temp_max}°)"
 
         if self.w_night != self.w_day:
             d_str += f"，夜间{self.w_night}"
@@ -53,4 +61,4 @@ class HeWeatherModel:
         if self.air_aqi and self.air_text:
             d_str += f"，空气{self.air_text}({self.air_aqi})"
 
-        return d_str
+        return d_str + "。"
