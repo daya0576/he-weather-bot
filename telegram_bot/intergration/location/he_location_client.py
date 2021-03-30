@@ -50,10 +50,8 @@ class HeLocationClient:
             lat=float(d_location["lat"]),
             lon=float(d_location["lon"]),
             tz=d_location["tz"],
-
             province=d_location["adm1"],
             country=d_location["country"],
-
             url=d_location["fxLink"],
         )
 

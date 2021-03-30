@@ -16,7 +16,7 @@ class HttpxClient(HttpClient):
         异步请求外部资源
         """
         logger.info(f"[http][get][request]{url}")
-        r = await self.client.get(url)
+        r = await self.client.get(url, params=params)
         logger.info(f"[http][get][response]{url},{r.status_code},{r.json()}")
 
         if r.status_code == 200:
