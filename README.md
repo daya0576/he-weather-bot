@@ -1,15 +1,14 @@
 ## 基于和风 API 的天气预报 Telegram 机器人
 
-[![Heroku App Status](http://heroku-shields.herokuapp.com/he-weather-bot)](https://he-weather-bot.herokuapp.com)
-![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m787647728-b1a273391c2ad5c526b1c605)
 ![](https://img.shields.io/github/v/release/daya0576/he-weather-bot.svg)
+![](https://img.shields.io/badge/Bot%20API-5.1-blue?logo=telegram)
+![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m787647728-b1a273391c2ad5c526b1c605)
 
 ⭐️ Features
 
-- 支持发送定位或地名关键词设置所在地
-- 支持当日气温范围、当前气温、晚间天气、次日天气播报等
-- 支持定时订阅天气，自动推送
-- 基于和风天气 API 及 PaaS 平台 Heroku 部署
+1. 支持发送当前定位或地名关键词，设置所在地（全球范围）
+2. 支持当日天气状况、气温范围、空气质量、次日天气播报等
+3. 支持自定义通知时间，定时自动推送（用户所在地时区为准）
 
 👉 戳链接调戏我：https://t.me/he_weather_bot   
 

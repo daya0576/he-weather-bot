@@ -50,7 +50,7 @@ class HeWeatherModel:
         return self.w_night + self.with_emoji(self.w_night)
 
     def __str__(self) -> str:
-        d_str = f"{self.w_day_with_emoji}({self.temp_min}°~{self.temp_max}°)"
+        d_str = f"{self.w_day_with_emoji} {self.temp_min}°~{self.temp_max}°"
 
         if self.w_night != self.w_day:
             d_str += f"，夜间{self.w_night}"
@@ -61,4 +61,4 @@ class HeWeatherModel:
         if self.air_aqi and self.air_text:
             d_str += f"，空气{self.air_text}({self.air_aqi})"
 
-        return d_str + "。"
+        return d_str
