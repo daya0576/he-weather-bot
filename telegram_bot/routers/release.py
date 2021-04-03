@@ -16,10 +16,10 @@ from telegram_bot.telegram.service.message import TelegramMessageService
 ONE_YEAR = 60 * 60 * 24 * 365
 
 V0_1_0 = """
-v0.1.1 稳定正式版已发布，如有任何问题，请联系 @daya0576
+v0.1.1 稳定正式版已发布。如有任何问题，请联系 @daya0576
 
 **✨ FEATURES**
-1. 自定义通知时间（所在地时区）
+1. 支持自定义通知时间（所在地时区）
 2. 支持开启/关闭订阅
 3. 告警样式优化（新增 emoji）
 4. 支持群订阅
@@ -35,6 +35,8 @@ async def do_release(chat: models.Chat):
     """发送版本更新"""
     markup = KeyboardMarkUpFactory.build_main_menu(chat)
     await TelegramMessageService.send_keyboard_markup(dp.bot, chat.chat_id, V0_1_0, markup, parse_mode="Markdown")
+
+    return True
 
 
 @router.get("/release_v1")
