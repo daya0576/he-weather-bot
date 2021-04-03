@@ -7,7 +7,6 @@ from telegram_bot.database import crud
 from telegram_bot.database.database import get_db_session
 from telegram_bot.intergration import he_location_client
 from telegram_bot.intergration.location.he_location_client import Location
-from telegram_bot.telegram.components.keyboard_markup_factory import KeyboardMarkUpFactory, WELCOME_TEXT
 from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.service.message import TelegramMessageService
 
@@ -48,9 +47,6 @@ async def process_location(message: types.Message, state: FSMContext):
         user = crud.update_or_create_user_by_location(db, message.chat.id, location)
     await message.reply(f"城市信息已更新：{location.province}{user.city_name}"
                         f"({user.latitude},{user.longitude})\n{location.url}")
-
-    reply_markup = KeyboardMarkUpFactory.build_main_menu(user)
-    await TelegramMessageService.send_keyboard_markup(dp.bot, message.chat.id, WELCOME_TEXT, reply_markup)
 
     # Finish conversation
     await state.finish()
