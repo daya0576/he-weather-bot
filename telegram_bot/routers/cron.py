@@ -11,7 +11,7 @@ from telegram_bot.database.models import Chat
 from telegram_bot.intergration import he_weather
 from telegram_bot.scheduler import scheduler
 from telegram_bot.scheduler.job import CronJobsExecutor
-from telegram_bot.settings import aio_lru_cache
+from telegram_bot.settings import aio_lru_cache_1h
 from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.service.message import TelegramMessageService
 from telegram_bot.util.date_util import DateUtil
@@ -32,7 +32,7 @@ async def users():
         return crud.get_users(db)
 
 
-@aio_lru_cache
+@aio_lru_cache_1h
 async def cron_send_weather_to_user(chat: Chat, user_cur_hour: str):
     text = await he_weather.get_weather_forecast(chat.location)
     await TelegramMessageService.send_text(dp.bot, chat.chat_id, text)

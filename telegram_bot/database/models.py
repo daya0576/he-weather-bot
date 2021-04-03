@@ -29,6 +29,9 @@ class Chat(Base):
     def location(self):
         return Location(name=self.city_name, lat=float(self.latitude), lon=float(self.longitude), tz=self.time_zone)
 
+    def is_location_exist(self):
+        return self.latitude and self.longitude
+
     @property
     def sub_hours(self) -> Tuple:
         return tuple(job.hour for job in self.cron_jobs)

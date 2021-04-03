@@ -6,7 +6,7 @@ from telegram_bot.intergration.http.base_http_client import HttpClient
 from telegram_bot.intergration.location.he_location_client import Location
 from telegram_bot.intergration.weather.base_weather_client import WeatherClient
 from telegram_bot.intergration.weather.models.he_weather_model import HeWeatherModel
-from telegram_bot.settings import aio_lru_cache
+from telegram_bot.settings import aio_lru_cache_1h
 from telegram_bot.util.date_util import DateUtil
 
 WEATHER_MESSAGE_TEMPLATE = """
@@ -38,7 +38,7 @@ class HeWeatherClient(WeatherClient):
 
         return response
 
-    @aio_lru_cache
+    @aio_lru_cache_1h
     async def get_weather_forecast(self, location: Location) -> str:
         weather_3d, forecast_air = await asyncio.gather(
             self.get_weather_3d(location),

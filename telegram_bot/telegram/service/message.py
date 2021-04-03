@@ -36,5 +36,5 @@ class TelegramMessageService:
 
     @staticmethod
     @service_template
-    async def send_keyboard_markup(bot: Bot, chat_id: str, text: str, reply_markup=None):
-        await bot.send_message(chat_id=chat_id, text=text, parse_mode='MarkdownV2', reply_markup=reply_markup)
+    async def send_keyboard_markup(bot: Bot, chat_id: str, text: str, reply_markup=None, parse_mode="MarkdownV2"):
+        await bot.send_message(chat_id=chat_id, text=text, parse_mode=parse_mode, reply_markup=reply_markup)

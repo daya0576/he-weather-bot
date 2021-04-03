@@ -29,7 +29,7 @@ class KeyboardMarkUpFactory:
 
         # 第二行：自定义配置
         inline_buttons = [InlineKeyboardButton('更新位置', callback_data=UPDATE_LOCATION)]
-        if chat:
+        if chat and chat.is_location_exist:
             sub_cron_button = InlineKeyboardButton('通知时间', callback_data=UPDATE_SUB_CRON)
             inline_buttons.append(sub_cron_button)
 
