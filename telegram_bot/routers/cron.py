@@ -52,8 +52,8 @@ async def weather_by_user(user_id: str, user_cur_hour: str):
 
 @router.get("/cron")
 async def cron_handler(db: Session = Depends(get_db)):
-    # 限流 API
-    mil_seconds_interval = 60 * 1000 / QPS_LIMIT
+    # 限流: https://dev.qweather.com/docs/start/glossary#qpm
+    mil_seconds_interval = (60 * 1000 / QPS_LIMIT) * 2
 
     # 注册天气发送任务
     count = 0

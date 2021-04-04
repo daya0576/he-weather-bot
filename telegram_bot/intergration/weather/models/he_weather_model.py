@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, List
 
 
 @dataclass
@@ -14,10 +14,13 @@ class HeWeatherModel:
     air_aqi: str
     air_text: str
 
+    life_text: str
+
     @classmethod
-    def build(cls, weather_daily: Dict, weather_now: Dict = None, air_now: Dict = None):
+    def build(cls, weather_daily: Dict, weather_now: Dict = None, air_now: Dict = None, indices: List = None):
         weather_now = weather_now or {}
         air_now = air_now or {}
+        indices_d1 = indices[0] if indices else {}
         return cls(
             weather_daily.get("textDay"),
             weather_daily.get("textNight"),
@@ -26,6 +29,7 @@ class HeWeatherModel:
             weather_now.get("temp"),
             air_now.get("aqi"),
             air_now.get("category"),
+            indices_d1.get("text")
         )
 
     @staticmethod
@@ -52,7 +56,7 @@ class HeWeatherModel:
         return self.w_night + self.with_emoji(self.w_night)
 
     def __str__(self) -> str:
-        d_str = f"{self.w_day_with_emoji} {self.temp_min}°~{self.temp_max}°"
+        d_str = f"{self.w_day_with_emoji}，{self.temp_min}°~{self.temp_max}°"
 
         if self.w_night != self.w_day:
             d_str += f"，夜间{self.w_night}"
@@ -62,5 +66,8 @@ class HeWeatherModel:
 
         if self.air_aqi and self.air_text:
             d_str += f"，空气{self.air_text}({self.air_aqi})"
+
+        if self.life_text:
+            d_str += "。" + self.life_text
 
         return d_str

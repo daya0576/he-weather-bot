@@ -10,9 +10,9 @@ from telegram_bot.settings import aio_lru_cache_1h
 from telegram_bot.util.date_util import DateUtil
 
 WEATHER_MESSAGE_TEMPLATE = """
-{Location}今日{d1_pretty}
+{Location}今天{d1_pretty}
 
-明日{d2}，白天{d2_pretty}
+明天{d2}，白天{d2_pretty}
 """
 
 
@@ -20,7 +20,7 @@ class HeWeatherClient(WeatherClient):
     """ 和风天气客户端 """
 
     # 和风生活指数选项，随机选择
-    LIFE_OPTIONS = (1, 3, 5, 6, 8, 9, 10, 15, 16)
+    LIFE_OPTIONS = tuple(range(1, 17))
 
     def __init__(self, http_client: HttpClient, key: str):
         self.http_client = http_client
@@ -40,16 +40,17 @@ class HeWeatherClient(WeatherClient):
 
     @aio_lru_cache_1h
     async def get_weather_forecast(self, location: Location) -> str:
-        weather_3d, forecast_air = await asyncio.gather(
+        weather_3d, forecast_air, indices_1d = await asyncio.gather(
             self.get_weather_3d(location),
             self.get_air_now(location),
+            self.get_indices_1d(location, random.choice(self.LIFE_OPTIONS)),
         )
         d1_forecast, d2_forecast, _ = weather_3d
 
         return WEATHER_MESSAGE_TEMPLATE.format(
             Location=location.name,
             d2=DateUtil.get_day(location.tz),
-            d1_pretty=HeWeatherModel.build(d1_forecast, air_now=forecast_air),
+            d1_pretty=HeWeatherModel.build(d1_forecast, air_now=forecast_air, indices=indices_1d),
             d2_pretty=HeWeatherModel.build(d2_forecast),
         )
 
@@ -58,9 +59,9 @@ class HeWeatherClient(WeatherClient):
         result = await self._do_get("weather", "3d", {"location": location})
         return result.get("daily", [])
 
-    async def get_indices_1d(self, location: Location) -> List:
+    async def get_indices_1d(self, location: Location, indices_type) -> List:
         """天气指数API / 天气生活指数"""
-        params = {"location": location, "type": random.choice(self.LIFE_OPTIONS)}
+        params = {"location": location, "type": indices_type}
         result = await self._do_get("indices", "1d", params)
         return result.get("daily", [])
 
