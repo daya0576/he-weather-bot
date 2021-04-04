@@ -23,6 +23,12 @@ def get_active_users(db: Session, skip: int = 0, limit: int = 10000) -> List[mod
         .limit(limit).all()
 
 
+def get_active_user_count(db: Session) -> int:
+    return db.query(models.Chat) \
+        .filter(models.Chat.is_active.is_(True)) \
+        .count()
+
+
 def update_user_status(db: Session, chat_id: str, is_active: bool):
     user = db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first()
     if user:

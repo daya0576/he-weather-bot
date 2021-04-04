@@ -9,7 +9,7 @@ from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
 from telegram_bot.database import models
 from telegram_bot.database.database import engine
-from telegram_bot.routers import webhook, cron, release
+from telegram_bot.routers import webhook, cron, release, meta
 from telegram_bot.scheduler import scheduler
 from telegram_bot.settings import settings
 
@@ -22,6 +22,7 @@ app = FastAPI()
 app.include_router(webhook.router)
 app.include_router(cron.router)
 app.include_router(release.router)
+app.include_router(meta.router)
 
 
 @app.on_event("startup")

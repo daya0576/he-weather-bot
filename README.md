@@ -1,6 +1,7 @@
 ## 🌤 HeWeatherBot：基于和风天气 API 的 Telegram 机器人
 
-![](https://img.shields.io/github/v/release/daya0576/he-weather-bot.svg)
+[comment]: <> (![Active users]&#40;http://127.0.0.1:5000/users/count&#41; )
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/daya0576/he-weather-bot?link=https://github.com/daya0576/he-weather-bot/releases/)
 ![](https://img.shields.io/badge/Bot%20API-5.1-blue?logo=telegram)
 ![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m787647728-b1a273391c2ad5c526b1c605)
 

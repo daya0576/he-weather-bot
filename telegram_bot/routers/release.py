@@ -1,18 +1,18 @@
 import asyncio
 
-from fastapi import Depends
+from fastapi import Depends, APIRouter
 from loguru import logger
 from sentry_sdk import capture_exception
 from sqlalchemy.orm import Session
 
 from telegram_bot.database import crud, models
 from telegram_bot.database.database import get_db
-from telegram_bot.routers.cron import router
 from telegram_bot.settings import aio_lru_cache_partial, settings
 from telegram_bot.telegram.components.keyboard_markup_factory import KeyboardMarkUpFactory
 from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.service.message import TelegramMessageService
 
+router = APIRouter()
 ONE_YEAR = 60 * 60 * 24 * 365
 
 V0_1_0 = """
