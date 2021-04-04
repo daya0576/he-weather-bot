@@ -1,5 +1,4 @@
 import asyncio
-import random
 from typing import Dict, List
 
 from telegram_bot.intergration.http.base_http_client import HttpClient
@@ -40,17 +39,16 @@ class HeWeatherClient(WeatherClient):
 
     @aio_lru_cache_1h
     async def get_weather_forecast(self, location: Location) -> str:
-        weather_3d, forecast_air, indices_1d = await asyncio.gather(
+        weather_3d, forecast_air = await asyncio.gather(
             self.get_weather_3d(location),
             self.get_air_now(location),
-            self.get_indices_1d(location, random.choice(self.LIFE_OPTIONS)),
         )
         d1_forecast, d2_forecast, _ = weather_3d
 
         return WEATHER_MESSAGE_TEMPLATE.format(
             Location=location.name,
             d2=DateUtil.get_day(location.tz),
-            d1_pretty=HeWeatherModel.build(d1_forecast, air_now=forecast_air, indices=indices_1d),
+            d1_pretty=HeWeatherModel.build(d1_forecast, air_now=forecast_air),
             d2_pretty=HeWeatherModel.build(d2_forecast),
         )
 

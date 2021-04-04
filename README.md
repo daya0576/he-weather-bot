@@ -4,7 +4,7 @@
 ![](https://img.shields.io/badge/Bot%20API-5.1-blue?logo=telegram)
 ![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m787647728-b1a273391c2ad5c526b1c605)
 
-⭐️ Features
+✨ Features
 
 - [x] 支持发送定位或地名关键词设置所在地
 - [x] 支持当日气温范围、空气质量AQI、次日天气播报
