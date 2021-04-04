@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     ENV: str = "production"
     CACHE_TTL: int = 60 * 59
     DEFAULT_TIMEZONE: str = "Asia/Shanghai"
+    DO_RELEASE: bool = False
 
     @property
     def is_production(self):

@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from telegram_bot.database import crud, models
 from telegram_bot.database.database import get_db
 from telegram_bot.routers.cron import router
-from telegram_bot.settings import aio_lru_cache_partial
+from telegram_bot.settings import aio_lru_cache_partial, settings
 from telegram_bot.telegram.components.keyboard_markup_factory import KeyboardMarkUpFactory
 from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.service.message import TelegramMessageService
@@ -41,6 +41,9 @@ async def do_release(chat: models.Chat):
 
 @router.get("/release_v1")
 async def cron_handler(db: Session = Depends(get_db)):
+    if not settings.DO_RELEASE:
+        return {"message": "disable"}
+
     all_active_users = crud.get_active_users(db)
 
     # 并行处理，单个 exception 不中断其他任务
@@ -57,4 +60,5 @@ async def cron_handler(db: Session = Depends(get_db)):
         logger.exception(result)
         capture_exception(result)
 
-    return {"result": f"{success}/{len(results)}"}
+    logger.info(f"released! {success}/{len(results)})")
+    return {"message": f"{success}/{len(results)}"}

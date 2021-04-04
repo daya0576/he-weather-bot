@@ -41,6 +41,8 @@ class HeWeatherModel:
         if "云" in day_text or "阴" in day_text:
             return "☁️"
 
+        return ""
+
     @property
     def w_day_with_emoji(self):
         return self.w_day + self.with_emoji(self.w_day)
