@@ -1,4 +1,4 @@
-## 🌤 HeWeatherBot：基于和风天气 API 的私讯 Telegram 机器人
+## 🌤 HeWeatherBot：基于和风天气 API 的 Telegram 机器人
 
 ![](https://img.shields.io/github/v/release/daya0576/he-weather-bot.svg)
 ![](https://img.shields.io/badge/Bot%20API-5.1-blue?logo=telegram)

@@ -66,14 +66,13 @@ class HeWeatherModel:
             d_str += f"，夜间{self.w_night}"
         if self.temp_min and self.temp_max:
             d_str += f"，气温{self.temp_min}°~{self.temp_max}°"
-        if self.temp_now:
-            d_str += f"，现在{self.temp_now}°C"
+
         if self.air_aqi and self.air_text:
             d_str += f"，空气{self.air_text}({self.air_aqi})"
 
-        for text in (self.warning_text, self.life_text):
-            if text:
-                d_str += "。" + text
-                break
+        if self.warning_text:
+            d_str += "。⚠️" + self.warning_text
+        elif self.life_text:
+            d_str += "。" + self.life_text
 
         return d_str
