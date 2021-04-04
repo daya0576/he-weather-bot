@@ -1,7 +1,7 @@
 import functools
 
 from aiogram import Bot
-from aiogram.utils.exceptions import BotBlocked
+from aiogram.utils.exceptions import BotBlocked, UserDeactivated
 from loguru import logger
 
 from telegram_bot.database import crud
@@ -13,8 +13,8 @@ def service_template(f):
     async def inner(bot: Bot, chat_id: str, *args, **kwargs):
         try:
             await f(bot, chat_id, *args, **kwargs)
-        except BotBlocked:
-            logger.warning(f"bot blocked by {chat_id}")
+        except (BotBlocked, UserDeactivated, BotBlocked) as e:
+            logger.warning(f"bot blocked by {chat_id},{str(e)}")
             with get_db_session() as db:
                 crud.update_user_status(db, chat_id, False)
         else:
