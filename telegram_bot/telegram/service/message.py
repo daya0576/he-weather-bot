@@ -18,7 +18,7 @@ def service_template(f):
             with get_db_session() as db:
                 crud.update_user_status(db, chat_id, False)
         else:
-            logger.info(f"message send to {chat_id}")
+            logger.info(f"message send to {chat_id},args={args},kwargs={kwargs}")
 
     return inner
 
