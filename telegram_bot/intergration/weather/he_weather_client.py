@@ -39,16 +39,17 @@ class HeWeatherClient(WeatherClient):
 
     @aio_lru_cache_1h
     async def get_weather_forecast(self, location: Location) -> str:
-        weather_3d, forecast_air = await asyncio.gather(
+        weather_3d, forecast_air, warning = await asyncio.gather(
             self.get_weather_3d(location),
             self.get_air_now(location),
+            self.get_warning_now(location),
         )
         d1_forecast, d2_forecast, _ = weather_3d
 
         return WEATHER_MESSAGE_TEMPLATE.format(
             Location=location.name,
             d2=DateUtil.get_day(location.tz),
-            d1_pretty=HeWeatherModel.build(d1_forecast, air_now=forecast_air),
+            d1_pretty=HeWeatherModel.build(d1_forecast, air_now=forecast_air, warning=warning),
             d2_pretty=HeWeatherModel.build(d2_forecast),
         )
 
@@ -67,6 +68,11 @@ class HeWeatherClient(WeatherClient):
         """空气API / 实时空气质量"""
         result = await self._do_get("air", "now", {"location": location})
         return result.get("now", {})
+
+    async def get_warning_now(self, location: Location) -> Dict:
+        """天气灾害预警"""
+        result = await self._do_get("warning", "now", {"location": location})
+        return result.get("warning", [])
 
     def get_weather_photo(self, location) -> str:
         pass

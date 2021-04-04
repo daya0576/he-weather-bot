@@ -15,12 +15,15 @@ class HeWeatherModel:
     air_text: str
 
     life_text: str
+    warning_text: str
 
     @classmethod
-    def build(cls, weather_daily: Dict, weather_now: Dict = None, air_now: Dict = None, indices: List = None):
+    def build(cls, weather_daily: Dict, weather_now: Dict = None, air_now: Dict = None, indices: List = None,
+              warning: List = None):
         weather_now = weather_now or {}
         air_now = air_now or {}
         indices_d1 = indices[0] if indices else {}
+        warning_first = warning[0] if warning else {}
         return cls(
             weather_daily.get("textDay"),
             weather_daily.get("textNight"),
@@ -29,7 +32,8 @@ class HeWeatherModel:
             weather_now.get("temp"),
             air_now.get("aqi"),
             air_now.get("category"),
-            indices_d1.get("text")
+            indices_d1.get("text"),
+            warning_first.get("text"),
         )
 
     @staticmethod
@@ -56,18 +60,20 @@ class HeWeatherModel:
         return self.w_night + self.with_emoji(self.w_night)
 
     def __str__(self) -> str:
-        d_str = f"{self.w_day_with_emoji} {self.temp_min}°~{self.temp_max}°"
+        d_str = f"{self.w_day_with_emoji}"
 
         if self.w_night != self.w_day:
             d_str += f"，夜间{self.w_night}"
-
+        if self.temp_min and self.temp_max:
+            d_str += f"，气温{self.temp_min}°~{self.temp_max}°"
         if self.temp_now:
             d_str += f"，现在{self.temp_now}°C"
-
         if self.air_aqi and self.air_text:
             d_str += f"，空气{self.air_text}({self.air_aqi})"
 
-        if self.life_text:
-            d_str += "。" + self.life_text
+        for text in (self.warning_text, self.life_text):
+            if text:
+                d_str += "。" + text
+                break
 
         return d_str
