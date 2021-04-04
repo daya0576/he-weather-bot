@@ -9,12 +9,13 @@
 - [x] 支持发送定位或地名关键词设置所在地
 - [x] 支持当日气温范围、晚间天气、天气灾害预警、次日天气播报
 - [x] 支持订阅天气，自动推送
-- [ ] 极端天气预警
+- [x] 极端天气预警
+- [ ] 最近一周的天气播报
 - [ ] 多语言支持
 
 👉 戳链接调戏我：[t.me/he_weather_bot](https://t.me/he_weather_bot)
 
-<img src="https://github.com/daya0576/he-weather-bot/blob/fdd4d924943ab6036646cc6d7b7888fc71b9d3e2/img/2021-02-21%2015-49-06.gifcask.2021-02-21%2017_20_45.gif" width="600">
+<img src="https://github.com/daya0576/he-weather-bot/blob/master/static/demo.gif?raw=true" width="600">
 
 🚀 实现原理：[《如何零成本制作一个 telegram 机器人》](https://changchen.me/blog/20210221/buld-telegram-bot-from-scratch/)
 
