@@ -25,15 +25,15 @@ class HeWeatherModel:
         indices_d1 = indices[0] if indices else {}
         warning_first = warning[0] if warning else {}
         return cls(
-            weather_daily.get("textDay"),
-            weather_daily.get("textNight"),
-            weather_daily.get("tempMin"),
-            weather_daily.get("tempMax"),
-            weather_now.get("temp"),
-            air_now.get("aqi"),
-            air_now.get("category"),
-            indices_d1.get("text"),
-            warning_first.get("text"),
+            weather_daily.get("textDay", ""),
+            weather_daily.get("textNight", ""),
+            weather_daily.get("tempMin", ""),
+            weather_daily.get("tempMax", ""),
+            weather_now.get("temp", ""),
+            air_now.get("aqi", ""),
+            air_now.get("category", ""),
+            indices_d1.get("text", ""),
+            warning_first.get("text", ""),
         )
 
     @staticmethod
@@ -53,7 +53,7 @@ class HeWeatherModel:
 
     @property
     def w_day_with_emoji(self):
-        return self.w_day + self.with_emoji(self.w_day)
+        return f"{self.with_emoji(self.w_day)}{self.w_day}"
 
     @property
     def w_night_with_emoji(self):
@@ -62,17 +62,12 @@ class HeWeatherModel:
     def __str__(self) -> str:
         d_str = f"{self.w_day_with_emoji}"
 
+        if self.temp_min and self.temp_max:
+            d_str += f"({self.temp_min}°~{self.temp_max}°)"
+
         if self.w_night != self.w_day:
             d_str += f"，夜间{self.w_night}"
-        if self.temp_min and self.temp_max:
-            d_str += f"，气温{self.temp_min}°~{self.temp_max}°"
-
         if self.air_aqi and self.air_text:
             d_str += f"，空气{self.air_text}({self.air_aqi})"
-
-        if self.warning_text:
-            d_str += "。⚠️" + self.warning_text
-        elif self.life_text:
-            d_str += "。" + self.life_text
 
         return d_str

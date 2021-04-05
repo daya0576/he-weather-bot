@@ -1,4 +1,5 @@
 import asyncio
+import random
 from typing import Dict, List
 
 from telegram_bot.intergration.http.base_http_client import HttpClient
@@ -9,9 +10,10 @@ from telegram_bot.settings import aio_lru_cache_1h
 from telegram_bot.util.date_util import DateUtil
 
 WEATHER_MESSAGE_TEMPLATE = """
-{Location}今天{d1_pretty}
-
+{Location}今天白天{d1_pretty}
 明天{d2}，白天{d2_pretty}
+
+{extra}
 """
 
 
@@ -39,18 +41,31 @@ class HeWeatherClient(WeatherClient):
 
     @aio_lru_cache_1h
     async def get_weather_forecast(self, location: Location) -> str:
-        weather_3d, forecast_air, warning = await asyncio.gather(
+        weather_3d_data, forecast_air, life_1d, warning = await asyncio.gather(
             self.get_weather_3d(location),
             self.get_air_now(location),
+            self.get_indices_1d(location, random.choice(self.LIFE_OPTIONS)),
             self.get_warning_now(location),
         )
-        d1_forecast, d2_forecast, _ = weather_3d
+        d1_forecast_dict, d2_forecast_dict, _ = weather_3d_data
+
+        # 构建天气预报数据模型
+        d1_forecast = HeWeatherModel.build(d1_forecast_dict, air_now=forecast_air, warning=warning, indices=life_1d)
+        d2_forecast = HeWeatherModel.build(d2_forecast_dict)
+
+        # 组装最终天气文案
+        extra = ""
+        if d1_forecast.warning_text:
+            extra = f"⚠️{d1_forecast.warning_text}"
+        elif d1_forecast.life_text:
+            extra = d1_forecast.life_text
 
         return WEATHER_MESSAGE_TEMPLATE.format(
             Location=location.name,
             d2=DateUtil.get_day(location.tz),
-            d1_pretty=HeWeatherModel.build(d1_forecast, air_now=forecast_air, warning=warning),
-            d2_pretty=HeWeatherModel.build(d2_forecast),
+            d1_pretty=str(d1_forecast),
+            d2_pretty=str(d2_forecast),
+            extra=extra
         )
 
     async def get_weather_3d(self, location: Location) -> List:
