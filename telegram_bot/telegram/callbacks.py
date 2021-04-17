@@ -10,14 +10,26 @@ from telegram_bot.telegram.finite_state_machine import update_location
 from telegram_bot.telegram.service.message import TelegramMessageService
 
 
+def registered(func):
+    async def wrapper(message: types.Message):
+        chat_id = message.chat.id
+        with get_db_session() as db:
+            user = crud.get_user(db, chat_id)
+
+        if not user:
+            return await update_location(message)
+
+        await func(message)
+
+    return wrapper
+
+
 @dp.message_handler(commands=['weather'])
+@registered
 async def handle_weather(message: types.Message) -> None:
     chat_id = message.chat.id
     with get_db_session() as db:
         user = crud.get_user(db, chat_id)
-
-    if not user:
-        return await update_location(message)
 
     text = await he_weather.get_weather_forecast(user.location)
     await TelegramMessageService.send_text(dp.bot, chat_id, text)
@@ -32,13 +44,24 @@ async def handle_help(message: types.Message) -> None:
 
 
 @dp.message_handler(commands=['sub'])
+@registered
 async def handle_sub(message: types.Message) -> None:
     with get_db_session() as db:
         crud.update_user_status(db, message.chat.id, True)
     await TelegramMessageService.send_text(dp.bot, message.chat.id, "已开启定时订阅")
 
 
+@dp.message_handler(commands=['update_sub_hour'])
+@registered
+async def handle_update_sub_hour(message: types.Message) -> None:
+    with get_db_session() as db:
+        user = crud.get_user(db, message.chat.id)
+        reply_markup = KeyboardMarkUpFactory.build_cron_options(user)
+        await TelegramMessageService.send_keyboard_markup(dp.bot, message.chat.id, WELCOME_TEXT, reply_markup)
+
+
 @dp.message_handler(commands=['unsub'])
+@registered
 async def handle_unsub(message: types.Message) -> None:
     with get_db_session() as db:
         crud.update_user_status(db, message.chat.id, False)
