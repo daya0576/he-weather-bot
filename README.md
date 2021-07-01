@@ -5,11 +5,11 @@
 ![](https://img.shields.io/badge/Bot%20API-5.1-blue?logo=telegram)
 ![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m787647728-b1a273391c2ad5c526b1c605)
 
-✨ Features
+## ✨ Features
 
 - [x] 支持发送定位或地名关键词设置所在地
 - [x] 支持当日气温范围、晚间天气、天气灾害预警、次日天气播报
-- [x] 支持订阅天气，自动推送
+- [x] 支持自定义时间订阅天气，自动推送
 - [x] 极端天气预警
 - [ ] 温差变化提示
 - [ ] 最近一周的天气播报
