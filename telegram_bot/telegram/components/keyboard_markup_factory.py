@@ -7,7 +7,7 @@ from telegram_bot.database import models
 WELCOME_TEXT = """
 基于「和风」的天气预报机器人；根据定位查询精准实时天气，并每天自动播报。
 
-如有任何问题，请联系 @daya0576    
+如有任何问题，请联系 @daya233    
 """
 
 ENABLE_SUB, DISABLE_SUB = "enable_sub", "disable_sub"
