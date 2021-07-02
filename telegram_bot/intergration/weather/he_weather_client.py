@@ -34,7 +34,6 @@ class HeWeatherClient(WeatherClient):
         result_code = 200
         for _ in range(5):
             response = await self.http_client.get(url, params)
-
             # API状态码校验，具体含义请参考：https://dev.qweather.com/docs/start/status-code/
             result_code = response.get("code")
             if result_code in ("200", "204", "403"):
