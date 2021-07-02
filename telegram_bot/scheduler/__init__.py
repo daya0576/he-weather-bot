@@ -20,8 +20,8 @@ job_defaults = {}
 
 def my_listener(event: JobExecutionEvent):
     if event.exception:
-        capture_exception(event.exception)
-        logger.exception(event.exception, 'The job crashed :(')
+        capture_exception(error=event.exception)
+        logger.exception(str(event.exception), 'The job crashed :(')
     else:
         logger.info('The job worked :)')
 

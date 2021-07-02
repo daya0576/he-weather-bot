@@ -6,7 +6,7 @@ from sentry_sdk import capture_exception
 from telegram_bot.telegram.dispatcher import dp
 
 
-@dp.errors_handler(exception=BotBlocked)
+@dp.errors_handler(exception=BotBlocked, )
 async def global_error_handler(update: types.Update, e):
     logger.warning(e)
     return True

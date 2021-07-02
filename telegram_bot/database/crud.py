@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, make_transient
 
 from telegram_bot.database import models
 from telegram_bot.intergration.location.he_location_client import Location
@@ -34,6 +34,30 @@ def update_user_status(db: Session, chat_id: str, is_active: bool):
     if user:
         user.is_active = is_active
         db.merge(user)
+    db.commit()
+
+
+def migrate_user_by_chat_id(db: Session, chat_id: str, new_chat_id: str):
+    user: models.Chat = db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first()
+    if not user:
+        raise Exception(f"chat_id does not exist: {chat_id}!!")
+
+    db.expunge(user)
+    make_transient(user)
+    user.chat_id = new_chat_id
+    db.add(user)
+
+    # 复制订阅的定时任务
+    cron_job_list = db.query(models.CronJobs) \
+        .filter(models.CronJobs.chat_id == chat_id) \
+        .all()
+    for cron_job in cron_job_list:
+        db.expunge(cron_job)
+        make_transient(cron_job)
+        cron_job.chat_id = new_chat_id
+        cron_job.id = None
+        db.add(cron_job)
+
     db.commit()
 
 
