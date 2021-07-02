@@ -47,7 +47,7 @@ class HeWeatherClient(WeatherClient):
             self.get_indices_1d(location, random.choice(self.LIFE_OPTIONS)),
             self.get_warning_now(location),
         )
-        d1_forecast_dict, d2_forecast_dict, _ = weather_3d_data
+        d1_forecast_dict, d2_forecast_dict = weather_3d_data[:2]
 
         # 构建天气预报数据模型
         d1_forecast = HeWeatherModel.build(d1_forecast_dict, air_now=forecast_air, warning=warning, indices=life_1d)
