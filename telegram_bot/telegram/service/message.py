@@ -18,8 +18,8 @@ def service_template(f):
             logger.warning(f"bot blocked by {chat_id},{str(e)}")
         except MigrateToChat as e:
             with get_db_session() as db:
-                crud.migrate_user_by_chat_id(db, chat_id, str(e.migrate_to_chat_id))
                 crud.update_user_status(db, chat_id, False)
+                crud.migrate_user_by_chat_id(db, chat_id, str(e.migrate_to_chat_id))
         except CantTalkWithBots as e:
             logger.warning(f"bot blocked by {chat_id},{str(e)}")
         else:

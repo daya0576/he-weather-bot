@@ -30,18 +30,7 @@ class HeWeatherClient(WeatherClient):
     async def _do_get(self, api_type, weather_type, params: Dict) -> Dict:
         url = f"https://devapi.qweather.com/v7/{api_type}/{weather_type}"
         params.update(key=self.key)
-
-        result_code = 200
-        for _ in range(5):
-            response = await self.http_client.get(url, params)
-            # API状态码校验，具体含义请参考：https://dev.qweather.com/docs/start/status-code/
-            result_code = response.get("code")
-            if result_code in ("200", "204", "403"):
-                break
-        else:
-            raise Exception(f"qweather api returns code {result_code}!!")
-
-        return response
+        return await self.http_client.get(url, params)
 
     @aio_lru_cache_1h
     async def get_weather_forecast(self, location: Location) -> str:

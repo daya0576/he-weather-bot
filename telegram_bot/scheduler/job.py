@@ -13,7 +13,7 @@ class CronJobsExecutor:
     def send_weather(user_id: str, user_cur_hour: str):
         with requests.Session() as s:
             retries = Retry(
-                total=10,
+                total=3,
                 backoff_factor=0.1,
                 status_forcelist=[500, 502, 503, 504]
             )

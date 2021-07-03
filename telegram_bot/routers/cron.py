@@ -16,7 +16,8 @@ from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.service.message import TelegramMessageService
 from telegram_bot.util.date_util import DateUtil
 
-QPS_LIMIT = 500
+QPM_LIMIT = 500
+ONE_MINUTE = 60 * 1000
 
 router = APIRouter()
 
@@ -53,7 +54,7 @@ async def weather_by_user(user_id: str, user_cur_hour: str):
 @router.get("/cron")
 async def cron_handler(db: Session = Depends(get_db)):
     # 限流: https://dev.qweather.com/docs/start/glossary#qpm
-    mil_seconds_interval = (60 * 1000 / QPS_LIMIT) * 2
+    mil_seconds_interval = (ONE_MINUTE / QPM_LIMIT) * 5
 
     # 注册天气发送任务
     count = 0

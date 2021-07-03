@@ -9,7 +9,8 @@ from telegram_bot.intergration.http.base_http_client import HttpClient
 class HttpxClient(HttpClient):
 
     def __init__(self):
-        self.client = httpx.AsyncClient()
+        transport = httpx.AsyncHTTPTransport(retries=5)
+        self.client = httpx.AsyncClient(transport=transport)
 
     async def get(self, url: str, params: Dict = None) -> Dict:
         """
