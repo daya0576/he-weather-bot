@@ -37,7 +37,7 @@ async def weather_by_user(user_id: str, user_cur_hour: str):
     if not chat or not chat.is_active:
         return {"message": "USER_NOT_FOUND"}
 
-    await biz_send_weather(chat, user_cur_hour)
+    return await biz_send_weather(chat, user_cur_hour)
 
 
 @router.get("/cron_warning_to_user")
@@ -47,7 +47,7 @@ async def warning_by_user(user_id: str):
     if not chat or not chat.is_active:
         return {"message": "USER_NOT_FOUND"}
 
-    await biz_send_warning(chat)
+    return await biz_send_warning(chat)
 
 
 @router.get("/cron")

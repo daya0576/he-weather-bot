@@ -19,3 +19,8 @@ class DateUtil:
         """根据时区获取当前的小时"""
         tz = pytz.timezone(time_zone)
         return str(datetime.now(tz).hour)
+
+    @staticmethod
+    def get_now_for_human() -> str:
+        tz = pytz.timezone("Asia/Shanghai")
+        return datetime.now(tz).strftime("YYYY-MM-DDTHH:MM:SS")
