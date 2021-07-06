@@ -1,6 +1,6 @@
 import asyncio
 import random
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from telegram_bot.intergration.http.base_http_client import HttpClient
 from telegram_bot.intergration.location.he_location_client import Location
@@ -34,16 +34,15 @@ class HeWeatherClient(WeatherClient):
 
     @aio_lru_cache_1h
     async def get_weather_forecast(self, location: Location) -> str:
-        weather_3d_data, forecast_air, life_1d, warning = await asyncio.gather(
+        weather_3d_data, forecast_air, life_1d = await asyncio.gather(
             self.get_weather_3d(location),
             self.get_air_now(location),
             self.get_indices_1d(location, random.choice(self.LIFE_OPTIONS)),
-            self.get_warning_now(location),
         )
         d1_forecast_dict, d2_forecast_dict = weather_3d_data[:2]
 
         # 构建天气预报数据模型
-        d1_forecast = HeWeatherModel.build(d1_forecast_dict, air_now=forecast_air, warning=warning, indices=life_1d)
+        d1_forecast = HeWeatherModel.build(d1_forecast_dict, air_now=forecast_air, indices=life_1d)
         d2_forecast = HeWeatherModel.build(d2_forecast_dict)
 
         # 组装最终天气文案
@@ -61,6 +60,16 @@ class HeWeatherClient(WeatherClient):
             extra=extra
         )
 
+    @aio_lru_cache_1h
+    async def get_weather_warning(self, location: Location) -> Optional[str]:
+        """获取自然灾害信息"""
+        warning = await self.get_warning_now(location)
+        if not warning:
+            return
+
+        warning_first = warning[0] if warning else {}
+        return warning_first.get("text")
+
     async def get_weather_3d(self, location: Location) -> List:
         """城市天气API / 逐天天气预报"""
         result = await self._do_get("weather", "3d", {"location": location})
@@ -77,7 +86,7 @@ class HeWeatherClient(WeatherClient):
         result = await self._do_get("air", "now", {"location": location})
         return result.get("now", {})
 
-    async def get_warning_now(self, location: Location) -> Dict:
+    async def get_warning_now(self, location: Location) -> List:
         """天气灾害预警"""
         result = await self._do_get("warning", "now", {"location": location})
         return result.get("warning", [])

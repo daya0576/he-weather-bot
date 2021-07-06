@@ -7,10 +7,10 @@ from fastapi import FastAPI
 from loguru import logger
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
+from telegram_bot.controllers import webhook, cron, release, meta
+from telegram_bot.controllers.scheduler import scheduler
 from telegram_bot.database import models
 from telegram_bot.database.database import engine
-from telegram_bot.routers import webhook, cron, release, meta
-from telegram_bot.scheduler import scheduler
 from telegram_bot.settings import settings
 
 # 日志格式设置

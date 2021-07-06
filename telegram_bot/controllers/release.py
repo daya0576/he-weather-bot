@@ -8,8 +8,8 @@ from sqlalchemy.orm import Session
 from telegram_bot.database import crud, models
 from telegram_bot.database.database import get_db
 from telegram_bot.settings import aio_lru_cache_partial, settings
-from telegram_bot.telegram.components.keyboard_markup_factory import KeyboardMarkUpFactory
 from telegram_bot.telegram.dispatcher import dp
+from telegram_bot.telegram.models.keyboard_markup_factory import KeyboardMarkUpFactory
 from telegram_bot.telegram.service.message import TelegramMessageService
 
 router = APIRouter()
