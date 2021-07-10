@@ -2,6 +2,9 @@ import asyncio
 import random
 from typing import Dict, List, Optional
 
+from httpx import TransportError
+from retry import retry
+
 from telegram_bot.intergration.http.base_http_client import HttpClient
 from telegram_bot.intergration.location.he_location_client import Location
 from telegram_bot.intergration.weather.base_weather_client import WeatherClient
@@ -27,6 +30,7 @@ class HeWeatherClient(WeatherClient):
         self.http_client = http_client
         self.key = key
 
+    @retry((TransportError,), tries=3, delay=1, backoff=2)
     async def _do_get(self, api_type, weather_type, params: Dict) -> Dict:
         url = f"https://devapi.qweather.com/v7/{api_type}/{weather_type}"
         params.update(key=self.key)
