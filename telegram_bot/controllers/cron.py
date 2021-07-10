@@ -5,10 +5,10 @@ from fastapi import APIRouter, Depends
 from loguru import logger
 from sqlalchemy.orm import Session
 
-from telegram_bot.controllers.scheduler import scheduler, cron_executor
 from telegram_bot.database import crud
 from telegram_bot.database.database import get_db, get_db_session
-from telegram_bot.telegram.biz.weather import biz_send_weather, biz_send_warning
+from telegram_bot.scheduler import scheduler
+from telegram_bot.scheduler.jobs import send_warning_by_user, send_weather_by_user
 from telegram_bot.util.date_util import DateUtil
 
 QPM_LIMIT = 500
@@ -30,26 +30,6 @@ async def users():
         return crud.get_users(db)
 
 
-@router.get("/cron_send_weather_to_user")
-async def weather_by_user(user_id: str, user_cur_hour: str):
-    with get_db_session() as db:
-        chat = crud.get_user(db, user_id)
-    if not chat or not chat.is_active:
-        return {"message": "USER_NOT_FOUND"}
-
-    return await biz_send_weather(chat, user_cur_hour)
-
-
-@router.get("/cron_warning_to_user")
-async def warning_by_user(user_id: str):
-    with get_db_session() as db:
-        chat = crud.get_user(db, user_id)
-    if not chat or not chat.is_active:
-        return {"message": "USER_NOT_FOUND"}
-
-    return await biz_send_warning(chat)
-
-
 @router.get("/cron")
 async def cron_handler(db: Session = Depends(get_db)):
     """ 外部请求触发的定时任务，每个小时执行一次 """
@@ -63,7 +43,7 @@ async def cron_handler(db: Session = Depends(get_db)):
             continue
 
         job = scheduler.add_job(
-            cron_executor.send_weather,
+            send_weather_by_user,
             args=(user.chat_id, user_cur_hour),
             trigger="date",
             run_date=run_date,
@@ -84,7 +64,7 @@ async def one_hour_cron_handler(db: Session = Depends(get_db)):
 
         # 自然灾害预警信息获取
         job = scheduler.add_job(
-            cron_executor.send_warning,
+            send_warning_by_user,
             args=(user.chat_id,),
             trigger="date",
             run_date=run_date,
