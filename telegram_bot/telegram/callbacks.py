@@ -37,7 +37,7 @@ async def handle_weather(message: types.Message) -> None:
 
 @dp.message_handler(commands=['id'])
 @registered
-async def handle_weather(message: types.Message) -> None:
+async def handle_chat_id(message: types.Message) -> None:
     chat_id = message.chat.id
     await TelegramMessageService.send_text(dp.bot, chat_id, chat_id)
 
