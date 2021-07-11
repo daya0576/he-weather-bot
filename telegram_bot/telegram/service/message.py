@@ -2,7 +2,7 @@ import functools
 
 from aiogram import Bot
 from aiogram.utils.exceptions import BotBlocked, UserDeactivated, ChatNotFound, BotKicked, MigrateToChat, \
-    CantTalkWithBots
+    CantTalkWithBots, Unauthorized
 from loguru import logger
 
 from telegram_bot.database import crud
@@ -18,6 +18,9 @@ def service_template(f):
             logger.warning(f"bot blocked by {chat_id},{str(e)}")
             with get_db_session() as db:
                 crud.update_user_status(db, chat_id, False)
+        except Unauthorized as e:
+            if "the group chat was deleted" in e.text:
+                logger.warning(f"{bot} of group was deleted")
         except MigrateToChat as e:
             with get_db_session() as db:
                 crud.update_user_status(db, chat_id, False)

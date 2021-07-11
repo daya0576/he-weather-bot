@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from httpx import HTTPError
+from retry import retry
+
 from telegram_bot.intergration.http.base_http_client import HttpClient
 from telegram_bot.settings import settings
 
@@ -36,6 +39,7 @@ class HeLocationClient:
 
     URL = f"https://geoapi.qweather.com/v2/city/lookup?location={{}}&key={KEY}"
 
+    @retry((HTTPError,), tries=3, delay=1, backoff=2)
     async def _fetch(self, location) -> Optional[Location]:
         url = self.URL.format(location)
         d = await self.http_client.get(url)
