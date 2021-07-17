@@ -2,16 +2,13 @@ import asyncio
 import random
 from typing import Dict, List, Optional
 
-from httpcore import RemoteProtocolError
-from httpx import HTTPError
-from retry import retry
-
 from telegram_bot.intergration.http.base_http_client import HttpClient
 from telegram_bot.intergration.location.he_location_client import Location
 from telegram_bot.intergration.weather.base_weather_client import WeatherClient
 from telegram_bot.intergration.weather.models.he_weather_model import HeWeatherModel
 from telegram_bot.settings import aio_lru_cache_1h
 from telegram_bot.util.date_util import DateUtil
+from telegram_bot.util.retry_util import tries
 
 WEATHER_MESSAGE_TEMPLATE = """
 {Location}今天白天{d1_pretty}
@@ -31,7 +28,7 @@ class HeWeatherClient(WeatherClient):
         self.http_client = http_client
         self.key = key
 
-    @retry((HTTPError, RemoteProtocolError), tries=5, delay=1, backoff=2)
+    @tries(times=5)
     async def _do_get(self, api_type, weather_type, params: Dict) -> Dict:
         url = f"https://devapi.qweather.com/v7/{api_type}/{weather_type}"
         params.update(key=self.key)
