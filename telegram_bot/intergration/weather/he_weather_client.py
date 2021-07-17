@@ -2,6 +2,7 @@ import asyncio
 import random
 from typing import Dict, List, Optional
 
+from httpcore import RemoteProtocolError
 from httpx import HTTPError
 from retry import retry
 
@@ -30,7 +31,7 @@ class HeWeatherClient(WeatherClient):
         self.http_client = http_client
         self.key = key
 
-    @retry((HTTPError,), tries=3, delay=1, backoff=2)
+    @retry((HTTPError, RemoteProtocolError), tries=5, delay=1, backoff=2)
     async def _do_get(self, api_type, weather_type, params: Dict) -> Dict:
         url = f"https://devapi.qweather.com/v7/{api_type}/{weather_type}"
         params.update(key=self.key)
