@@ -17,8 +17,6 @@
 
 <img src="https://github.com/daya0576/he-weather-bot/blob/master/static/demo.gif?raw=true" width="600">
 
-<img src="https://github.com/daya0576/he-weather-bot/blob/master/static/warning.png?raw=true" width="600">
-
 ## 👉 使用说明
 
 无需部署开箱即用，戳链接调戏我：[t.me/he_weather_bot](https://t.me/he_weather_bot)
