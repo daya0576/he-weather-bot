@@ -15,13 +15,19 @@
 - [ ] 最近一周的天气播报
 - [ ] 多语言支持
 
-👉 戳链接调戏我：[t.me/he_weather_bot](https://t.me/he_weather_bot)
-
 <img src="https://github.com/daya0576/he-weather-bot/blob/master/static/demo.gif?raw=true" width="600">
 
-🚀 实现原理：[《如何零成本制作一个 telegram 机器人》](https://changchen.me/blog/20210221/buld-telegram-bot-from-scratch/)
+<img src="https://github.com/daya0576/he-weather-bot/blob/master/static/warning.png?raw=true" width="600">
+
+## 👉 使用说明
+
+无需部署开箱即用，戳链接调戏我：[t.me/he_weather_bot](https://t.me/he_weather_bot)
+
+## 🚀 实现原理
+
+[《如何零成本制作一个 telegram 机器人》](https://changchen.me/blog/20210221/buld-telegram-bot-from-scratch/)
 
 ## FAQ
 
-**问题：** 有考虑支持多地区订阅吗(比如关心亲朋好友和出差人员)？   
-**解法：** 目前暂不支持，但可以通过建立一个群组（只有你和机器人）进行订阅。
+1. **问题：** 有考虑支持多地区订阅吗(比如关心亲朋好友和出差人员)？   
+   **解法：** 目前暂不支持，但可以通过建立一个群组（只有你和机器人）进行订阅。
