@@ -1,4 +1,4 @@
-## 🌤 HeWeatherBot：基于和风天气 API 的 Telegram 机器人
+## 🌤 QWeatherBot：基于和风天气 API 的 Telegram 机器人
 
 ![Active users](https://he-weather-bot.herokuapp.com/users/count)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/daya0576/he-weather-bot?link=https://github.com/daya0576/he-weather-bot/releases/)
