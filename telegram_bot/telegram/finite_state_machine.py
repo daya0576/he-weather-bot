@@ -66,7 +66,7 @@ async def process_location(message: types.Message, state: FSMContext):
 
     # 更新位置后，发送天气预报
     text = await he_weather.get_weather_forecast(user.location)
-    text = f"- - -\n{text}"
+    text = f"\n{text}"
     await TelegramMessageService.send_text(dp.bot, message.chat.id, text)
 
     # Finish conversation

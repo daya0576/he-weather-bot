@@ -6,7 +6,7 @@ import pytz
 
 class DateUtil:
     @staticmethod
-    def get_day(time_zone, day=1):
+    def get_day_of_week(time_zone, day=0):
         """获取未来 N 天的周 X"""
         d = {0: "周一", 1: "周二", 2: "周三", 3: "周四", 4: "周五", 5: "周六", 6: "周日"}
 

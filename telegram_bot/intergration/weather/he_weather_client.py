@@ -11,8 +11,10 @@ from telegram_bot.util.date_util import DateUtil
 from telegram_bot.util.retry_util import tries
 
 WEATHER_MESSAGE_TEMPLATE = """
-{Location}今天白天{d1_pretty}
-明天{d2}，白天{d2_pretty}
+📍{Location}   
+
+今天({d1})，白天{d1_pretty}
+明天({d2})，白天{d2_pretty}
 
 {extra}
 """
@@ -56,7 +58,8 @@ class HeWeatherClient(WeatherClient):
 
         return WEATHER_MESSAGE_TEMPLATE.format(
             Location=location.name,
-            d2=DateUtil.get_day(location.tz),
+            d1=DateUtil.get_day_of_week(location.tz, 0),
+            d2=DateUtil.get_day_of_week(location.tz, 1),
             d1_pretty=str(d1_forecast),
             d2_pretty=str(d2_forecast),
             extra=extra

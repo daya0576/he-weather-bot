@@ -9,7 +9,7 @@ from telegram_bot.intergration.http.base_http_client import HttpClient
 class HttpxClient(HttpClient):
 
     def __init__(self):
-        transport = httpx.AsyncHTTPTransport(retries=5)
+        transport = httpx.AsyncHTTPTransport(retries=3)
         self.client = httpx.AsyncClient(transport=transport)
 
     async def get(self, url: str, params: Dict = None) -> Dict:
@@ -20,7 +20,8 @@ class HttpxClient(HttpClient):
         r = await self.client.get(url, params=params)
         logger.info(f"[http][get][response]{url},{r.status_code},{r.json()}")
 
-        if r.status_code == 200:
-            return r.json()
+        if r.status_code not in (200, 204):
+            # TODO: raise Exception
+            pass
 
-        return {}
+        return r.json()

@@ -30,7 +30,7 @@ class KeyboardMarkUpFactory:
         # 第二行：自定义配置
         inline_buttons = [InlineKeyboardButton('更新位置', callback_data=UPDATE_LOCATION)]
         if chat and chat.is_location_exist:
-            sub_cron_button = InlineKeyboardButton('通知时间', callback_data=UPDATE_SUB_CRON)
+            sub_cron_button = InlineKeyboardButton('定时订阅', callback_data=UPDATE_SUB_CRON)
             inline_buttons.append(sub_cron_button)
 
         star_button = InlineKeyboardButton('关注项目✨', url="https://github.com/daya0576/he_weather_bot")
