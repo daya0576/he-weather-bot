@@ -13,8 +13,8 @@ from telegram_bot.util.retry_util import tries
 WEATHER_MESSAGE_TEMPLATE = """
 📍{Location}   
 
-今天({d1})，白天{d1_pretty}
-明天({d2})，白天{d2_pretty}
+今天{d1}，白天{d1_pretty}
+明天{d2}，白天{d2_pretty}
 
 {extra}
 """
