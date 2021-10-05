@@ -57,10 +57,16 @@ async def cron_handler(db: Session = Depends(get_db)):
 
 @router.get("/cron_1h")
 async def one_hour_cron_handler(db: Session = Depends(get_db)):
-    """ 外部请求触发的定时任务，每十分钟执行一次 """
+    """ 外部请求触发的定时任务，每个小时执行一次 """
+
+    # 每四个小时执行一遍
+    now = datetime.now(pytz.utc)
+    if now.hour % 4 != 0:
+        return {"total": 0}
+
     count = 0
     for i, user in enumerate(crud.get_active_users(db)):
-        run_date = datetime.now(pytz.utc) + timedelta(milliseconds=i * MIL_SECONDS_INTERVAL)
+        run_date = now + timedelta(milliseconds=i * MIL_SECONDS_INTERVAL)
 
         # 自然灾害预警信息获取
         job = scheduler.add_job(
