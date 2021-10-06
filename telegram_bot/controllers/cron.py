@@ -16,6 +16,8 @@ ONE_MINUTE = 60 * 1000
 # 限流: https://dev.qweather.com/docs/start/glossary#qpm
 MIL_SECONDS_INTERVAL = (ONE_MINUTE / QPM_LIMIT) * 5
 
+VALID_WARNING_CHECK_HOURS = (6, 8, 10, 12, 14, 16, 18, 20, 22, 24)
+
 router = APIRouter()
 
 
@@ -58,10 +60,8 @@ async def cron_handler(db: Session = Depends(get_db)):
 @router.get("/cron_1h")
 async def one_hour_cron_handler(db: Session = Depends(get_db)):
     """ 外部请求触发的定时任务，每个小时执行一次 """
-
-    # 每四个小时执行一遍
-    now = datetime.now(pytz.utc)
-    if now.hour % 4 != 0:
+    now = datetime.now(pytz.timezone('Asia/Shanghai'))
+    if now.hour not in VALID_WARNING_CHECK_HOURS:
         return {"total": 0}
 
     count = 0
