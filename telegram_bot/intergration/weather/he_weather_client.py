@@ -66,7 +66,6 @@ class HeWeatherClient(WeatherClient):
             extra=extra
         )
 
-    @aio_lru_cache_1h
     async def get_weather_warning(self, location: Location) -> Optional[WarnModel]:
         """获取自然灾害信息"""
         warning_list = await self.get_warning_now(location)
