@@ -9,7 +9,9 @@ from telegram_bot.telegram.service.message import TelegramMessageService
 
 def test_beijin_weather():
     location = Location(name="北京", lat=39.92, lon=116.41, tz="")
-    print(asyncio.run(he_weather.get_weather_3d(location)))
+    model = asyncio.run(he_weather.get_weather_warning(location))
+
+    print(model)
 
 
 def test_bot_blocked():

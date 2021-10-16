@@ -17,8 +17,7 @@ async def biz_send_weather(chat: models.Chat, user_cur_hour: str):
 
 @aio_lru_cache_48h
 async def biz_send_warning(chat: models.Chat):
-    if text := await he_weather.get_weather_warning(chat.location):
-        text = "⚠️" + text
-        await TelegramMessageService.send_text(dp.bot, chat.chat_id, text)
+    if warnModel := await he_weather.get_weather_warning(chat.location):
+        await TelegramMessageService.send_text(dp.bot, chat.chat_id, str(warnModel))
         logger.info(f"[cron]send_warning_to_user,success,{chat}")
         return True

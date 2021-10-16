@@ -6,6 +6,7 @@ from telegram_bot.intergration.http.base_http_client import HttpClient
 from telegram_bot.intergration.location.he_location_client import Location
 from telegram_bot.intergration.weather.base_weather_client import WeatherClient
 from telegram_bot.intergration.weather.models.he_weather_model import HeWeatherModel
+from telegram_bot.intergration.weather.models.warn_model import WarnModel
 from telegram_bot.settings import aio_lru_cache_1h
 from telegram_bot.util.date_util import DateUtil
 from telegram_bot.util.retry_util import tries
@@ -66,14 +67,14 @@ class HeWeatherClient(WeatherClient):
         )
 
     @aio_lru_cache_1h
-    async def get_weather_warning(self, location: Location) -> Optional[str]:
+    async def get_weather_warning(self, location: Location) -> Optional[WarnModel]:
         """获取自然灾害信息"""
-        warning = await self.get_warning_now(location)
-        if not warning:
+        warning_list = await self.get_warning_now(location)
+        if not warning_list:
             return
 
-        warning_first = warning[0] if warning else {}
-        return warning_first.get("text")
+        w = warning_list[0]
+        return WarnModel(w["text"], w["typeName"], w["level"])
 
     async def get_weather_3d(self, location: Location) -> List:
         """城市天气API / 逐天天气预报"""
@@ -91,7 +92,7 @@ class HeWeatherClient(WeatherClient):
         result = await self._do_get("air", "now", {"location": location})
         return result.get("now", {})
 
-    async def get_warning_now(self, location: Location) -> List:
+    async def get_warning_now(self, location: Location) -> List[Dict]:
         """天气灾害预警"""
         result = await self._do_get("warning", "now", {"location": location})
         return result.get("warning", [])
