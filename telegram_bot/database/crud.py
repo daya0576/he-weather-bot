@@ -86,6 +86,25 @@ def update_or_create_user_by_location(db: Session, chat_id: str, location: Locat
     return chat
 
 
+def get_ding_bot(db: Session, chat_id: str) -> models.DingBots:
+    chat = get_user(db, chat_id)
+    return chat.ding_bot
+
+
+def update_or_create_ding_bot(db: Session, chat_id: str, ding_token: str):
+    ding_bot = get_ding_bot(db, chat_id)
+    if not ding_bot:
+        # create
+        ding_bot = models.DingBots(token=ding_token, chat_id=chat_id)
+        db.add(ding_bot)
+    else:
+        # update
+        ding_bot.token = ding_token
+        db.merge(ding_bot)
+
+    db.commit()
+
+
 def get_cron_job(db, chat_id, hour):
     return db.query(models.CronJobs) \
         .filter(models.CronJobs.chat_id == chat_id) \

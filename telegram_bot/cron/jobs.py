@@ -21,6 +21,16 @@ VALID_WARNING_CHECK_HOURS = (6, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 22)
 router = APIRouter()
 
 
+async def send_weather_by_user(user_id: str, user_cur_hour: str):
+    logger.info(f"[send_weather_by_user]start,{user_id},{user_cur_hour}")
+    with get_db_session() as db:
+        chat = crud.get_user(db, user_id)
+    if not chat or not chat.is_active:
+        return {"message": "USER_NOT_FOUND"}
+
+    return await cron_send_weather(chat)
+
+
 @router.get("/cron")
 async def cron_handler(db: Session = Depends(get_db)):
     """ 外部请求触发的定时任务，每个小时执行一次 """
@@ -32,15 +42,6 @@ async def cron_handler(db: Session = Depends(get_db)):
         cur_hour = DateUtil.get_cur_hour(user.time_zone)
         if cur_hour not in user.sub_hours:
             continue
-
-        async def send_weather_by_user(user_id: str, user_cur_hour: str):
-            logger.info(f"[send_weather_by_user]start,{user_id},{user_cur_hour}")
-            with get_db_session() as db:
-                chat = crud.get_user(db, user_id)
-            if not chat or not chat.is_active:
-                return {"message": "USER_NOT_FOUND"}
-
-            return await cron_send_weather(chat)
 
         job = scheduler.add_job(
             send_weather_by_user,
@@ -55,6 +56,17 @@ async def cron_handler(db: Session = Depends(get_db)):
     return {"total": count}
 
 
+# 自然灾害预警信息获取
+async def send_warning_by_user(user_id: str):
+    logger.info(f"[send_warning_by_user]start,{user_id}")
+    with get_db_session() as db:
+        chat = crud.get_user(db, user_id)
+    if not chat or not chat.is_active:
+        return {"message": "USER_NOT_FOUND"}
+
+    return await cron_send_warning(chat)
+
+
 @router.get("/cron_1h")
 async def one_hour_cron_handler(db: Session = Depends(get_db)):
     """ 外部请求触发的定时任务，每个小时执行一次 """
@@ -65,16 +77,6 @@ async def one_hour_cron_handler(db: Session = Depends(get_db)):
     count = 0
     for i, user in enumerate(crud.get_active_users(db)):
         run_date = now + timedelta(milliseconds=i * MIL_SECONDS_INTERVAL)
-
-        # 自然灾害预警信息获取
-        async def send_warning_by_user(user_id: str):
-            logger.info(f"[send_warning_by_user]start,{user_id}")
-            with get_db_session() as db:
-                chat = crud.get_user(db, user_id)
-            if not chat or not chat.is_active:
-                return {"message": "USER_NOT_FOUND"}
-
-            return await cron_send_warning(chat)
 
         job = scheduler.add_job(
             send_warning_by_user,

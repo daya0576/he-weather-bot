@@ -20,7 +20,9 @@ class Chat(Base):
     city_name = Column(String, nullable=False)
     time_zone = Column(String, nullable=False)
 
+    # 外键：https://docs.sqlalchemy.org/en/14/orm/basic_relationships.html
     cron_jobs = relationship("CronJobs", backref="parent")
+    ding_bot = relationship("DingBots", back_populates="chat", uselist=False)
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -56,3 +58,15 @@ class CronJobs(Base):
     __table_args__ = (
         UniqueConstraint('chat_id', 'hour'),
     )
+
+
+class DingBots(Base):
+    __tablename__ = 'ding_bots'
+
+    token = Column(BigInteger, primary_key=True, index=True)
+
+    chat_id = Column(BigInteger, ForeignKey('users.chat_id'))
+    chat = relationship("Chat", back_populates="ding_bot")
+
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

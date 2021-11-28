@@ -5,9 +5,9 @@ from telegram_bot.database.database import get_db_session
 from telegram_bot.intergration import he_weather
 from telegram_bot.service.message import TelegramMessageService
 from telegram_bot.telegram.dispatcher import dp
-from telegram_bot.telegram.finite_state_machine import update_location
 from telegram_bot.telegram.keyboard.keyboard_markup_factory import KeyboardMarkUpFactory, WELCOME_TEXT, GET_WEATHER, \
     UPDATE_LOCATION, ENABLE_SUB, DISABLE_SUB, UPDATE_SUB_CRON, BACK, HOURS
+from telegram_bot.telegram.update_location import update_location
 
 
 def registered(func):
@@ -50,24 +50,19 @@ async def handle_help(message: types.Message) -> None:
     await TelegramMessageService.send_keyboard_markup(dp.bot, message.chat.id, WELCOME_TEXT, reply_markup)
 
 
-@dp.message_handler(commands=['sub'])
+@dp.message_handler(commands=['subscribe'])
 @registered
 async def handle_sub(message: types.Message) -> None:
     with get_db_session() as db:
         crud.update_user_status(db, message.chat.id, True)
-    await TelegramMessageService.send_text(dp.bot, message.chat.id, "已开启定时订阅")
+        await TelegramMessageService.send_text(dp.bot, message.chat.id, "已开启定时订阅")
 
-
-@dp.message_handler(commands=['update_sub_hour'])
-@registered
-async def handle_update_sub_hour(message: types.Message) -> None:
-    with get_db_session() as db:
         user = crud.get_user(db, message.chat.id)
         reply_markup = KeyboardMarkUpFactory.build_cron_options(user)
         await TelegramMessageService.send_keyboard_markup(dp.bot, message.chat.id, WELCOME_TEXT, reply_markup)
 
 
-@dp.message_handler(commands=['unsub'])
+@dp.message_handler(commands=['unsubscribe'])
 @registered
 async def handle_unsub(message: types.Message) -> None:
     with get_db_session() as db:
@@ -125,6 +120,8 @@ async def sub_cron_update_callback_handler(query: types.CallbackQuery):
     chat_id = query.message.chat.id
 
     with get_db_session() as db:
+        # 激活用户
+        crud.update_user_status(db, query.message.chat.id, True)
         user = crud.get_user(db, query.message.chat.id)
 
         # 新增/删除订阅
