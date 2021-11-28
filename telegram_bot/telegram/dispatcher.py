@@ -8,7 +8,7 @@ from telegram_bot.telegram.bot import bot
 help - 帮助
 weather - 获取实时天气
 change_location - 更新位置
-sub - 订阅天气预报
+sub - 开启订阅
 unsub - 关闭订阅
 update_sub_hour - 自定义推送时间
 """

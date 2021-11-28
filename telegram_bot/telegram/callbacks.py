@@ -3,11 +3,11 @@ from aiogram import types
 from telegram_bot.database import crud
 from telegram_bot.database.database import get_db_session
 from telegram_bot.intergration import he_weather
+from telegram_bot.service.message import TelegramMessageService
 from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.finite_state_machine import update_location
-from telegram_bot.telegram.models.keyboard_markup_factory import KeyboardMarkUpFactory, WELCOME_TEXT, GET_WEATHER, \
+from telegram_bot.telegram.keyboard.keyboard_markup_factory import KeyboardMarkUpFactory, WELCOME_TEXT, GET_WEATHER, \
     UPDATE_LOCATION, ENABLE_SUB, DISABLE_SUB, UPDATE_SUB_CRON, BACK, HOURS
-from telegram_bot.telegram.service.message import TelegramMessageService
 
 
 def registered(func):
