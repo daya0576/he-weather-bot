@@ -7,10 +7,10 @@ from telegram_bot.telegram.bot import bot
 """
 help - 帮助
 weather - 获取实时天气
-change_location - 更新位置
-sub - 订阅天气预报
-unsub - 关闭订阅
-update_sub_hour - 自定义推送时间
+update_location - 更新位置
+subscribe - 开启订阅
+unsubscribe - 关闭订阅
+ding_token - 钉钉同步
 """
 dp = Dispatcher(bot, storage=dispatcher_storage)
 dp.middleware.setup(LoggingMiddleware())

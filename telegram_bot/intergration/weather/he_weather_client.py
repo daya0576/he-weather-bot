@@ -8,11 +8,10 @@ from telegram_bot.intergration.weather.base_weather_client import WeatherClient
 from telegram_bot.intergration.weather.models.he_weather_model import HeWeatherModel
 from telegram_bot.intergration.weather.models.warn_model import WarnModel
 from telegram_bot.settings import aio_lru_cache_1h
-from telegram_bot.util.date_util import DateUtil
-from telegram_bot.util.retry_util import tries
+from telegram_bot.utils.date_util import DateUtil
+from telegram_bot.utils.retry_util import tries
 
-WEATHER_MESSAGE_TEMPLATE = """
-📍{Location}   
+WEATHER_MESSAGE_TEMPLATE = """📍{Location}   
 
 今天{d1}，白天{d1_pretty}
 明天{d2}，白天{d2_pretty}

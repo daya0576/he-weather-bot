@@ -2,7 +2,7 @@ import asyncio
 
 from loguru import logger
 
-from telegram_bot.util.exceptions import TooManyTriesException
+from telegram_bot.utils.exceptions import TooManyTriesException
 
 
 def tries(times, delay=1, backoff=2):

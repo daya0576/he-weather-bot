@@ -1,0 +1,2 @@
+class DingBotException(Exception):
+    pass
