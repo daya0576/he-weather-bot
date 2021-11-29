@@ -64,7 +64,7 @@ class DingBots(Base):
     __tablename__ = 'ding_bots'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    token = Column(BigInteger, index=True)
+    token = Column(String, index=True)
 
     chat_id = Column(BigInteger, ForeignKey('users.chat_id'))
     chat = relationship("Chat", back_populates="ding_bot")
