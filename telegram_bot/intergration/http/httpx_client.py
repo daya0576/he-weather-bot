@@ -25,3 +25,15 @@ class HttpxClient(HttpClient):
             pass
 
         return r.json()
+
+    async def post(self, url: str, params: Dict = None) -> Dict:
+        logger.info(f"[http][post][request]{url}")
+        headers = {"Content-Type": "application/json"}
+        r = await self.client.post(url, json=params, headers=headers)
+        logger.info(f"[http][post][response]{url},{r.status_code},{r.json()}")
+
+        if r.status_code not in (200, 204):
+            # TODO: raise Exception
+            pass
+
+        return r.json()

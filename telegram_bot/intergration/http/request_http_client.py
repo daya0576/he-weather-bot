@@ -7,11 +7,11 @@ from telegram_bot.intergration.http.base_http_client import HttpClient
 
 
 class RequestHttpClient(HttpClient):
+    async def post(self, url: str, params: Dict = None) -> Dict:
+        pass
+
     def __init__(self):
         self.session = FuturesSession()
-
-    def post(self, url):
-        pass
 
     async def get(self, url, params=None) -> Dict:
         logger.info(f"[http][get][request]{url}")

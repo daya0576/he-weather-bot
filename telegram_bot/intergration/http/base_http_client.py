@@ -6,3 +6,7 @@ class HttpClient(ABC):
     @abstractmethod
     async def get(self, url: str, params: Dict = None) -> Dict:
         pass
+
+    @abstractmethod
+    async def post(self, url: str, params: Dict = None) -> Dict:
+        pass

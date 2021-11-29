@@ -10,7 +10,6 @@ from telegram_bot.telegram.dispatcher import dp
 def test_beijin_weather():
     location = Location(name="北京", lat=39.92, lon=116.41, tz="")
     model = asyncio.run(he_weather.get_weather_warning(location))
-
     print(model)
 
 
