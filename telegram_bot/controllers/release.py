@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from telegram_bot.database import crud, models
 from telegram_bot.database.database import get_db
-from telegram_bot.service.message import TelegramMessageService
+from telegram_bot.service.telegram import TelegramMessageService
 from telegram_bot.settings import aio_lru_cache_partial, settings
 from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.keyboard.keyboard_markup_factory import KeyboardMarkUpFactory

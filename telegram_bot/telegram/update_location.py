@@ -8,7 +8,7 @@ from telegram_bot.database import crud
 from telegram_bot.database.database import get_db_session
 from telegram_bot.intergration import he_location_client, he_weather
 from telegram_bot.intergration.location.he_location_client import Location
-from telegram_bot.service.message import TelegramMessageService
+from telegram_bot.service.telegram import TelegramMessageService
 from telegram_bot.telegram.dispatcher import dp
 
 

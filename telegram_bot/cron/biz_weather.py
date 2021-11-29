@@ -2,7 +2,7 @@ from loguru import logger
 
 from telegram_bot.database import models
 from telegram_bot.intergration import he_weather
-from telegram_bot.service.message import TelegramMessageService
+from telegram_bot.service.telegram import TelegramMessageService
 from telegram_bot.settings import aio_lru_cache_1h, aio_lru_cache_48h
 from telegram_bot.telegram.dispatcher import dp
 

@@ -7,7 +7,7 @@ from aiogram.types import ContentType
 
 from telegram_bot.database import crud
 from telegram_bot.database.database import get_db_session
-from telegram_bot.service.message import TelegramMessageService
+from telegram_bot.service.telegram import TelegramMessageService
 from telegram_bot.telegram.callbacks import registered
 from telegram_bot.telegram.dispatcher import dp
 

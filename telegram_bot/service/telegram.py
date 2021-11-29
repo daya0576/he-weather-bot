@@ -1,5 +1,6 @@
 import functools
 
+import sentry_sdk
 from aiogram import Bot
 from aiogram.utils.exceptions import BotBlocked, UserDeactivated, ChatNotFound, BotKicked, MigrateToChat, \
     CantTalkWithBots, Unauthorized
@@ -25,6 +26,9 @@ def service_template(f):
             with get_db_session() as db:
                 crud.update_user_status(db, chat_id, False)
                 crud.migrate_user_by_chat_id(db, chat_id, str(e.migrate_to_chat_id))
+        except Exception as e:
+            logger.error(e)
+            sentry_sdk.capture_exception(e)
         else:
             logger.info(f"message send to {chat_id},args={args},kwargs={kwargs}")
 
