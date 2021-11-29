@@ -17,11 +17,11 @@ ascii_weather = AsciiWeatherClient()
 he_location_client = HeLocationClient(httpx_cli)
 
 # 钉钉客户端
-ding_bot = DingBotClient(httpx_cli)
+ding_bot_client = DingBotClient(httpx_cli)
 
 __all__ = [
     "he_weather",
     "ascii_weather",
     "he_location_client",
-    "ding_bot"
+    "ding_bot_client"
 ]

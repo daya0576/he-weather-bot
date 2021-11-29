@@ -3,15 +3,15 @@ import functools
 import sentry_sdk
 from loguru import logger
 
-from telegram_bot.intergration import DingBotClient
+from telegram_bot.intergration import ding_bot_client
 from telegram_bot.intergration.exceptions import DingBotException
 
 
 def service_template(f):
     @functools.wraps(f)
-    async def inner(bot: DingBotClient, token: str, msg: str):
+    async def inner(token: str, msg: str):
         try:
-            await f(bot, token, msg)
+            await f(token, msg)
         except DingBotException as e:
             logger.error(e)
             sentry_sdk.capture_exception(e, "钉钉发送异常")
@@ -29,5 +29,7 @@ class DingBotMessageService:
 
     @staticmethod
     @service_template
-    async def send_text(bot: DingBotClient, token: str, msg: str):
-        await bot.send_text(token, msg)
+    async def send_text(token: str, msg: str):
+        if not token or not msg:
+            raise ValueError(f"参数非法,token:{token},msg:{msg}")
+        await ding_bot_client.send_text(token, msg)

@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
-TEMPLATE = """
-{prefix} {typeName}{level}预警
+TEMPLATE = """{prefix} {typeName}{level}预警
 
 {text}
 """

@@ -14,6 +14,7 @@ class DingBotClient:
     async def _do_execute(self, webhook: str, param: Dict):
         d = await self.http_client.post(webhook, param)
         if d.get(ERRCODE_KEY) != 0:
+            # https://developers.dingtalk.com/document/app/server-api-error-codes-1
             raise DingBotException(f"dingding hook failed: {d}")
 
     async def send_text(self, token, msg):

@@ -11,8 +11,7 @@ from telegram_bot.settings import aio_lru_cache_1h
 from telegram_bot.utils.date_util import DateUtil
 from telegram_bot.utils.retry_util import tries
 
-WEATHER_MESSAGE_TEMPLATE = """
-📍{Location}   
+WEATHER_MESSAGE_TEMPLATE = """📍{Location}   
 
 今天{d1}，白天{d1_pretty}
 明天{d2}，白天{d2_pretty}
