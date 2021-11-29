@@ -93,14 +93,14 @@ def get_ding_bot(db: Session, chat_id: str) -> models.DingBots:
 
 def update_or_create_ding_bot(db: Session, chat_id: str, ding_token: str):
     ding_bot = get_ding_bot(db, chat_id)
-    if not ding_bot:
-        # create
-        ding_bot = models.DingBots(token=ding_token, chat_id=chat_id)
-        db.add(ding_bot)
-    else:
+    if ding_bot:
         # update
         ding_bot.token = ding_token
         db.merge(ding_bot)
+    else:
+        # create
+        ding_bot = models.DingBots(token=ding_token, chat_id=chat_id)
+        db.add(ding_bot)
 
     db.commit()
 

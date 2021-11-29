@@ -63,7 +63,8 @@ class CronJobs(Base):
 class DingBots(Base):
     __tablename__ = 'ding_bots'
 
-    token = Column(BigInteger, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    token = Column(BigInteger, index=True)
 
     chat_id = Column(BigInteger, ForeignKey('users.chat_id'))
     chat = relationship("Chat", back_populates="ding_bot")
