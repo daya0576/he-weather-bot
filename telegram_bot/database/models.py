@@ -71,3 +71,8 @@ class DingBots(Base):
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __str__(self) -> str:
+        return f"ding_bot_{self.token}"
+
+    __repr__ = __str__
