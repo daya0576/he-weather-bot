@@ -14,7 +14,7 @@ from telegram_bot.service.telegram import TelegramMessageService
 from telegram_bot.telegram.callbacks import registered
 from telegram_bot.telegram.dispatcher import dp
 
-RE_PATTERN = re.compile(r'https://oapi\.dingtalk\.com/robot/send\?access_token=([a-zA-Z0-9]+)')
+RE_PATTERN = re.compile(r"https://oapi\.dingtalk\.com/robot/send\?access_token=([a-zA-Z0-9]+)")
 
 
 async def extra_ding_token_from_message(text) -> str:

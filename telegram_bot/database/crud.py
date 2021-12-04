@@ -37,7 +37,7 @@ def update_user_status(db: Session, chat_id: str, is_active: bool):
     db.commit()
 
 
-def update_location_name(db: Session, chat_id: str, location_name: str):
+def update_location_name(db: Session, chat_id: str, location_name: str) -> None:
     user = db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first()
     if user:
         user.city_name = location_name
