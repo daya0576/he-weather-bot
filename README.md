@@ -7,12 +7,6 @@
 
 <img src="https://github.com/daya0576/he-weather-bot/blob/master/static/demo.gif?raw=true" width="600">
 
-
-## 👉 使用说明
-
-无需部署开箱即用，戳链接调戏我：[t.me/he_weather_bot](https://t.me/he_weather_bot)
-
-
 ## ✨ Features
 
 - [x] 支持发送定位或地名关键词设置所在地
@@ -22,6 +16,18 @@
 - [ ] 温差变化提示
 - [ ] 多语言支持
 
+## 👉 使用说明
+
+无需部署开箱即用，戳链接调戏我：[t.me/he_weather_bot](https://t.me/he_weather_bot)
+```shell
+help - 帮助
+weather - 获取实时天气
+set_location - 更新位置
+subscribe - 开启订阅
+unsubscribe - 关闭订阅
+set_ding_bot - 新增钉钉机器人同步
+delete_ding_bot - 移除钉钉同步
+```
 
 ## 🚀 实现原理
 
