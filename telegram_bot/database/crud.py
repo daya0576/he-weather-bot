@@ -37,6 +37,15 @@ def update_user_status(db: Session, chat_id: str, is_active: bool):
     db.commit()
 
 
+def update_location_name(db: Session, chat_id: str, location_name: str):
+    user = db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first()
+    if user:
+        user.city_name = location_name
+        user.city = location_name
+        db.merge(user)
+    db.commit()
+
+
 def migrate_user_by_chat_id(db: Session, chat_id: str, new_chat_id: str):
     user: models.Chat = db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first()
     if not user:
@@ -78,8 +87,9 @@ def update_or_create_user_by_location(db: Session, chat_id: str, location: Locat
         # create
         chat.is_active = True
         db.add(chat)
-        db.add(models.CronJobs(chat_id=chat.chat_id, hour=6))
-        db.add(models.CronJobs(chat_id=chat.chat_id, hour=18))
+        # 默认不定时订阅
+        # db.add(models.CronJobs(chat_id=chat.chat_id, hour=6))
+        # db.add(models.CronJobs(chat_id=chat.chat_id, hour=18))
 
     db.commit()
     db.refresh(chat)
@@ -103,6 +113,17 @@ def update_or_create_ding_bot(db: Session, chat_id: str, ding_token: str):
         db.add(ding_bot)
 
     db.commit()
+
+
+def remove_ding_bot(db: Session, chat_id: str):
+    cron_job = db.query(models.DingBots) \
+        .filter(models.DingBots.chat_id == chat_id) \
+        .first()
+
+    if cron_job:
+        db.delete(cron_job)
+        return True
+    return False
 
 
 def get_cron_job(db, chat_id, hour):

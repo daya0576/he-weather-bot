@@ -33,7 +33,7 @@ class Form(StatesGroup):
 @dp.message_handler(commands='update_location')
 async def update_location(message: types.Message):
     await Form.location.set()
-    await TelegramMessageService.send_text(dp.bot, message.chat.id, "天气区域未设置！请回复当前城市关键字，或者模糊定位")
+    await TelegramMessageService.send_text(dp.bot, message.chat.id, "请回复当前城市关键字，或者模糊定位。  /cancel")
 
 
 @dp.message_handler(state='*', commands='cancel')
@@ -47,7 +47,7 @@ async def cancel_handler(message: types.Message, state: FSMContext):
         return
 
     await state.finish()
-    await message.reply('Cancelled.')
+    await message.reply('已取消')
 
 
 @dp.message_handler(state=Form.location, content_types=ContentType.LOCATION)
@@ -56,7 +56,7 @@ async def cancel_handler(message: types.Message, state: FSMContext):
 async def process_location(message: types.Message, state: FSMContext):
     location = await _get_location_from_message(message)
     if not location:
-        return await message.reply("找不到输入的城市，试试其他关键字")
+        return await message.reply("找不到输入的城市，试试其他关键字 /cancel")
 
     # 更新用户所属位置
     with get_db_session() as db:
