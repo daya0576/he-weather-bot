@@ -30,7 +30,7 @@ class Form(StatesGroup):
     location = State()
 
 
-@dp.message_handler(commands='update_location')
+@dp.message_handler(commands='set_location')
 async def update_location(message: types.Message):
     await Form.location.set()
     await TelegramMessageService.send_text(dp.bot, message.chat.id, "请回复当前城市关键字，或者模糊定位。  /cancel")
