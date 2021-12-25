@@ -11,13 +11,19 @@ from telegram_bot.settings import aio_lru_cache_1h
 from telegram_bot.utils.date_util import DateUtil
 from telegram_bot.utils.retry_util import tries
 
-WEATHER_MESSAGE_TEMPLATE = """\
-📍{Location}   
+WEATHER_2D_MESSAGE_TEMPLATE = """\
+📍{location}   
 
 今天{d1}，白天{d1_pretty}
 明天{d2}，白天{d2_pretty}
 
 {extra}
+"""
+
+WEATHER_6H_MESSAGE_TEMPLATE = """\
+📍{location}   
+
+{hours}
 """
 
 
@@ -57,8 +63,8 @@ class HeWeatherClient(WeatherClient):
         elif d1_forecast.life_text:
             extra = d1_forecast.life_text
 
-        return WEATHER_MESSAGE_TEMPLATE.format(
-            Location=location.name,
+        return WEATHER_2D_MESSAGE_TEMPLATE.format(
+            location=location.name,
             d1=DateUtil.get_day_of_week(location.tz, 0),
             d2=DateUtil.get_day_of_week(location.tz, 1),
             d1_pretty=str(d1_forecast),
@@ -75,9 +81,18 @@ class HeWeatherClient(WeatherClient):
         w = warning_list[0]
         return WarnModel(w["text"], w["typeName"], w["level"])
 
-    async def get_weather_3h_forecast_text(self, location: Location) -> str:
-        weather_hour_data = await self._get_weather_3h(location)
-        return ""
+    async def get_weather_6h_forecast_text(self, location: Location) -> str:
+        d = await self._get_weather_hour(location)
+        hour = DateUtil.get_cur_hour(location.tz)
+        hours_text = "\n".join(
+            f"{(hour + i) % 24:02d}:00：{d[i]['text']} {d[i]['temp']}℃"
+            for i in range(6)
+        )
+
+        return WEATHER_6H_MESSAGE_TEMPLATE.format(
+            location=location.name,
+            hours=hours_text
+        )
 
     #################################### 原始接口 ####################################
 
@@ -86,7 +101,7 @@ class HeWeatherClient(WeatherClient):
         result = await self._do_get("weather", "3d", {"location": location.get_location()})
         return result.get("daily", [])
 
-    async def _get_weather_3h(self, location: Location) -> List:
+    async def _get_weather_hour(self, location: Location) -> List:
         """城市天气API / 逐小时天气预报"""
         result = await self._do_get("weather", "24h", {"location": location.get_location()})
         return result.get("hourly", [])

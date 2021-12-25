@@ -29,7 +29,7 @@ async def cron_handler(db: Session = Depends(get_db)):
         run_date = datetime.now(pytz.utc) + timedelta(milliseconds=i * MIL_SECONDS_INTERVAL)
 
         # 用户定时订阅判断逻辑
-        cur_hour = DateUtil.get_cur_hour(chat.time_zone)
+        cur_hour = str(DateUtil.get_cur_hour(chat.time_zone))
         if cur_hour not in chat.sub_hours:
             continue
 

@@ -15,10 +15,10 @@ class DateUtil:
         return d[cur_time.weekday()]
 
     @staticmethod
-    def get_cur_hour(time_zone: str = 'UTC') -> str:
+    def get_cur_hour(time_zone: str = 'UTC') -> int:
         """根据时区获取当前的小时"""
         tz = pytz.timezone(time_zone)
-        return str(datetime.now(tz).hour)
+        return datetime.now(tz).hour
 
     @staticmethod
     def get_now_for_human() -> str:

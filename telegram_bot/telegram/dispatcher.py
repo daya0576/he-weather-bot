@@ -6,7 +6,8 @@ from telegram_bot.telegram.bot import bot
 
 """
 help - 帮助
-weather - 获取实时天气
+weather - 获取实时天气（最近两天）
+weather_6h - 获取实时天气（最近六小时）
 set_location - 更新位置
 subscribe - 开启订阅
 unsubscribe - 关闭订阅
