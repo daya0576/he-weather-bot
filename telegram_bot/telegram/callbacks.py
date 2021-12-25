@@ -35,6 +35,17 @@ async def handle_weather(message: types.Message) -> None:
     await TelegramMessageService.send_text(dp.bot, chat_id, text)
 
 
+@dp.message_handler(commands=['weather_3h'])
+@registered
+async def handle_weather(message: types.Message) -> None:
+    chat_id = message.chat.id
+    with get_db_session() as db:
+        user = crud.get_user(db, chat_id)
+
+    text = await he_weather.get_weather_3h_forecast_text(user.location)
+    await TelegramMessageService.send_text(dp.bot, chat_id, text)
+
+
 @dp.message_handler(commands=['id'])
 @registered
 async def handle_chat_id(message: types.Message) -> None:

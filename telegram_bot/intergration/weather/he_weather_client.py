@@ -40,9 +40,9 @@ class HeWeatherClient(WeatherClient):
     @aio_lru_cache_1h
     async def get_weather_forecast(self, location: Location) -> str:
         weather_3d_data, forecast_air, life_1d = await asyncio.gather(
-            self.get_weather_3d(location),
-            self.get_air_now(location),
-            self.get_indices_1d(location, random.choice(self.LIFE_OPTIONS)),
+            self._get_weather_3d(location),
+            self._get_air_now(location),
+            self._get_indices_1d(location, random.choice(self.LIFE_OPTIONS)),
         )
         d1_forecast_dict, d2_forecast_dict = weather_3d_data[:2]
 
@@ -68,32 +68,41 @@ class HeWeatherClient(WeatherClient):
 
     async def get_weather_warning(self, location: Location) -> Optional[WarnModel]:
         """获取自然灾害信息"""
-        warning_list = await self.get_warning_now(location)
+        warning_list = await self._get_warning_now(location)
         if not warning_list:
             return
 
         w = warning_list[0]
         return WarnModel(w["text"], w["typeName"], w["level"])
 
-    async def get_weather_3d(self, location: Location) -> List:
+    async def get_weather_3h_forecast_text(self, location: Location) -> str:
+        weather_hour_data = await self._get_weather_3h(location)
+        return ""
+
+    async def _get_weather_3d(self, location: Location) -> List:
         """城市天气API / 逐天天气预报"""
-        result = await self._do_get("weather", "3d", {"location": location})
+        result = await self._do_get("weather", "3d", {"location": location.get_location()})
         return result.get("daily", [])
 
-    async def get_indices_1d(self, location: Location, indices_type) -> List:
+    async def _get_weather_3h(self, location: Location) -> List:
+        """城市天气API / 逐小时天气预报"""
+        result = await self._do_get("weather", "24h", {"location": location.get_location()})
+        return result.get("hourly", [])
+
+    async def _get_indices_1d(self, location: Location, indices_type) -> List:
         """天气指数API / 天气生活指数"""
-        params = {"location": location, "type": indices_type}
+        params = {"location": location.get_location(), "type": indices_type}
         result = await self._do_get("indices", "1d", params)
         return result.get("daily", [])
 
-    async def get_air_now(self, location: Location) -> Dict:
+    async def _get_air_now(self, location: Location) -> Dict:
         """空气API / 实时空气质量"""
-        result = await self._do_get("air", "now", {"location": location})
+        result = await self._do_get("air", "now", {"location": location.get_location()})
         return result.get("now", {})
 
-    async def get_warning_now(self, location: Location) -> List[Dict]:
+    async def _get_warning_now(self, location: Location) -> List[Dict]:
         """天气灾害预警"""
-        result = await self._do_get("warning", "now", {"location": location})
+        result = await self._do_get("warning", "now", {"location": location.get_location()})
         return result.get("warning", [])
 
     def get_weather_photo(self, location) -> str:

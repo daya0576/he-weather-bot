@@ -20,6 +20,9 @@ class Location:
     country: Optional[str] = ""
     url: Optional[str] = ""
 
+    def get_location(self):
+        return f"{self.lon},{self.lat}" if self.lat and self.lon else self.name
+
     def __eq__(self, o: "Location") -> bool:
         return self.lat == o.lat and self.lon == o.lon and self.name == o.name
 
@@ -27,8 +30,7 @@ class Location:
         return hash((self.lat, self.lon, self.name))
 
     def __str__(self):
-        city = f"{self.lon},{self.lat}" if self.lat and self.lon else self.name
-        return city
+        return f"{self.lon},{self.lat},{self.name}"
 
     __repr__ = __str__
 
@@ -40,8 +42,8 @@ class HeLocationClient:
     URL = f"https://geoapi.qweather.com/v2/city/lookup?location={{}}&key={KEY}"
 
     @retry((HTTPError,), tries=3, delay=1, backoff=2)
-    async def _fetch(self, location) -> Optional[Location]:
-        url = self.URL.format(location)
+    async def _fetch(self, location_id: str) -> Optional[Location]:
+        url = self.URL.format(location_id)
         d = await self.http_client.get(url)
 
         location_list = d.get("location")
