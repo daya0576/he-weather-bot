@@ -79,6 +79,8 @@ class HeWeatherClient(WeatherClient):
         weather_hour_data = await self._get_weather_3h(location)
         return ""
 
+    #################################### 原始接口 ####################################
+
     async def _get_weather_3d(self, location: Location) -> List:
         """城市天气API / 逐天天气预报"""
         result = await self._do_get("weather", "3d", {"location": location.get_location()})

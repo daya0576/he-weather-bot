@@ -50,4 +50,4 @@ aio_lru_cache_partial = partial(
 )
 
 aio_lru_cache_1h = aio_lru_cache_partial(ttl=settings.CACHE_TTL)
-aio_lru_cache_48h = aio_lru_cache_partial(ttl=settings.CACHE_TTL * 24 * 2)
+aio_lru_cache_24h = aio_lru_cache_partial(ttl=settings.CACHE_TTL * 24)
