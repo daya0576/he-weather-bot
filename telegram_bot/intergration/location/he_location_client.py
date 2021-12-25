@@ -21,10 +21,10 @@ class Location:
     url: Optional[str] = ""
 
     def __eq__(self, o: "Location") -> bool:
-        return self.lat == o.lat and self.lon == o.lon
+        return self.lat == o.lat and self.lon == o.lon and self.name == o.name
 
     def __hash__(self) -> int:
-        return hash((self.lat, self.lon))
+        return hash((self.lat, self.lon, self.name))
 
     def __str__(self):
         city = f"{self.lon},{self.lat}" if self.lat and self.lon else self.name
