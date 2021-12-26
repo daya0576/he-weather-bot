@@ -116,12 +116,13 @@ def update_or_create_ding_bot(db: Session, chat_id: str, ding_token: str):
 
 
 def remove_ding_bot(db: Session, chat_id: str):
-    cron_job = db.query(models.DingBots) \
+    dingbot = db.query(models.DingBots) \
         .filter(models.DingBots.chat_id == chat_id) \
         .first()
 
-    if cron_job:
-        db.delete(cron_job)
+    if dingbot:
+        db.delete(dingbot)
+        db.commit()
         return True
     return False
 
