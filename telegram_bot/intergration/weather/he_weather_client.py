@@ -5,26 +5,12 @@ from typing import Dict, List, Optional
 from telegram_bot.intergration.http.base_http_client import HttpClient
 from telegram_bot.intergration.location.he_location_client import Location
 from telegram_bot.intergration.weather.base_weather_client import WeatherClient
+from telegram_bot.intergration.weather.const import WEATHER_6H_MESSAGE_TEMPLATE, WEATHER_2D_MESSAGE_TEMPLATE
 from telegram_bot.intergration.weather.models.he_weather_model import HeWeatherModel
 from telegram_bot.intergration.weather.models.warn_model import WarnModel
 from telegram_bot.settings import aio_lru_cache_1h
 from telegram_bot.utils.date_util import DateUtil
 from telegram_bot.utils.retry_util import tries
-
-WEATHER_2D_MESSAGE_TEMPLATE = """\
-📍{location}   
-
-今天{d1}，白天{d1_pretty}
-明天{d2}，白天{d2_pretty}
-
-{extra}
-"""
-
-WEATHER_6H_MESSAGE_TEMPLATE = """\
-📍{location}   
-
-{hours}
-"""
 
 
 class HeWeatherClient(WeatherClient):
@@ -37,12 +23,7 @@ class HeWeatherClient(WeatherClient):
         self.http_client = http_client
         self.key = key
 
-    @tries(times=5)
-    async def _do_get(self, api_type, weather_type, params: Dict) -> Dict:
-        url = f"https://devapi.qweather.com/v7/{api_type}/{weather_type}"
-        params.update(key=self.key)
-        return await self.http_client.get(url, params)
-
+    #################################### 对外接口 ####################################
     @aio_lru_cache_1h
     async def get_weather_forecast(self, location: Location) -> str:
         weather_3d_data, forecast_air, life_1d = await asyncio.gather(
@@ -95,6 +76,11 @@ class HeWeatherClient(WeatherClient):
         )
 
     #################################### 原始接口 ####################################
+    @tries(times=5)
+    async def _do_get(self, api_type, weather_type, params: Dict) -> Dict:
+        url = f"https://devapi.qweather.com/v7/{api_type}/{weather_type}"
+        params.update(key=self.key)
+        return await self.http_client.get(url, params)
 
     async def _get_weather_3d(self, location: Location) -> List:
         """城市天气API / 逐天天气预报"""
