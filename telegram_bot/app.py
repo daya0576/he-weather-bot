@@ -8,7 +8,7 @@ from loguru import logger
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
 from telegram_bot.controllers import webhook, release, meta
-from telegram_bot.cron import jobs, scheduler
+from telegram_bot.cron import scheduler
 from telegram_bot.database import models
 from telegram_bot.database.database import engine
 from telegram_bot.settings import settings

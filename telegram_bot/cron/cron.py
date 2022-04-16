@@ -6,7 +6,7 @@ from loguru import logger
 from sqlalchemy.orm import Session
 
 from telegram_bot.cron import scheduler
-from telegram_bot.cron.weather_forecast_task import cron_send_weather, cron_send_warning
+from telegram_bot.cron.tasks import cron_send_weather, cron_send_warning
 from telegram_bot.database import crud
 from telegram_bot.database.database import get_db
 from telegram_bot.utils.date_util import DateUtil
