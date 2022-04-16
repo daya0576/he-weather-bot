@@ -16,7 +16,7 @@ ONE_MINUTE = 60 * 1000
 # 限流: https://dev.qweather.com/docs/start/glossary#qpm
 MIL_SECONDS_INTERVAL = (ONE_MINUTE / QPM_LIMIT) * 5
 # 天气预警触发
-VALID_WARNING_CHECK_HOURS = (0, 6, 9, 12, 15, 18, 21, 24)
+VALID_WARNING_CHECK_HOURS = (0, 6, 9, 12, 15, 18, 21)
 
 router = APIRouter()
 
