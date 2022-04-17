@@ -8,7 +8,7 @@ from loguru import logger
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
 from telegram_bot.controllers import webhook, release, meta
-from telegram_bot.cron import scheduler
+from telegram_bot.cron import scheduler, cron
 from telegram_bot.database import models
 from telegram_bot.database.database import engine
 from telegram_bot.settings import settings
@@ -21,7 +21,7 @@ logger.add(sys.stdout, colorize=True, format=FORMAT, diagnose=False)
 app = FastAPI()
 app.include_router(meta.router)
 app.include_router(webhook.router)
-app.include_router(jobs.router)
+app.include_router(cron.router)
 app.include_router(release.router)
 
 
