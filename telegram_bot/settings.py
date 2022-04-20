@@ -3,19 +3,9 @@ from dataclasses import dataclass
 from functools import partial
 
 from aiocache import cached, Cache
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.fsm_storage.redis import RedisStorage
 from pydantic import BaseSettings, SecretStr
-
-
-@dataclass
-class RedisConfig:
-    host: str
-    port: str
-    password: str
-
-    def __init__(self, url) -> None:
-        m = re.match(r"redis://:(.*)@(.*):(.*)", url)
-        self.password, self.host, self.port = m.group(1), m.group(2), m.group(3)
 
 
 class Settings(BaseSettings):
@@ -37,11 +27,20 @@ class Settings(BaseSettings):
         return self.ENV == "production"
 
 
-settings = Settings()
+@dataclass
+class RedisConfig:
+    host: str
+    port: str
+    password: str
 
+    def __init__(self, url) -> None:
+        m = re.match(r"redis://:(.*)@(.*):(.*)", url)
+        self.password, self.host, self.port = m.group(1), m.group(2), m.group(3)
+
+
+settings = Settings()
 redis_config = RedisConfig(settings.REDIS_URL)
 dispatcher_storage = RedisStorage(host=redis_config.host, port=redis_config.port, password=redis_config.password)
-
 aio_lru_cache_partial = partial(
     cached,
     cache=Cache.REDIS,
@@ -51,3 +50,11 @@ aio_lru_cache_partial = partial(
 )
 aio_lru_cache_1h = aio_lru_cache_partial(ttl=settings.CACHE_TTL)
 aio_lru_cache_24h = aio_lru_cache_partial(ttl=settings.CACHE_TTL * 24)
+
+if not settings.is_production:
+    dispatcher_storage = MemoryStorage()
+    aio_lru_cache_partial = partial(
+        cached,
+        cache=Cache.MEMORY
+    )
+    aio_lru_cache_24h = aio_lru_cache_1h
