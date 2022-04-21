@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from functools import partial
 
 from aiocache import cached, Cache
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.fsm_storage.redis import RedisStorage
 from pydantic import BaseSettings, SecretStr
 
@@ -50,11 +49,3 @@ aio_lru_cache_partial = partial(
 )
 aio_lru_cache_1h = aio_lru_cache_partial(ttl=settings.CACHE_TTL)
 aio_lru_cache_24h = aio_lru_cache_partial(ttl=settings.CACHE_TTL * 24)
-
-if not settings.is_production:
-    dispatcher_storage = MemoryStorage()
-    aio_lru_cache_partial = partial(
-        cached,
-        cache=Cache.MEMORY
-    )
-    aio_lru_cache_24h = aio_lru_cache_1h

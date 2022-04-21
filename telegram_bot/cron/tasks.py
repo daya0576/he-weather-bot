@@ -14,10 +14,14 @@ async def _do_send_weather_message(chat: models.Chat, ding_bot: models.DingBots,
     return True
 
 
+notify_with_1h_cache = aio_lru_cache_1h(_do_send_weather_message)
+notify_with_24h_cache = aio_lru_cache_24h(_do_send_weather_message)
+
+
 async def cron_send_weather(chat: models.Chat, ding_bot: models.DingBots):
     """ 定时发送天气预报 """
     text = await he_weather.get_weather_forecast(chat.location)
-    await aio_lru_cache_1h(_do_send_weather_message)(chat, ding_bot, text)
+    await notify_with_1h_cache(chat, ding_bot, text)
     return True
 
 
@@ -26,5 +30,5 @@ async def cron_send_warning(chat: models.Chat, ding_bot: models.DingBots):
     if warnModel := await he_weather.get_weather_warning(chat.location):
         # 预警信息可能持续超过 1h，故新增幂等操作
         # 如果 24h 内有新增预警信息，不影响发送
-        await aio_lru_cache_24h(_do_send_weather_message)(chat, ding_bot, str(warnModel))
+        await notify_with_24h_cache(chat, ding_bot, str(warnModel))
     return True

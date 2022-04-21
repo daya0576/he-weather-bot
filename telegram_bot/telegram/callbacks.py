@@ -1,9 +1,10 @@
 from aiogram import types
 
-from telegram_bot.database import crud
+from telegram_bot.database import crud, models
 from telegram_bot.database.database import get_db_session
 from telegram_bot.intergration import he_weather
 from telegram_bot.service.telegram import TelegramMessageService
+from telegram_bot.settings import aio_lru_cache_24h
 from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.keyboard.keyboard_markup_factory import KeyboardMarkUpFactory, WELCOME_TEXT, GET_WEATHER, \
     UPDATE_LOCATION, ENABLE_SUB, DISABLE_SUB, UPDATE_SUB_CRON, BACK, HOURS
@@ -33,6 +34,26 @@ async def handle_weather(message: types.Message) -> None:
 
     text = await he_weather.get_weather_forecast(user.location)
     await TelegramMessageService.send_text(dp.bot, chat_id, text)
+
+
+async def do_send_warning_message(chat: models.Chat, text: str):
+    await TelegramMessageService.send_text(dp.bot, chat.chat_id, text)
+    # 注意：必须返回值，以确保缓存生效
+    return True
+
+
+notify_with_24h_cache = aio_lru_cache_24h(do_send_warning_message)
+
+
+@dp.message_handler(commands=['warning'])
+@registered
+async def handle_weather(message: types.Message) -> None:
+    chat_id = message.chat.id
+    with get_db_session() as db:
+        user = crud.get_user(db, chat_id)
+
+    if text := await he_weather.get_weather_warning(user.location):
+        await notify_with_24h_cache(user, text)
 
 
 @dp.message_handler(commands=['weather_6h'])

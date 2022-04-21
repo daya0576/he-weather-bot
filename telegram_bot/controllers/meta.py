@@ -1,10 +1,11 @@
 from fastapi import Depends, APIRouter
+from loguru import logger
 from sqlalchemy.orm import Session
 from starlette.responses import RedirectResponse
 
 from telegram_bot.database import crud
 from telegram_bot.database.database import get_db, get_db_session
-from telegram_bot.settings import aio_lru_cache_1h
+from telegram_bot.settings import aio_lru_cache_1h, settings
 
 router = APIRouter()
 
@@ -23,7 +24,13 @@ async def active_users_count(db: Session = Depends(get_db)):
 
 @router.get("/")
 async def index():
-    return {"message": "Hello World"}
+    return "hello"
+
+
+@router.get("/config")
+async def index():
+    logger.info(settings)
+    return "OK"
 
 
 @router.get("/users")
