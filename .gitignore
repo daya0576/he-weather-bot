@@ -6,3 +6,4 @@ __pycache__/
 sql_app.db
 /.env
 .env*
+*.swp

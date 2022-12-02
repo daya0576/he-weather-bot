@@ -1,25 +1,25 @@
 version: "3.9"
 
 services:
-
+  
   api:
-    build: ./telegram_bot
+    build: .
     ports:
       - "9000:9000"
-    command: uvicorn app:app --workers 4 --host=0.0.0.0 
+    command: uvicorn telegram_bot.app:app --workers 4 --host=0.0.0.0 --port=9000 --env-file=.env
     volumes:
-      - ./telegram_bot:/app
+      - ./telegram_bot:/telegram_bot
     environment:
       - DOMAIN=xxx
       - CACHE_TTL=3540
     depends_on:
       - redis
-      - db
+      - database
 
   redis:
     image: redis:latest
 
-  db:
+  database:
     image: postgres:latest
     volumes:
       - postgres_data:/var/lib/postgresql/data/

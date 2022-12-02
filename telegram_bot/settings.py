@@ -39,13 +39,15 @@ class RedisConfig:
 
 settings = Settings()
 redis_config = RedisConfig(settings.REDIS_URL)
-dispatcher_storage = RedisStorage(host=redis_config.host, port=redis_config.port, password=redis_config.password)
+dispatcher_storage = RedisStorage(
+    host=redis_config.host, port=redis_config.port, password=redis_config.password
+)
 aio_lru_cache_partial = partial(
     cached,
     cache=Cache.REDIS,
     endpoint=redis_config.host,
     port=redis_config.port,
-    password=redis_config.password
+    password=redis_config.password,
 )
 aio_lru_cache_1h = aio_lru_cache_partial(ttl=settings.CACHE_TTL)
 aio_lru_cache_24h = aio_lru_cache_partial(ttl=settings.CACHE_TTL * 24)
