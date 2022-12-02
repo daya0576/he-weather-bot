@@ -52,7 +52,7 @@ toml==0.10.2; python_version >= "3.6" and python_full_version < "3.0.0" or pytho
 typing-extensions==4.3.0; python_full_version >= "3.6.1" and python_version >= "3.7"
 tzdata==2022.1; python_version >= "3.6" and python_full_version < "3.0.0" and platform_system == "Windows" or python_full_version >= "3.6.0" and python_version < "4" and python_version >= "3.6" and platform_system == "Windows"
 tzlocal==4.2; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version < "4" and python_version >= "3.6"
-ujson==4.3.0; python_version >= "3.6"
+ujson==5.4.0; python_version >= "3.6"
 urllib3==1.26.11; python_version >= "3.7" and python_full_version < "3.0.0" and python_version < "4" or python_full_version >= "3.6.0" and python_version < "4" and python_version >= "3.7"
 uvicorn==0.13.4
 win32-setctime==1.1.0; sys_platform == "win32" and python_version >= "3.5"
