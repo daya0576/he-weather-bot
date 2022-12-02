@@ -14,10 +14,10 @@ from telegram_bot.settings import settings
 router = APIRouter()
 
 
-@router.post('/hook')
+@router.post("/hook")
 async def webhook_handler(
-        update_raw: Dict[str, Any] = Body(...),
-        dp: Dispatcher = Depends(bot_dispatcher),
+    update_raw: Dict[str, Any] = Body(...),
+    dp: Dispatcher = Depends(bot_dispatcher),
 ) -> Response:
     """Set route /hook with POST method will trigger this method."""
     telegram_update = Update(**update_raw)
@@ -27,23 +27,25 @@ async def webhook_handler(
     return Response(status_code=HTTP_200_OK)
 
 
-@router.on_event("startup")
-async def set_webhook() -> None:
-    """
-    Tell Telegram API about new webhook on app startup.
+if not settings.is_production:
 
-    We need to check current webhook url first, because Telegram API has
-    strong rate limit for `set_webhook` method.
-    """
-    bot = telegram_bot()
+    @router.on_event("startup")
+    async def set_webhook() -> None:
+        """
+        Tell Telegram API about new webhook on app startup.
 
-    webhook_endpoint = router.url_path_for('webhook_handler')
-    url = urljoin(settings.TELEGRAM_BOT_WEBHOOK_ENDPOINT, webhook_endpoint)
-    current_url = (await bot.get_webhook_info())["url"]
+        We need to check current webhook url first, because Telegram API has
+        strong rate limit for `set_webhook` method.
+        """
+        bot = telegram_bot()
 
-    if current_url != url:
-        await bot.set_webhook(url=url)
-        logger.warning("webhook updated!")
+        webhook_endpoint = router.url_path_for("webhook_handler")
+        url = urljoin(settings.TELEGRAM_BOT_WEBHOOK_ENDPOINT, webhook_endpoint)
+        current_url = (await bot.get_webhook_info())["url"]
+
+        if current_url != url:
+            await bot.set_webhook(url=url)
+            logger.warning("webhook updated!")
 
 
 @router.on_event("shutdown")
