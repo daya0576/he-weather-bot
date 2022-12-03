@@ -1,0 +1,19 @@
+# flyctl launch added from .gitignore
+**/.idea
+**/.cache
+**/.pytest_cache
+**/__pycache__
+
+**/sql_app.db
+.env
+**/.env*
+**/*.swp
+
+# flyctl launch added from .idea/.gitignore
+# Default ignored files
+.idea/shelf
+.idea/workspace.xml
+
+# flyctl launch added from telegram_bot/tests/.pytest_cache/.gitignore
+# Created by pytest automatically.
+telegram_bot/tests/.pytest_cache/**/*

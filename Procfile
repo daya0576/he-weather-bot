@@ -1,1 +1,2 @@
-web: uvicorn telegram_bot.app:app --workers 4 --host=0.0.0.0 --port=${PORT:-5000}
+# Modify this Procfile to fit your needs
+web: uvicorn telegram_bot.app:app --workers 4
