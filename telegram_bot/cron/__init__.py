@@ -28,7 +28,5 @@ def my_listener(event: JobExecutionEvent):
         logger.info(f"my_listener: {event}")
 
 
-scheduler = AsyncIOScheduler(
-    jobstores=jobstores, job_defaults=job_defaults, executors=executors, timezone=utc
-)
+scheduler = AsyncIOScheduler(timezone=utc)
 scheduler.add_listener(my_listener, EVENT_ALL)
