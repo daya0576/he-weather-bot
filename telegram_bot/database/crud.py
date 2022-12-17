@@ -10,23 +10,24 @@ def get_user(db: Session, chat_id: str) -> models.Chat:
     return db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first()
 
 
-def get_users(db: Session, skip: int = 0, limit: int = 10000) -> List[models.Chat]:
-    return db.query(models.Chat) \
-        .offset(skip) \
-        .limit(limit).all()
+def get_users(db: Session, skip: int = 0, limit: int = 100000) -> List[models.Chat]:
+    return db.query(models.Chat).offset(skip).limit(limit).all()
 
 
-def get_active_users(db: Session, skip: int = 0, limit: int = 10000) -> List[models.Chat]:
-    return db.query(models.Chat) \
-        .filter(models.Chat.is_active.is_(True)) \
-        .offset(skip) \
-        .limit(limit).all()
+def get_active_users(
+    db: Session, skip: int = 0, limit: int = 100000
+) -> List[models.Chat]:
+    return (
+        db.query(models.Chat)
+        .filter(models.Chat.is_active.is_(True))
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
 
 def get_active_user_count(db: Session) -> int:
-    return db.query(models.Chat) \
-        .filter(models.Chat.is_active.is_(True)) \
-        .count()
+    return db.query(models.Chat).filter(models.Chat.is_active.is_(True)).count()
 
 
 def update_user_status(db: Session, chat_id: str, is_active: bool):
@@ -47,7 +48,9 @@ def update_location_name(db: Session, chat_id: str, location_name: str) -> None:
 
 
 def migrate_user_by_chat_id(db: Session, chat_id: str, new_chat_id: str):
-    user: models.Chat = db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first()
+    user: models.Chat = (
+        db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first()
+    )
     if not user:
         raise Exception(f"chat_id does not exist: {chat_id}!!")
 
@@ -57,9 +60,9 @@ def migrate_user_by_chat_id(db: Session, chat_id: str, new_chat_id: str):
     db.add(user)
 
     # 复制订阅的定时任务
-    cron_job_list = db.query(models.CronJobs) \
-        .filter(models.CronJobs.chat_id == chat_id) \
-        .all()
+    cron_job_list = (
+        db.query(models.CronJobs).filter(models.CronJobs.chat_id == chat_id).all()
+    )
     for cron_job in cron_job_list:
         db.expunge(cron_job)
         make_transient(cron_job)
@@ -70,7 +73,9 @@ def migrate_user_by_chat_id(db: Session, chat_id: str, new_chat_id: str):
     db.commit()
 
 
-def update_or_create_user_by_location(db: Session, chat_id: str, location: Location) -> models.Chat:
+def update_or_create_user_by_location(
+    db: Session, chat_id: str, location: Location
+) -> models.Chat:
     chat = models.Chat(
         chat_id=int(chat_id),
         latitude="{:.2f}".format(location.lat),
@@ -116,9 +121,9 @@ def update_or_create_ding_bot(db: Session, chat_id: str, ding_token: str):
 
 
 def remove_ding_bot(db: Session, chat_id: str):
-    dingbot = db.query(models.DingBots) \
-        .filter(models.DingBots.chat_id == chat_id) \
-        .first()
+    dingbot = (
+        db.query(models.DingBots).filter(models.DingBots.chat_id == chat_id).first()
+    )
 
     if dingbot:
         db.delete(dingbot)
@@ -128,17 +133,21 @@ def remove_ding_bot(db: Session, chat_id: str):
 
 
 def get_cron_job(db, chat_id, hour):
-    return db.query(models.CronJobs) \
-        .filter(models.CronJobs.chat_id == chat_id) \
-        .filter(models.CronJobs.hour == hour) \
+    return (
+        db.query(models.CronJobs)
+        .filter(models.CronJobs.chat_id == chat_id)
+        .filter(models.CronJobs.hour == hour)
         .first()
+    )
 
 
 def create_or_delete_cron_job(db: Session, chat_id: int, hour: str):
-    cron_job = db.query(models.CronJobs) \
-        .filter(models.CronJobs.chat_id == chat_id) \
-        .filter(models.CronJobs.hour == hour) \
+    cron_job = (
+        db.query(models.CronJobs)
+        .filter(models.CronJobs.chat_id == chat_id)
+        .filter(models.CronJobs.hour == hour)
         .first()
+    )
 
     if cron_job:
         db.delete(cron_job)
@@ -154,7 +163,9 @@ def create_or_delete_cron_job(db: Session, chat_id: int, hour: str):
 
 
 def get_active_cron_jobs_by_hour(db: Session, hour: str):
-    return db.query(models.CronJobs) \
-        .filter(models.CronJobs.hour == hour) \
-        .filter(models.CronJobs.parent.is_active is True) \
+    return (
+        db.query(models.CronJobs)
+        .filter(models.CronJobs.hour == hour)
+        .filter(models.CronJobs.parent.is_active is True)
         .all()
+    )
