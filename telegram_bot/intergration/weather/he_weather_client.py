@@ -5,7 +5,10 @@ from typing import Dict, List, Optional
 from telegram_bot.intergration.http.base_http_client import HttpClient
 from telegram_bot.intergration.location.he_location_client import Location
 from telegram_bot.intergration.weather.base_weather_client import WeatherClient
-from telegram_bot.intergration.weather.const import WEATHER_6H_MESSAGE_TEMPLATE, WEATHER_2D_MESSAGE_TEMPLATE
+from telegram_bot.intergration.weather.const import (
+    WEATHER_6H_MESSAGE_TEMPLATE,
+    WEATHER_2D_MESSAGE_TEMPLATE,
+)
 from telegram_bot.intergration.weather.models.he_weather_model import HeWeatherModel
 from telegram_bot.intergration.weather.models.warn_model import WarnModel
 from telegram_bot.settings import aio_lru_cache_1h
@@ -14,7 +17,7 @@ from telegram_bot.utils.retry_util import tries
 
 
 class HeWeatherClient(WeatherClient):
-    """ 和风天气客户端 """
+    """和风天气客户端"""
 
     # 和风生活指数选项，随机选择
     LIFE_OPTIONS = tuple(range(1, 17))
@@ -34,7 +37,9 @@ class HeWeatherClient(WeatherClient):
         d1_forecast_dict, d2_forecast_dict = weather_3d_data[:2]
 
         # 构建天气预报数据模型
-        d1_forecast = HeWeatherModel.build(d1_forecast_dict, air_now=forecast_air, indices=life_1d)
+        d1_forecast = HeWeatherModel.build(
+            d1_forecast_dict, air_now=forecast_air, indices=life_1d
+        )
         d2_forecast = HeWeatherModel.build(d2_forecast_dict)
 
         # 组装最终天气文案
@@ -50,7 +55,7 @@ class HeWeatherClient(WeatherClient):
             d2=DateUtil.get_day_of_week(location.tz, 1),
             d1_pretty=str(d1_forecast),
             d2_pretty=str(d2_forecast),
-            extra=extra
+            extra=extra,
         )
 
     async def get_weather_warning(self, location: Location) -> Optional[WarnModel]:
@@ -66,13 +71,11 @@ class HeWeatherClient(WeatherClient):
         d = await self._get_weather_hour(location)
         hour = DateUtil.get_cur_hour(location.tz)
         hours_text = "\n".join(
-            f"{(hour + i) % 24:02d}:00：{d[i]['text']} {d[i]['temp']}℃"
-            for i in range(6)
+            f"{(hour + i) % 24:02d}:00：{d[i]['text']} {d[i]['temp']}℃" for i in range(6)
         )
 
         return WEATHER_6H_MESSAGE_TEMPLATE.format(
-            location=location.name,
-            hours=hours_text
+            location=location.name, hours=hours_text
         )
 
     #################################### 原始接口 ####################################
@@ -84,12 +87,16 @@ class HeWeatherClient(WeatherClient):
 
     async def _get_weather_3d(self, location: Location) -> List:
         """城市天气API / 逐天天气预报"""
-        result = await self._do_get("weather", "3d", {"location": location.get_location()})
+        result = await self._do_get(
+            "weather", "3d", {"location": location.get_location()}
+        )
         return result.get("daily", [])
 
     async def _get_weather_hour(self, location: Location) -> List:
         """城市天气API / 逐小时天气预报"""
-        result = await self._do_get("weather", "24h", {"location": location.get_location()})
+        result = await self._do_get(
+            "weather", "24h", {"location": location.get_location()}
+        )
         return result.get("hourly", [])
 
     async def _get_indices_1d(self, location: Location, indices_type) -> List:
@@ -105,7 +112,9 @@ class HeWeatherClient(WeatherClient):
 
     async def _get_warning_now(self, location: Location) -> List[Dict]:
         """天气灾害预警"""
-        result = await self._do_get("warning", "now", {"location": location.get_location()})
+        result = await self._do_get(
+            "warning", "now", {"location": location.get_location()}
+        )
         return result.get("warning", [])
 
     def get_weather_photo(self, location) -> str:

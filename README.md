@@ -1,6 +1,5 @@
 # 🌧 QWeatherBot：基于和风天气的 Telegram 机器人
 
-
 ![Active users](https://he-weather-bot.fly.dev/users/count)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/daya0576/he-weather-bot?link=https://github.com/daya0576/he-weather-bot/releases/)
 ![](https://img.shields.io/badge/Bot%20API-5.1-blue?logo=telegram)
@@ -20,14 +19,18 @@
 ## 👉 使用说明
 
 无需部署开箱即用，戳链接调戏我：[t.me/he_weather_bot](https://t.me/he_weather_bot)
+
 ```shell
 help - 帮助
-weather - 获取实时天气
+weather - 获取实时天气（最近两天）
+weather_6h - 获取实时天气（最近六小时）
 set_location - 更新位置
 subscribe - 开启订阅
 unsubscribe - 关闭订阅
 set_ding_bot - 新增钉钉机器人同步
 delete_ding_bot - 移除钉钉同步
+add_sub_locations - 新增子位置（支持多个）
+delete_sub_locations - 移除子位置
 ```
 
 ## 🚀 实现原理
@@ -36,5 +39,5 @@ delete_ding_bot - 移除钉钉同步
 
 ## FAQ
 
-Q. 有考虑支持多地区订阅吗(比如关心亲朋好友和出差人员)？   
+Q. 有考虑支持多地区订阅吗(比如关心亲朋好友和出差人员)？  
 A. 目前可以通过建立一个群组（只有你和机器人）进行订阅。

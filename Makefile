@@ -1,6 +1,6 @@
 dev:
 	echo "dev"
-	heroku local web
+	fly dev local 
 
 release:
 	poetry export -f requirements.txt --without-hashes --output requirements.txt

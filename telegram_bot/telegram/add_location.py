@@ -25,14 +25,24 @@ async def _get_location_from_message(message: types.Message) -> Optional["Locati
 
 
 class Form(StatesGroup):
-    location = State()
+    add_location = State()
 
 
-@dp.message_handler(commands="set_location")
-async def update_location(message: types.Message):
-    await Form.location.set()
+@dp.message_handler(commands="add_sub_locations")
+async def add_location(message: types.Message):
+    # 检查用户是否已经设置城市主位置
+    chat_id = str(message.chat.id)
+    with get_db_session() as db:
+        if not crud.get_user(db, chat_id):
+            await TelegramMessageService.send_text(
+                dp.bot, chat_id, "请先设置主城市位置。  /set_location"
+            )
+            return
+
+    # 开始添加城市子位置
+    await Form.add_location.set()
     await TelegramMessageService.send_text(
-        dp.bot, message.chat.id, "请回复当前城市关键字，或者模糊定位。  /cancel"
+        dp.bot, chat_id, "请回复新增城市关键字，或者模糊定位。  /cancel"
     )
 
 
@@ -50,26 +60,27 @@ async def cancel_handler(message: types.Message, state: FSMContext):
     await message.reply("已取消")
 
 
-@dp.message_handler(state=Form.location, content_types=ContentType.LOCATION)
-@dp.message_handler(state=Form.location, content_types=ContentType.VENUE)
-@dp.message_handler(state=Form.location, content_types=ContentType.TEXT)
+@dp.message_handler(state=Form.add_location, content_types=ContentType.LOCATION)
+@dp.message_handler(state=Form.add_location, content_types=ContentType.VENUE)
+@dp.message_handler(state=Form.add_location, content_types=ContentType.TEXT)
 async def process_location(message: types.Message, state: FSMContext):
     location = await _get_location_from_message(message)
     if not location:
         return await message.reply("找不到输入的城市，试试其他关键字 /cancel")
 
     # 更新用户所属位置
+    chat_id = str(message.chat.id)
     with get_db_session() as db:
-        user = crud.update_or_create_user_by_location(db, message.chat.id, location)
+        user = crud.add_location(db, chat_id, location)
     await message.reply(
-        f"城市信息已更新：{location.province}{user.city_name}"
+        f"城市信息已新增：{location.province}{user.city_name}"
         f"({user.latitude},{user.longitude})\n{location.url}"
     )
 
     # 更新位置后，发送天气预报
     text = await he_weather.get_weather_forecast(user.location)
     text = f"\n{text}"
-    await TelegramMessageService.send_text(dp.bot, message.chat.id, text)
+    await TelegramMessageService.send_text(dp.bot, chat_id, text)
 
     # Finish conversation
     await state.finish()

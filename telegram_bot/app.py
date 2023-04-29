@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
+from dotenv import load_dotenv
 
 import sentry_sdk
 import uvicorn
@@ -41,5 +42,6 @@ if settings.SENTRY_URL:
     sentry_sdk.init(dsn=settings.SENTRY_URL, environment=settings.ENV)
     app = SentryAsgiMiddleware(app)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    load_dotenv()
     uvicorn.run("app:app", host="127.0.0.1", port=5000, log_level="info", reload=True)

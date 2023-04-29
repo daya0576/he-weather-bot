@@ -1,9 +1,15 @@
-from typing import List
+from typing import Iterable, List
 
 from sqlalchemy.orm import Session, make_transient
 
 from telegram_bot.database import models
 from telegram_bot.intergration.location.he_location_client import Location
+
+
+def is_user_exists(db: Session, chat_id: str) -> bool:
+    return (
+        db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first() is not None
+    )
 
 
 def get_user(db: Session, chat_id: str) -> models.Chat:
@@ -12,6 +18,16 @@ def get_user(db: Session, chat_id: str) -> models.Chat:
 
 def get_users(db: Session, skip: int = 0, limit: int = 100000) -> List[models.Chat]:
     return db.query(models.Chat).offset(skip).limit(limit).all()
+
+
+def get_user_locations(db: Session, chat_id: str) -> Iterable[Location]:
+    chat = db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first()
+    if not chat:
+        return []
+    yield chat.location
+
+    locations = filter_locations(db, chat_id)
+    yield from [x.location for x in locations]
 
 
 def get_active_users(
@@ -26,8 +42,8 @@ def get_active_users(
     )
 
 
-def get_active_user_count(db: Session) -> int:
-    return db.query(models.Chat).filter(models.Chat.is_active.is_(True)).count()
+def get_user_count(db: Session) -> int:
+    return db.query(models.Chat).count()
 
 
 def update_user_status(db: Session, chat_id: str, is_active: bool):
@@ -39,11 +55,11 @@ def update_user_status(db: Session, chat_id: str, is_active: bool):
 
 
 def update_location_name(db: Session, chat_id: str, location_name: str) -> None:
-    user = db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first()
-    if user:
-        user.city_name = location_name
-        user.city = location_name
-        db.merge(user)
+    chat = db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first()
+    if chat:
+        chat.city_name = location_name
+        chat.city = location_name
+        db.merge(chat)
     db.commit()
 
 
@@ -92,13 +108,29 @@ def update_or_create_user_by_location(
         # create
         chat.is_active = True
         db.add(chat)
-        # 默认不定时订阅
-        # db.add(models.CronJobs(chat_id=chat.chat_id, hour=6))
-        # db.add(models.CronJobs(chat_id=chat.chat_id, hour=18))
 
     db.commit()
     db.refresh(chat)
     return chat
+
+
+def add_location(db: Session, chat_id: str, location: Location) -> models.Chat:
+    sub_location = models.Locations(
+        chat_id=int(chat_id),
+        latitude="{:.2f}".format(location.lat),
+        longitude="{:.2f}".format(location.lon),
+        city=location.name,
+        city_name=location.name,
+        time_zone=location.tz,
+    )
+    db.add(sub_location)
+    db.commit()
+    db.refresh(sub_location)
+    return sub_location
+
+
+def filter_locations(db: Session, chat_id: str) -> List[models.Locations]:
+    return db.query(models.Locations).filter(models.Locations.chat_id == chat_id).all()
 
 
 def get_ding_bot(db: Session, chat_id: str) -> models.DingBots:
@@ -130,6 +162,15 @@ def remove_ding_bot(db: Session, chat_id: str):
         db.commit()
         return True
     return False
+
+
+def remove_sub_locations(db: Session, chat_id: str):
+    locations = filter_locations(db, chat_id)
+    if locations:
+        for location in locations:
+            db.delete(location)
+        db.commit()
+        return True
 
 
 def get_cron_job(db, chat_id, hour):

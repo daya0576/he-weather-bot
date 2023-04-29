@@ -11,14 +11,14 @@ router = APIRouter()
 
 
 @aio_lru_cache_1h
-async def get_active_user_count(db):
-    return crud.get_active_user_count(db)
+async def get_user_count(db):
+    return crud.get_user_count(db)
 
 
 @router.get("/users/count")
 async def active_users_count(db: Session = Depends(get_db)):
     """活跃用户总数"""
-    badge_url = f"https://img.shields.io/badge/users-{await get_active_user_count(db)}-blue"
+    badge_url = f"https://img.shields.io/badge/users-{await get_user_count(db)}-blue"
     return RedirectResponse(badge_url)
 
 
@@ -28,7 +28,7 @@ async def index():
 
 
 @router.get("/config")
-async def index():
+async def config():
     logger.info(settings)
     return "OK"
 
@@ -37,3 +37,9 @@ async def index():
 async def users():
     with get_db_session() as db:
         return crud.get_users(db)
+
+
+@router.get("/user_count")
+async def user_count():
+    with get_db_session() as db:
+        return await get_user_count(db)

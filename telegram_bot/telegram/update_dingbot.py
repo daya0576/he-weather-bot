@@ -14,7 +14,9 @@ from telegram_bot.service.telegram import TelegramMessageService
 from telegram_bot.telegram.callbacks import registered
 from telegram_bot.telegram.dispatcher import dp
 
-RE_PATTERN = re.compile(r"https://oapi\.dingtalk\.com/robot/send\?access_token=([a-zA-Z0-9]+)")
+RE_PATTERN = re.compile(
+    r"https://oapi\.dingtalk\.com/robot/send\?access_token=([a-zA-Z0-9]+)"
+)
 
 
 async def extra_ding_token_from_message(text) -> str:
@@ -29,8 +31,8 @@ class Form(StatesGroup):
     set_location_alias = State()
 
 
-@dp.message_handler(state='*', commands='cancel')
-@dp.message_handler(Text(equals='cancel', ignore_case=True), state='*')
+@dp.message_handler(state="*", commands="cancel")
+@dp.message_handler(Text(equals="cancel", ignore_case=True), state="*")
 async def cancel_handler(message: types.Message, state: FSMContext):
     """
     Allow user to cancel any action
@@ -40,17 +42,17 @@ async def cancel_handler(message: types.Message, state: FSMContext):
         return
 
     await state.finish()
-    await message.reply('已取消')
+    await message.reply("已取消")
 
 
-@dp.message_handler(commands='set_ding_bot')
+@dp.message_handler(commands="set_ding_bot")
 @registered
 async def update_ding_token(message: types.Message):
     await Form.set_location_alias.set()
     await TelegramMessageService.send_text(dp.bot, message.chat.id, "Hi！请回复定位别名，例如上海外滩")
 
 
-@dp.message_handler(commands='delete_ding_bot')
+@dp.message_handler(commands="delete_ding_bot")
 @registered
 async def remove_ding_token(message: types.Message):
     with get_db_session() as db:
@@ -62,14 +64,28 @@ async def remove_ding_token(message: types.Message):
         return await message.reply("不存在关联")
 
 
+@dp.message_handler(commands="delete_sub_locations")
+@registered
+async def remove_ding_token(message: types.Message):
+    with get_db_session() as db:
+        delete = crud.remove_sub_locations(db, message.chat.id)
+
+    if delete:
+        return await message.reply("已清除所有子位置")
+    else:
+        return await message.reply("不存在子位置")
+
+
 @dp.message_handler(state=Form.set_ding_token, content_types=ContentType.TEXT)
 @dp.message_handler(state=Form.set_ding_token, content_types=ContentType.ANY)
 async def process_ding_token(message: types.Message, state: FSMContext):
     ding_bot_token = await extra_ding_token_from_message(message.text)
     if not ding_bot_token:
-        return await message.reply("机器人的Webhook地址非法!"
-                                   "\n参考格式：https://oapi.dingtalk.com/robot/send?access_token=XXXXXX"
-                                   "\n取消输入：/cancel")
+        return await message.reply(
+            "机器人的Webhook地址非法!"
+            "\n参考格式：https://oapi.dingtalk.com/robot/send?access_token=XXXXXX"
+            "\n取消输入：/cancel"
+        )
 
     with get_db_session() as db:
         crud.update_or_create_ding_bot(db, message.chat.id, ding_bot_token)
@@ -93,5 +109,7 @@ async def process_ding_token_alias(message: types.Message, state: FSMContext):
     with get_db_session() as db:
         crud.update_location_name(db, message.chat.id, location_name)
 
-    await TelegramMessageService.send_text(dp.bot, message.chat.id, "请输入自定义机器人Webhook地址")
+    await TelegramMessageService.send_text(
+        dp.bot, message.chat.id, "请输入自定义机器人Webhook地址"
+    )
     await Form.set_ding_token.set()

@@ -1,10 +1,12 @@
 import re
 from dataclasses import dataclass
 from functools import partial
+from typing import Optional
+from urllib.parse import urlparse
 
 from aiocache import cached, Cache
 from aiogram.contrib.fsm_storage.redis import RedisStorage
-from pydantic import BaseSettings, SecretStr, main
+from pydantic import BaseSettings, SecretStr
 
 
 class Settings(BaseSettings):
@@ -25,23 +27,27 @@ class Settings(BaseSettings):
     def is_production(self):
         return self.ENV == "production"
 
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+
 
 @dataclass
 class RedisConfig:
     host: str
     port: int
-    user: str
-    password: str
+    user: Optional[str]
+    password: Optional[str]
 
     def __init__(self, url) -> None:
-        m = re.match(r"redis://(.*):(.*)@(.*):(.*)", url)
-        if m is None:
-            raise ValueError(f"invalid redic url: {url}")
+        parsed_redis_url = urlparse(url)
+        if parsed_redis_url.hostname is None or parsed_redis_url.port is None:
+            raise ValueError(f"invalid redis url: {url}")
         self.user, self.password, self.host, self.port = (
-            m.group(1),
-            m.group(2),
-            m.group(3),
-            int(m.group(4)),
+            parsed_redis_url.username,
+            parsed_redis_url.password,
+            parsed_redis_url.hostname,
+            int(parsed_redis_url.port),
         )
 
 

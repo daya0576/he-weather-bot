@@ -1,7 +1,16 @@
 from datetime import datetime
 from typing import Tuple
 
-from sqlalchemy import Boolean, Column, String, BigInteger, Integer, DateTime, UniqueConstraint, ForeignKey
+from sqlalchemy import (
+    Boolean,
+    Column,
+    String,
+    BigInteger,
+    Integer,
+    DateTime,
+    UniqueConstraint,
+    ForeignKey,
+)
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -29,7 +38,12 @@ class Chat(Base):
 
     @property
     def location(self):
-        return Location(name=self.city_name, lat=float(self.latitude), lon=float(self.longitude), tz=self.time_zone)
+        return Location(
+            name=self.city_name,
+            lat=float(self.latitude),
+            lon=float(self.longitude),
+            tz=self.time_zone,
+        )
 
     def is_location_exist(self):
         return self.latitude and self.longitude
@@ -46,27 +60,25 @@ class Chat(Base):
 
 
 class CronJobs(Base):
-    __tablename__ = 'cron_jobs'
+    __tablename__ = "cron_jobs"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    chat_id = Column(BigInteger, ForeignKey('users.chat_id'))
+    chat_id = Column(BigInteger, ForeignKey("users.chat_id"))
     hour = Column(String, nullable=False)
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    __table_args__ = (
-        UniqueConstraint('chat_id', 'hour'),
-    )
+    __table_args__ = (UniqueConstraint("chat_id", "hour"),)
 
 
 class DingBots(Base):
-    __tablename__ = 'ding_bots'
+    __tablename__ = "ding_bots"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     token = Column(String, index=True)
 
-    chat_id = Column(BigInteger, ForeignKey('users.chat_id'))
+    chat_id = Column(BigInteger, ForeignKey("users.chat_id"))
     chat = relationship("Chat", back_populates="ding_bot")
 
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -76,3 +88,34 @@ class DingBots(Base):
         return f"ding_bot_{self.token}"
 
     __repr__ = __str__
+
+
+class Locations(Base):
+    __tablename__ = "locations"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    chat_id = Column(BigInteger, ForeignKey("users.chat_id"))
+
+    latitude = Column(String)
+    longitude = Column(String)
+    city = Column(String, nullable=False)
+    city_name = Column(String, nullable=False)
+    time_zone = Column(String, nullable=False)
+
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    @property
+    def location(self):
+        return Location(
+            name=self.city_name,
+            lat=float(self.latitude),
+            lon=float(self.longitude),
+            tz=self.time_zone,
+        )
+
+    def __str__(self) -> str:
+        return f"location_{self.chat_id}_{self.city_name}({self.location})"
+
+    def __repr__(self) -> str:
+        return f"location_{self.chat_id}"

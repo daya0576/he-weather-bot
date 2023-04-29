@@ -13,6 +13,8 @@ subscribe - 开启订阅
 unsubscribe - 关闭订阅
 set_ding_bot - 新增钉钉机器人同步
 delete_ding_bot - 移除钉钉同步
+add_sub_locations - 新增子位置
+delete_sub_locations - 移除子位置
 """
 dp = Dispatcher(bot, storage=dispatcher_storage)
 dp.middleware.setup(LoggingMiddleware())

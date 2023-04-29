@@ -6,34 +6,42 @@ from telegram_bot.intergration import he_weather
 from telegram_bot.service.telegram import TelegramMessageService
 from telegram_bot.settings import aio_lru_cache_24h
 from telegram_bot.telegram.dispatcher import dp
-from telegram_bot.telegram.keyboard.keyboard_markup_factory import KeyboardMarkUpFactory, WELCOME_TEXT, GET_WEATHER, \
-    UPDATE_LOCATION, ENABLE_SUB, DISABLE_SUB, UPDATE_SUB_CRON, BACK, HOURS
+from telegram_bot.telegram.keyboard.keyboard_markup_factory import (
+    KeyboardMarkUpFactory,
+    WELCOME_TEXT,
+    GET_WEATHER,
+    UPDATE_LOCATION,
+    ENABLE_SUB,
+    DISABLE_SUB,
+    UPDATE_SUB_CRON,
+    BACK,
+    HOURS,
+)
 from telegram_bot.telegram.update_location import update_location
 
 
 def registered(func):
     async def wrapper(message: types.Message):
-        chat_id = message.chat.id
+        chat_id = str(message.chat.id)
         with get_db_session() as db:
-            user = crud.get_user(db, chat_id)
-
-        if not user:
-            return await update_location(message)
+            if not crud.is_user_exists(db, chat_id):
+                return await update_location(message)
 
         await func(message)
 
     return wrapper
 
 
-@dp.message_handler(commands=['weather'])
+@dp.message_handler(commands=["weather"])
 @registered
 async def handle_weather(message: types.Message) -> None:
-    chat_id = message.chat.id
+    chat_id = str(message.chat.id)
     with get_db_session() as db:
-        user = crud.get_user(db, chat_id)
+        locations = crud.get_user_locations(db, chat_id)
 
-    text = await he_weather.get_weather_forecast(user.location)
-    await TelegramMessageService.send_text(dp.bot, chat_id, text)
+    for location in locations:
+        text = await he_weather.get_weather_forecast(location)
+        await TelegramMessageService.send_text(dp.bot, chat_id, text)
 
 
 async def do_send_warning_message(chat: models.Chat, text: str):
@@ -45,44 +53,49 @@ async def do_send_warning_message(chat: models.Chat, text: str):
 notify_with_24h_cache = aio_lru_cache_24h(do_send_warning_message)
 
 
-@dp.message_handler(commands=['warning'])
+@dp.message_handler(commands=["warning"])
 @registered
 async def handle_weather(message: types.Message) -> None:
-    chat_id = message.chat.id
+    chat_id = str(message.chat.id)
     with get_db_session() as db:
         user = crud.get_user(db, chat_id)
+        locations = crud.get_user_locations(db, chat_id)
 
-    if text := await he_weather.get_weather_warning(user.location):
-        await notify_with_24h_cache(user, text)
+    for location in locations:
+        if text := await he_weather.get_weather_warning(location):
+            await notify_with_24h_cache(user, text)
 
 
-@dp.message_handler(commands=['weather_6h'])
+@dp.message_handler(commands=["weather_6h"])
 @registered
 async def handle_weather(message: types.Message) -> None:
-    chat_id = message.chat.id
+    chat_id = str(message.chat.id)
     with get_db_session() as db:
-        user = crud.get_user(db, chat_id)
+        locations = crud.get_user_locations(db, chat_id)
 
-    text = await he_weather.get_weather_6h_forecast_text(user.location)
-    await TelegramMessageService.send_text(dp.bot, chat_id, text)
+    for location in locations:
+        text = await he_weather.get_weather_6h_forecast_text(location)
+        await TelegramMessageService.send_text(dp.bot, chat_id, text)
 
 
-@dp.message_handler(commands=['id'])
+@dp.message_handler(commands=["id"])
 @registered
 async def handle_chat_id(message: types.Message) -> None:
     chat_id = message.chat.id
     await TelegramMessageService.send_text(dp.bot, chat_id, chat_id)
 
 
-@dp.message_handler(commands=['help', 'start'])
+@dp.message_handler(commands=["help", "start"])
 async def handle_help(message: types.Message) -> None:
     with get_db_session() as db:
         user = crud.get_user(db, message.chat.id)
     reply_markup = KeyboardMarkUpFactory.build_main_menu(user)
-    await TelegramMessageService.send_keyboard_markup(dp.bot, message.chat.id, WELCOME_TEXT, reply_markup)
+    await TelegramMessageService.send_keyboard_markup(
+        dp.bot, message.chat.id, WELCOME_TEXT, reply_markup
+    )
 
 
-@dp.message_handler(commands=['subscribe'])
+@dp.message_handler(commands=["subscribe"])
 @registered
 async def handle_sub(message: types.Message) -> None:
     with get_db_session() as db:
@@ -91,10 +104,12 @@ async def handle_sub(message: types.Message) -> None:
 
         user = crud.get_user(db, message.chat.id)
         reply_markup = KeyboardMarkUpFactory.build_cron_options(user)
-        await TelegramMessageService.send_keyboard_markup(dp.bot, message.chat.id, WELCOME_TEXT, reply_markup)
+        await TelegramMessageService.send_keyboard_markup(
+            dp.bot, message.chat.id, WELCOME_TEXT, reply_markup
+        )
 
 
-@dp.message_handler(commands=['unsubscribe'])
+@dp.message_handler(commands=["unsubscribe"])
 @registered
 async def handle_unsub(message: types.Message) -> None:
     with get_db_session() as db:
@@ -105,13 +120,13 @@ async def handle_unsub(message: types.Message) -> None:
 @dp.callback_query_handler(text=GET_WEATHER)
 async def weather_callback_handler(query: types.CallbackQuery):
     await handle_weather(query.message)
-    await query.answer('')
+    await query.answer("")
 
 
 @dp.callback_query_handler(text=UPDATE_LOCATION)
 async def location_callback_handler(query: types.CallbackQuery):
     await update_location(query.message)
-    await query.answer('')
+    await query.answer("")
 
 
 @dp.callback_query_handler(text=ENABLE_SUB)
@@ -123,7 +138,9 @@ async def update_subscription_callback_handler(query: types.CallbackQuery):
         text = "已开启订阅" if is_enable else "已关闭订阅"
         user = crud.get_user(db, query.message.chat.id)
         await query.answer(text)
-        await query.message.edit_reply_markup(KeyboardMarkUpFactory.build_cron_options(user))
+        await query.message.edit_reply_markup(
+            KeyboardMarkUpFactory.build_cron_options(user)
+        )
 
 
 @dp.callback_query_handler(text=UPDATE_SUB_CRON)
@@ -133,7 +150,7 @@ async def sub_cron_callback_handler(query: types.CallbackQuery):
         await query.message.edit_reply_markup(
             KeyboardMarkUpFactory.build_cron_options(user)
         )
-        await query.answer('')
+        await query.answer("")
 
 
 @dp.callback_query_handler(text=BACK)
@@ -143,7 +160,7 @@ async def exit_callback_handler(query: types.CallbackQuery):
         await query.message.edit_reply_markup(
             KeyboardMarkUpFactory.build_main_menu(user)
         )
-        await query.answer('')
+        await query.answer("")
 
 
 @dp.callback_query_handler(lambda callback_query: callback_query.data in HOURS)
