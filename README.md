@@ -40,4 +40,4 @@ delete_sub_locations - 移除子位置
 ## FAQ
 
 Q. 有考虑支持多地区订阅吗(比如关心亲朋好友和出差人员)？  
-A. 目前可以通过建立一个群组（只有你和机器人）进行订阅。
+A. `add_sub_locations`命令添加子城市，`delete_sub_locations`命令清除。

@@ -39,7 +39,15 @@ async def startup_event():
 
 # sentry middleware
 if settings.SENTRY_URL:
-    sentry_sdk.init(dsn=settings.SENTRY_URL, environment=settings.ENV)
+    sentry_sdk.init(
+        dsn=settings.SENTRY_URL,
+        environment=settings.ENV,
+        # To set a uniform sample rate
+        # Set profiles_sample_rate to 1.0 to profile 100%
+        # of sampled transactions.
+        # We recommend adjusting this value in production
+        profiles_sample_rate=1.0,
+    )
     app = SentryAsgiMiddleware(app)
 
 if __name__ == "__main__":
