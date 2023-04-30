@@ -64,18 +64,6 @@ async def remove_ding_token(message: types.Message):
         return await message.reply("不存在关联")
 
 
-@dp.message_handler(commands="delete_sub_locations")
-@registered
-async def remove_ding_token(message: types.Message):
-    with get_db_session() as db:
-        delete = crud.remove_sub_locations(db, message.chat.id)
-
-    if delete:
-        return await message.reply("已清除所有子位置")
-    else:
-        return await message.reply("不存在子位置")
-
-
 @dp.message_handler(state=Form.set_ding_token, content_types=ContentType.TEXT)
 @dp.message_handler(state=Form.set_ding_token, content_types=ContentType.ANY)
 async def process_ding_token(message: types.Message, state: FSMContext):

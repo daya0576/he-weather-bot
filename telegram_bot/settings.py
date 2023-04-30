@@ -5,7 +5,6 @@ from urllib.parse import urlparse
 
 from aiocache import cached, Cache
 from aiogram.contrib.fsm_storage.redis import RedisStorage
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from pydantic import BaseSettings, SecretStr
 
 

@@ -43,4 +43,4 @@ Q. 有考虑支持多地区订阅吗(比如关心亲朋好友和出差人员)？
 A. 支持 `add_sub_locations `命令添加子城市，`delete_sub_locations` 命令清除。
 
 Q. 希望能支持 docker 部署 ，还有说明一下，哪些参数要改？
-A.
+A. WIP..

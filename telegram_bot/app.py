@@ -11,7 +11,7 @@ from telegram_bot.controllers import meta, release, webhook
 from telegram_bot.cron import cron, scheduler
 from telegram_bot.database import models
 from telegram_bot.database.database import engine
-from telegram_bot.settings import settings, aio_lru_cache_1h
+from telegram_bot.settings import settings
 
 # 日志格式设置
 logger.remove()
@@ -25,7 +25,6 @@ app.include_router(cron.router)
 app.include_router(release.router)
 
 
-@aio_lru_cache_1h
 @app.on_event("startup")
 async def startup_event():
     # 定时任务

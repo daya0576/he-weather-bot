@@ -5,6 +5,7 @@ __pycache__/
 
 sql_app.db
 *.swp
+*.log
 .venv/
 .env
 tags

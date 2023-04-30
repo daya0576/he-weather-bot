@@ -164,13 +164,15 @@ def remove_ding_bot(db: Session, chat_id: str):
     return False
 
 
-def remove_sub_locations(db: Session, chat_id: str):
-    locations = filter_locations(db, chat_id)
-    if locations:
-        for location in locations:
-            db.delete(location)
+def remove_sub_location(db: Session, location_id: str) -> bool:
+    location = (
+        db.query(models.Locations).filter(models.Locations.id == location_id).first()
+    )
+    if location:
+        db.delete(location)
         db.commit()
         return True
+    return False
 
 
 def get_cron_job(db, chat_id, hour):

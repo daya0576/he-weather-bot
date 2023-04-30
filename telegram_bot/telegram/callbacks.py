@@ -7,6 +7,8 @@ from telegram_bot.service.telegram import TelegramMessageService
 from telegram_bot.settings import aio_lru_cache_24h
 from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.keyboard.keyboard_markup_factory import (
+    HOURS_TEMPLATE,
+    REMOVE_LOCATION_PREFIX,
     KeyboardMarkUpFactory,
     WELCOME_TEXT,
     GET_WEATHER,
@@ -15,7 +17,7 @@ from telegram_bot.telegram.keyboard.keyboard_markup_factory import (
     DISABLE_SUB,
     UPDATE_SUB_CRON,
     BACK,
-    HOURS,
+    hour_decode,
 )
 from telegram_bot.telegram.update_location import update_location
 
@@ -163,9 +165,9 @@ async def exit_callback_handler(query: types.CallbackQuery):
         await query.answer("")
 
 
-@dp.callback_query_handler(lambda callback_query: callback_query.data in HOURS)
+@dp.callback_query_handler(lambda callback_query: callback_query.data in HOURS_TEMPLATE)
 async def sub_cron_update_callback_handler(query: types.CallbackQuery):
-    hour = query.data
+    hour = hour_decode(query.data)
     chat_id = query.message.chat.id
 
     with get_db_session() as db:
@@ -182,4 +184,38 @@ async def sub_cron_update_callback_handler(query: types.CallbackQuery):
 
         db.refresh(user)
         cron_sub_menu = KeyboardMarkUpFactory.build_cron_options(user)
+        await query.message.edit_reply_markup(cron_sub_menu)
+
+
+@dp.message_handler(commands=["delete_sub_locations"])
+async def remove_ding_token(message: types.Message) -> None:
+    chat_id = str(message.chat.id)
+    with get_db_session() as db:
+        locations = crud.filter_locations(db, chat_id)
+    if not locations:
+        await message.reply("不存在其他子位置")
+        return
+
+    mark_up = KeyboardMarkUpFactory.build_sub_locations(locations)
+    await TelegramMessageService.send_keyboard_markup(
+        dp.bot, chat_id, "单击城市删除👇", mark_up
+    )
+
+
+@dp.callback_query_handler(
+    lambda callback_query: REMOVE_LOCATION_PREFIX in callback_query.data
+)
+async def delete_sub_location_update_callback_handler(query: types.CallbackQuery):
+    location_id = query.data.replace(REMOVE_LOCATION_PREFIX, "")
+    chat_id = str(query.message.chat.id)
+
+    with get_db_session() as db:
+        deleted = crud.remove_sub_location(db, location_id)
+        if not deleted:
+            return
+
+        await query.answer("删除成功")
+
+        locations = crud.filter_locations(db, chat_id)
+        cron_sub_menu = KeyboardMarkUpFactory.build_sub_locations(locations)
         await query.message.edit_reply_markup(cron_sub_menu)
