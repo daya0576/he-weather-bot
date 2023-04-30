@@ -1,4 +1,3 @@
-import re
 from dataclasses import dataclass
 from functools import partial
 from typing import Optional
@@ -6,22 +5,23 @@ from urllib.parse import urlparse
 
 from aiocache import cached, Cache
 from aiogram.contrib.fsm_storage.redis import RedisStorage
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from pydantic import BaseSettings, SecretStr
 
 
 class Settings(BaseSettings):
     TELEGRAM_BOT_API_KEY: SecretStr
     TELEGRAM_BOT_WEBHOOK_ENDPOINT: str
-    DOMAIN: str
-    PROXY: str
     HE_WEATHER_API_TOKEN: str
     DATABASE_URL: str
-    REDIS_URL: str = ""
-    SENTRY_URL: str = ""
+    REDIS_URL: Optional[str] = ""
+    SENTRY_URL: Optional[str] = ""
     ENV: str = "production"
     CACHE_TTL: int = 60 * 59
     DEFAULT_TIMEZONE: str = "Asia/Shanghai"
+    PROXY: Optional[str] = ""
     DO_RELEASE: bool = False
+    DOMAIN: Optional[str] = "localhost"
 
     @property
     def is_production(self):

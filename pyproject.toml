@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "telegram_bot"
-version = "0.1.0"
+version = "0.3.0"
 description = ""
 authors = ["Henry Zhu <daya0576@gmail.com>"]
 
