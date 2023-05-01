@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Tuple
+from typing import Iterable, Tuple
 
 from sqlalchemy import (
     Boolean,
@@ -32,6 +32,7 @@ class Chat(Base):
     # 外键：https://docs.sqlalchemy.org/en/14/orm/basic_relationships.html
     cron_jobs = relationship("CronJobs", backref="parent")
     ding_bot = relationship("DingBots", back_populates="chat", uselist=False)
+    locations = relationship("Locations", backref="parent")
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -51,6 +52,10 @@ class Chat(Base):
     @property
     def sub_hours(self) -> Tuple:
         return tuple(job.hour for job in self.cron_jobs)
+
+    @property
+    def all_locations(self) -> Iterable[Location]:
+        return [self.location, *(x.location for x in self.locations)]
 
     def __str__(self) -> str:
         return f"chat_{self.chat_id}_{self.city_name}({self.location})"
