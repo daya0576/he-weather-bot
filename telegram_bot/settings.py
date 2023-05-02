@@ -6,7 +6,6 @@ from urllib.parse import urlparse
 from aiocache import Cache, cached
 from aiogram.contrib.fsm_storage.redis import RedisStorage
 from pydantic import BaseSettings, SecretStr
-from pyngrok import ngrok
 
 
 class Settings(BaseSettings):

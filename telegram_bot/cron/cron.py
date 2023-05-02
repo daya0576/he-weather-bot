@@ -58,8 +58,11 @@ async def one_hour_cron_handler(db: Session = Depends(get_db)):
 
     count = 0
     for i, chat in enumerate(crud.get_active_users(db)):
-        run_date = now + timedelta(milliseconds=i * MIL_SECONDS_INTERVAL)
+        # 仅针对主动开启订阅的用户检查投递预警信息
+        if not chat.cron_jobs:
+            continue
 
+        run_date = now + timedelta(milliseconds=i * MIL_SECONDS_INTERVAL)
         job = scheduler.add_job(
             cron_send_warning,
             args=(chat, chat.ding_bot),
