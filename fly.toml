@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for he-weather-bot on 2023-04-30T10:21:28+08:00
+# fly.toml app configuration file generated for he-weather-bot on 2023-05-02T16:02:01+08:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -12,7 +12,7 @@ kill_timeout = "5s"
   auto_rollback = true
 
 [build]
-  builder = "paketobuildpacks/builder:base"
+  dockerfile = "Dockerfile"
 
 [env]
   PORT = "8080"
