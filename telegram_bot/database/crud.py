@@ -1,6 +1,7 @@
 from typing import Iterable, List
 
 from sqlalchemy.orm import Session, make_transient
+from sqlalchemy import func
 
 from telegram_bot.database import models
 from telegram_bot.intergration.location.he_location_client import Location
@@ -43,7 +44,7 @@ def get_active_users(
 
 
 def get_user_count(db: Session) -> int:
-    return db.query(models.Chat).count()
+    return db.query(func.count(models.Chat.chat_id)).scalar()
 
 
 def update_user_status(db: Session, chat_id: str, is_active: bool):

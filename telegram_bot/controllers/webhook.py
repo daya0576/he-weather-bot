@@ -41,6 +41,7 @@ if not settings.is_production:
 
         webhook_endpoint = router.url_path_for("webhook_handler")
         url = urljoin(settings.TELEGRAM_BOT_WEBHOOK_ENDPOINT, webhook_endpoint)
+
         current_url = (await bot.get_webhook_info())["url"]
 
         if current_url != url:
