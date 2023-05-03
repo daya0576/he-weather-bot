@@ -6,6 +6,7 @@ from telegram_bot.service.dingtalk import DingBotMessageService
 from telegram_bot.service.telegram import TelegramMessageService
 from telegram_bot.settings import aio_lru_cache_1h, aio_lru_cache_24h
 from telegram_bot.telegram.dispatcher import dp
+from tenacity import retry, stop_after_attempt
 
 
 async def _do_send_weather_message(
@@ -18,8 +19,13 @@ async def _do_send_weather_message(
     return True
 
 
-notify_with_1h_cache = aio_lru_cache_1h(_do_send_weather_message)
-notify_with_24h_cache = aio_lru_cache_24h(_do_send_weather_message)
+notify_with_1h_cache = retry(stop=stop_after_attempt(3))(
+    aio_lru_cache_1h(_do_send_weather_message)
+)
+
+notify_with_24h_cache = retry(stop=stop_after_attempt(3))(
+    aio_lru_cache_24h(_do_send_weather_message)
+)
 
 
 async def cron_send_weather(

@@ -1,4 +1,5 @@
 import functools
+from typing import Union
 
 import sentry_sdk
 from aiogram import Bot
@@ -51,7 +52,7 @@ def service_template(f):
 class TelegramMessageService:
     @staticmethod
     @service_template
-    async def send_text(bot: Bot, chat_id: str, text: str):
+    async def send_text(bot: Bot, chat_id: Union[int, str], text: str):
         await bot.send_message(chat_id=chat_id, text=text)
 
     @staticmethod
