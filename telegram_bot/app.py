@@ -18,6 +18,10 @@ logger.remove()
 FORMAT = "<level>{level: <6}</level> <green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> <level>{message}</level>"
 logger.add(sys.stdout, colorize=True, format=FORMAT, diagnose=False)
 
+# 数据库更新
+logger.info("updating database schema..")
+models.Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
 app.include_router(meta.router)
 app.include_router(webhook.router)
@@ -30,10 +34,6 @@ async def startup_event():
     # 定时任务
     scheduler.start()
     logger.info("starting cron service..", scheduler)
-
-    # 数据库更新
-    logger.info("updating database schema..")
-    models.Base.metadata.create_all(bind=engine)
 
 
 # sentry middleware

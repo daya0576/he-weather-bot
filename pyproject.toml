@@ -31,10 +31,10 @@ python-dotenv = "^0.20.0"
 tenacity = "^8.2.2"
 
 [tool.poetry.dev-dependencies]
+sqlalchemy-stubs = "^0.4"
 
 [tool.poetry.group.dev.dependencies]
 pyngrok = "^6.0.0"
-sqlalchemy-stubs = "^0.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
