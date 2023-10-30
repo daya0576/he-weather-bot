@@ -19,8 +19,8 @@ redis = ["aioredis (>=0.3.3)", "aioredis (>=1.0.0)"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "aiogram"
@@ -45,8 +45,8 @@ proxy = ["aiohttp-socks (>=0.5.3,<0.6.0)"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "aiohttp"
@@ -158,8 +158,8 @@ speedups = ["Brotli", "aiodns", "cchardet"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "aioredis"
@@ -178,8 +178,8 @@ hiredis = "*"
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "aiosignal"
@@ -197,8 +197,8 @@ frozenlist = ">=1.1.0"
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "anyio"
@@ -223,8 +223,8 @@ trio = ["trio (>=0.22)"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "apscheduler"
@@ -256,8 +256,8 @@ zookeeper = ["kazoo"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "async-timeout"
@@ -272,8 +272,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "atomicwrites"
@@ -287,8 +287,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "attrs"
@@ -310,8 +310,8 @@ tests-no-zope = ["cloudpickle", "hypothesis", "mypy (>=1.1.1)", "pympler", "pyte
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "babel"
@@ -329,8 +329,8 @@ pytz = ">=2015.7"
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "certifi"
@@ -345,8 +345,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "charset-normalizer"
@@ -449,8 +449,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "click"
@@ -465,8 +465,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "colorama"
@@ -481,8 +481,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "decorator"
@@ -497,8 +497,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "exceptiongroup"
@@ -516,8 +516,8 @@ test = ["pytest (>=6)"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "fastapi"
@@ -542,8 +542,8 @@ test = ["anyio[trio] (>=3.2.1,<4.0.0)", "black (==22.3.0)", "databases[sqlite] (
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "frozenlist"
@@ -617,8 +617,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "greenlet"
@@ -692,8 +692,8 @@ test = ["objgraph", "psutil"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "h11"
@@ -708,8 +708,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "hiredis"
@@ -811,8 +811,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "httpcore"
@@ -834,8 +834,8 @@ http2 = ["h2 (>=3,<5)"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "httpx"
@@ -860,8 +860,8 @@ http2 = ["h2 (==3.*)"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "idna"
@@ -876,8 +876,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "iniconfig"
@@ -892,8 +892,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "loguru"
@@ -915,8 +915,8 @@ dev = ["Sphinx (>=2.2.1)", "black (>=19.10b0)", "codecov (>=2.0.15)", "colorama 
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "magic-filter"
@@ -934,8 +934,8 @@ dev = ["black (>=22.8.0,<22.9.0)", "flake8 (>=5.0.4,<5.1.0)", "isort (>=5.11.5,<
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "msgpack"
@@ -1004,8 +1004,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "multidict"
@@ -1092,8 +1092,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "mypy"
@@ -1143,8 +1143,8 @@ reports = ["lxml"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "mypy-extensions"
@@ -1159,8 +1159,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "packaging"
@@ -1175,8 +1175,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "pluggy"
@@ -1195,8 +1195,8 @@ testing = ["pytest", "pytest-benchmark"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "psycopg2"
@@ -1222,8 +1222,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "py"
@@ -1238,8 +1238,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "pydantic"
@@ -1295,8 +1295,8 @@ email = ["email-validator (>=1.0.3)"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "pyngrok"
@@ -1313,8 +1313,8 @@ PyYAML = "*"
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "pytest"
@@ -1342,8 +1342,8 @@ testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xm
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "pytest-asyncio"
@@ -1365,8 +1365,8 @@ testing = ["coverage (==6.2)", "flaky (>=3.5.0)", "hypothesis (>=5.7.1)", "mypy 
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "pytest-mock"
@@ -1387,8 +1387,8 @@ dev = ["pre-commit", "pytest-asyncio", "tox"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "python-dotenv"
@@ -1406,8 +1406,8 @@ cli = ["click (>=5.0)"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "pytz"
@@ -1422,8 +1422,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "pyyaml"
@@ -1486,8 +1486,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "redis"
@@ -1505,8 +1505,8 @@ hiredis = ["hiredis (>=0.1.3)"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "requests"
@@ -1531,8 +1531,8 @@ use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "requests-futures"
@@ -1553,8 +1553,8 @@ dev = ["black (>=22.3.0)", "build (>=0.7.0)", "isort (>=5.11.4)", "pyflakes (>=2
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "retry"
@@ -1573,8 +1573,8 @@ py = ">=1.4.26,<2.0.0"
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "rfc3986"
@@ -1595,8 +1595,8 @@ idna2008 = ["idna"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "sentry-sdk"
@@ -1646,8 +1646,8 @@ tornado = ["tornado (>=5)"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "six"
@@ -1662,8 +1662,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "sniffio"
@@ -1678,8 +1678,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "sqlalchemy"
@@ -1741,8 +1741,8 @@ sqlcipher = ["sqlcipher3-binary"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "sqlalchemy-stubs"
@@ -1761,8 +1761,8 @@ typing-extensions = ">=3.7.4"
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "starlette"
@@ -1784,8 +1784,8 @@ full = ["itsdangerous", "jinja2", "python-multipart", "pyyaml", "requests"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "syncer"
@@ -1799,8 +1799,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "tenacity"
@@ -1818,8 +1818,8 @@ doc = ["reno", "sphinx", "tornado (>=4.5)"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "toml"
@@ -1834,8 +1834,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "tomli"
@@ -1850,8 +1850,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "typing-extensions"
@@ -1866,8 +1866,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "tzdata"
@@ -1882,8 +1882,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "tzlocal"
@@ -1904,8 +1904,8 @@ devenv = ["check-manifest", "pytest (>=4.3)", "pytest-cov", "pytest-mock (>=3.3)
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "ujson"
@@ -1962,8 +1962,8 @@ files = [
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "urllib3"
@@ -1984,8 +1984,8 @@ zstd = ["zstandard (>=0.18.0)"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "uvicorn"
@@ -2007,8 +2007,8 @@ standard = ["PyYAML (>=5.1)", "colorama (>=0.4)", "httptools (==0.1.*)", "python
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "win32-setctime"
@@ -2026,8 +2026,8 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [[package]]
 name = "yarl"
@@ -2118,10 +2118,10 @@ multidict = ">=4.0"
 
 [package.source]
 type = "legacy"
-url = "https://pypi.doubanio.com/simple"
-reference = "douban"
+url = "https://pypi.org/simple"
+reference = "default"
 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "3e34e83abbe3dafadf878d702c6a6684004ae0d01c86c7439bdae23cd03ba987"
+content-hash = "202d52e6403211a4cccaa614579f76e4601d02ed7b59e5c983d87d91cd903d94"
