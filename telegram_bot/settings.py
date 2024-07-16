@@ -4,7 +4,7 @@ from typing import Optional
 from urllib.parse import urlparse
 
 from aiocache import Cache, cached
-from aiogram.contrib.fsm_storage.redis import RedisStorage
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from pydantic import BaseSettings, SecretStr
 
 
@@ -52,9 +52,11 @@ class RedisConfig:
 
 settings = Settings()
 redis_config = RedisConfig(settings.REDIS_URL)
-dispatcher_storage = RedisStorage(
-    host=redis_config.host, port=redis_config.port, password=redis_config.password
-)
+# dispatcher_storage = RedisStorage(
+#     host=redis_config.host, port=redis_config.port, password=redis_config.password
+# )
+dispatcher_storage = MemoryStorage()
+
 aio_lru_cache_partial = partial(
     cached,
     cache=Cache.REDIS,
