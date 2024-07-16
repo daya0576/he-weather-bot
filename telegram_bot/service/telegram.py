@@ -4,6 +4,7 @@ from typing import Union
 import sentry_sdk
 from aiogram import Bot
 from aiogram.utils.exceptions import (
+    BadRequest,
     BotBlocked,
     UserDeactivated,
     ChatNotFound,
@@ -36,6 +37,11 @@ def service_template(f):
         except Unauthorized as e:
             if e.text and "the group chat was deleted" in e.text:
                 logger.warning(f"{bot} of group was deleted")
+        except BadRequest as e:
+            if e.text == "Not enough rights to send text messages to the chat":
+                logger.warning(f"bot not enough rights to send text messages to the chat")
+                with get_db_session() as db:
+                    crud.update_user_status(db, chat_id, False)
         except MigrateToChat as e:
             with get_db_session() as db:
                 crud.update_user_status(db, chat_id, False)
