@@ -33,6 +33,11 @@ async def config():
     return "OK"
 
 
+@router.get("/sentry")
+async def test_sentry():
+    return 1 / 0
+
+
 @router.get("/users")
 async def users():
     with get_db_session() as db:
