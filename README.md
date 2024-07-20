@@ -40,7 +40,12 @@ delete_sub_locations - 移除子位置
 ## FAQ
 
 Q. 有考虑支持多地区订阅吗(比如关心亲朋好友和出差人员)？  
-A. 支持 `add_sub_locations `命令添加子城市，`delete_sub_locations` 命令清除。
+支持 `add_sub_locations `命令添加子城市，`delete_sub_locations` 命令清除。
 
-Q. 希望能支持 docker 部署 ，还有说明一下，哪些参数要改？
-A. WIP..
+Q. 如何在群中播报？   
+第一步：在群用户里添加机器人   
+第二步：在群的输入框输入 / 符号，根据自动提示，点击输入 /help   
+第三步：点击卡片的“定时订阅”修改推送的时间   
+
+Q. 希望能支持 docker 部署 ，还有说明一下，哪些参数要改？   
+WIP..
