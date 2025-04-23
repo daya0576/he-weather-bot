@@ -20,7 +20,8 @@ class Location:
     country: Optional[str] = ""
     url: Optional[str] = ""
 
-    api_key: Optional[str] = ""
+    host: Optional[str] = ""
+    key: Optional[str] = ""
 
     def get_location(self):
         return f"{self.lon},{self.lat}" if self.lat and self.lon else self.name

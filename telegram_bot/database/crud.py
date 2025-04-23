@@ -217,17 +217,23 @@ def get_active_cron_jobs_by_hour(db: Session, hour: str):
     )
 
 
-def update_or_create_api_key(db: Session, chat_id: str, api_key_str: str):
-    api_key = models.ApiKey(chat_id=int(chat_id), key=api_key_str)
-    if is_user_api_key_exists(db, chat_id):
+def get_api_key(db: Session, chat_id: str) -> models.ApiKey:
+    return db.query(models.ApiKey).filter(models.ApiKey.chat_id == chat_id).first()
+
+
+def update_or_create_api_key(db: Session, chat_id: str, host: str, key: str):
+    api_key = get_api_key(db, chat_id)
+    if api_key:
         # update
-        api_key = db.merge(api_key)
+        api_key.host = host
+        api_key.key = key
+        db.merge(api_key)
     else:
         # create
+        api_key = models.ApiKey(chat_id=chat_id, key=key, host=host)
         db.add(api_key)
 
     db.commit()
-    db.refresh(api_key)
     return api_key
 
 

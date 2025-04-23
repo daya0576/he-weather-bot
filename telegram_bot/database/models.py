@@ -45,7 +45,8 @@ class Chat(Base):
             lat=float(self.latitude),
             lon=float(self.longitude),
             tz=self.time_zone,
-            api_key=self.api_key and self.api_key.key,
+            key=self.api_key and self.api_key.key,
+            host=self.api_key and self.api_key.host,
         )
 
     def is_location_exist(self):
@@ -119,7 +120,8 @@ class Locations(Base):
             lat=float(self.latitude),
             lon=float(self.longitude),
             tz=self.time_zone,
-            api_key=self.parent.api_key and self.parent.api_key.key,
+            key=self.parent.api_key and self.parent.api_key.key,
+            host=self.parent.api_key and self.parent.api_key.host,
         )
 
     def __str__(self) -> str:
@@ -130,10 +132,11 @@ class Locations(Base):
 
 
 class ApiKey(Base):
-    __tablename__ = "api_key"
+    __tablename__ = "weather_api_key"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     chat_id = Column(BigInteger, ForeignKey("users.chat_id"))
+    host = Column(String, index=True)
     key = Column(String, index=True)
 
     chat = relationship("Chat", back_populates="api_key")
