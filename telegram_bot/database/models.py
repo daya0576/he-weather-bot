@@ -45,7 +45,7 @@ class Chat(Base):
             lat=float(self.latitude),
             lon=float(self.longitude),
             tz=self.time_zone,
-            api_key=self.api_key.key,
+            api_key=self.api_key and self.api_key.key,
         )
 
     def is_location_exist(self):
@@ -119,7 +119,7 @@ class Locations(Base):
             lat=float(self.latitude),
             lon=float(self.longitude),
             tz=self.time_zone,
-            api_key=self.parent.api_key.key,
+            api_key=self.parent.api_key and self.parent.api_key.key,
         )
 
     def __str__(self) -> str:

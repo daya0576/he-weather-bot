@@ -1,4 +1,7 @@
 from typing import List
+
+from tenacity import retry, stop_after_attempt
+
 from telegram_bot.database import models
 from telegram_bot.intergration import he_weather
 from telegram_bot.intergration.location.he_location_client import Location
@@ -6,7 +9,6 @@ from telegram_bot.service.dingtalk import DingBotMessageService
 from telegram_bot.service.telegram import TelegramMessageService
 from telegram_bot.settings import aio_lru_cache_1h, aio_lru_cache_24h
 from telegram_bot.telegram.dispatcher import dp
-from tenacity import retry, stop_after_attempt
 
 
 async def _do_send_weather_message(
@@ -19,11 +21,11 @@ async def _do_send_weather_message(
     return True
 
 
-notify_with_1h_cache = retry(stop=stop_after_attempt(3))(
+notify_with_1h_cache = retry(stop=stop_after_attempt(1))(
     aio_lru_cache_1h(_do_send_weather_message)
 )
 
-notify_with_24h_cache = retry(stop=stop_after_attempt(3))(
+notify_with_24h_cache = retry(stop=stop_after_attempt(1))(
     aio_lru_cache_24h(_do_send_weather_message)
 )
 
