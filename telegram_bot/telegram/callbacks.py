@@ -109,6 +109,7 @@ async def handle_help(message: types.Message) -> None:
 
 
 @dp.message_handler(commands=["subscribe"])
+@api_key_exists
 @registered
 async def handle_sub(message: types.Message) -> None:
     with get_db_session() as db:
@@ -161,7 +162,8 @@ async def update_subscription_callback_handler(query: types.CallbackQuery):
 @dp.callback_query_handler(text=UPDATE_SUB_CRON)
 async def sub_cron_callback_handler(query: types.CallbackQuery):
     with get_db_session() as db:
-        user = crud.get_user(db, query.message.chat.id)
+        chat_id = str(query.message.chat.id)
+        user = crud.get_user(db, chat_id)
         await query.message.edit_reply_markup(
             KeyboardMarkUpFactory.build_cron_options(user)
         )
@@ -184,6 +186,9 @@ async def sub_cron_update_callback_handler(query: types.CallbackQuery):
     chat_id = query.message.chat.id
 
     with get_db_session() as db:
+        if not crud.is_user_api_key_exists(db, chat_id):
+            return await update_api_key(query.message)
+
         # 激活用户
         crud.update_user_status(db, query.message.chat.id, True)
         user = crud.get_user(db, query.message.chat.id)

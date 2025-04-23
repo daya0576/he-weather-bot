@@ -13,7 +13,7 @@ class HttpxClient(HttpClient):
         timeout = httpx.Timeout(15.0, connect=60.0)
         self.client = httpx.AsyncClient(transport=transport, timeout=timeout)
 
-    @retry(stop=stop_after_attempt(3))
+    @retry(stop=stop_after_attempt(1))
     async def get(self, url: str, params: Optional[Dict] = None) -> Dict:
         logger.info(f"[http][get][request]{url}")
         r = await self.client.get(url, params=params)
@@ -22,7 +22,7 @@ class HttpxClient(HttpClient):
         r.raise_for_status()
         return r.json()
 
-    @retry(stop=stop_after_attempt(3))
+    @retry(stop=stop_after_attempt(1))
     async def post(self, url: str, params: Optional[Dict] = None) -> Dict:
         logger.info(f"[http][post][request]{url}")
         headers = {"Content-Type": "application/json"}
