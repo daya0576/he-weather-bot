@@ -29,15 +29,6 @@ def registered(func):
         with get_db_session() as db:
             if not crud.is_user_exists(db, chat_id):
                 return await update_location(message)
-        await func(message)
-
-    return wrapper
-
-
-def api_key_exists(func):
-    async def wrapper(message: types.Message):
-        chat_id = str(message.chat.id)
-        with get_db_session() as db:
             if not crud.is_user_api_key_exists(db, chat_id):
                 return await update_api_key(message)
         await func(message)
@@ -109,7 +100,6 @@ async def handle_help(message: types.Message) -> None:
 
 
 @dp.message_handler(commands=["subscribe"])
-@api_key_exists
 @registered
 async def handle_sub(message: types.Message) -> None:
     with get_db_session() as db:
