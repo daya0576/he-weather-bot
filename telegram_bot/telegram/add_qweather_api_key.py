@@ -12,6 +12,10 @@ from telegram_bot.intergration.location.he_location_client import Location
 from telegram_bot.service.telegram import TelegramMessageService
 from telegram_bot.telegram.dispatcher import dp
 
+TEMPLATE = """\
+请设置和风天气 [API HOST](https://console.qweather.com/setting) 与 [AIP KEY](https://console.qweather.com/project), 例如：`host.qweather.com,key`\n
+"""
+
 
 class Form(StatesGroup):
     key = State()
@@ -20,10 +24,7 @@ class Form(StatesGroup):
 @dp.message_handler(commands="set_api_key")
 async def update_api_key(message: types.Message):
     await Form.key.set()
-    tutorial = "[教程](https://github.com/daya0576/he-weather-bot/wiki/%E5%92%8C%E9%A3%8E%E5%A4%A9%E6%B0%94-API-KEY-%E5%88%9B%E5%BB%BA%E6%95%99%E7%A8%8B)"
-    await TelegramMessageService.send_markdown(
-        dp.bot, message.chat.id, f"请回复和风天气 API KEY {tutorial}。 /cancel"
-    )
+    await TelegramMessageService.send_markdown(dp.bot, message.chat.id, TEMPLATE)
 
 
 @dp.message_handler(state="*", commands="cancel")
