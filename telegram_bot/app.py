@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import sys
 
+import sentry_sdk
+import uvicorn
 from fastapi import FastAPI
 from loguru import logger
-import sentry_sdk
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
-import uvicorn
 
 from telegram_bot.controllers import meta, release, webhook
 from telegram_bot.cron import cron, scheduler

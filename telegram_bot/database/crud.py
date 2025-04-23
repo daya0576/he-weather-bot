@@ -1,7 +1,7 @@
 from typing import Iterable, List
 
-from sqlalchemy.orm import Session, make_transient
 from sqlalchemy import func
+from sqlalchemy.orm import Session, joinedload, make_transient
 
 from telegram_bot.database import models
 from telegram_bot.intergration.location.he_location_client import Location
@@ -14,15 +14,16 @@ def is_user_exists(db: Session, chat_id: str) -> bool:
 
 
 def get_user(db: Session, chat_id: str) -> models.Chat:
-    return db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first()
-
-
-def get_users(db: Session, skip: int = 0, limit: int = 100000) -> List[models.Chat]:
-    return db.query(models.Chat).offset(skip).limit(limit).all()
+    return (
+        db.query(models.Chat)
+        .options(joinedload(models.Chat.api_key))
+        .filter(models.Chat.chat_id == chat_id)
+        .first()
+    )
 
 
 def get_user_locations(db: Session, chat_id: str) -> Iterable[Location]:
-    chat = db.query(models.Chat).filter(models.Chat.chat_id == chat_id).first()
+    chat = get_user(db, chat_id)
     if not chat:
         return []
     yield chat.location
@@ -36,6 +37,7 @@ def get_active_users(
 ) -> List[models.Chat]:
     return (
         db.query(models.Chat)
+        .options(joinedload(models.Chat.api_key))
         .filter(models.Chat.is_active.is_(True))
         .offset(skip)
         .limit(limit)
@@ -212,4 +214,25 @@ def get_active_cron_jobs_by_hour(db: Session, hour: str):
         .filter(models.CronJobs.hour == hour)
         .filter(models.CronJobs.parent.is_active is True)
         .all()
+    )
+
+
+def update_or_create_api_key(db: Session, chat_id: str, api_key_str: str):
+    api_key = models.ApiKey(chat_id=int(chat_id), key=api_key_str)
+    if is_user_api_key_exists(db, chat_id):
+        # update
+        api_key = db.merge(api_key)
+    else:
+        # create
+        db.add(api_key)
+
+    db.commit()
+    db.refresh(api_key)
+    return api_key
+
+
+def is_user_api_key_exists(db: Session, chat_id: str) -> bool:
+    return (
+        db.query(models.ApiKey).filter(models.ApiKey.chat_id == chat_id).first()
+        is not None
     )

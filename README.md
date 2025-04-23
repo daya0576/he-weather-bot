@@ -1,6 +1,6 @@
 # 🌧 QWeatherBot：基于和风天气的 Telegram 机器人
 
-![Active users](https://he-weather-bot.fly.dev/users/count)
+![Active users](https://he-weather-bot-patient-dawn-5512.fly.dev/users/count)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/daya0576/he-weather-bot?link=https://github.com/daya0576/he-weather-bot/releases/)
 ![](https://img.shields.io/badge/Bot%20API-5.1-blue?logo=telegram)
 ![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m787647728-b1a273391c2ad5c526b1c605)
@@ -25,10 +25,9 @@ help - 帮助
 weather - 获取实时天气（最近两天）
 weather_6h - 获取实时天气（最近六小时）
 set_location - 更新位置
+set_api_key - 设置 API Key
 subscribe - 开启订阅
 unsubscribe - 关闭订阅
-set_ding_bot - 新增钉钉机器人同步
-delete_ding_bot - 移除钉钉同步
 add_sub_locations - 新增子位置（支持多个）
 delete_sub_locations - 移除子位置
 ```

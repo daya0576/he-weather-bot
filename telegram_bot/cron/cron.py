@@ -6,7 +6,7 @@ from loguru import logger
 from sqlalchemy.orm import Session
 
 from telegram_bot.cron import scheduler
-from telegram_bot.cron.tasks import cron_send_weather, cron_send_warning
+from telegram_bot.cron.tasks import cron_send_warning, cron_send_weather
 from telegram_bot.database import crud
 from telegram_bot.database.database import get_db
 from telegram_bot.utils.date_util import DateUtil
@@ -17,7 +17,7 @@ API_COUNT = 5
 # 限流: https://dev.qweather.com/docs/start/glossary#qpm
 MIL_SECONDS_INTERVAL = ONE_MINUTE / (QPM_LIMIT * API_COUNT)
 # 天气预警触发
-VALID_WARNING_CHECK_HOURS = (0, 6, 9, 12, 15, 18, 21)
+VALID_WARNING_CHECK_HOURS = (6, 12, 18)
 
 router = APIRouter()
 

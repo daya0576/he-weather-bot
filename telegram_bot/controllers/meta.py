@@ -1,4 +1,4 @@
-from fastapi import Depends, APIRouter
+from fastapi import APIRouter, Depends
 from loguru import logger
 from sqlalchemy.orm import Session
 from starlette.responses import RedirectResponse
@@ -41,7 +41,7 @@ async def test_sentry():
 @router.get("/users")
 async def users():
     with get_db_session() as db:
-        return crud.get_users(db)
+        return crud.get_user_count(db)
 
 
 @router.get("/user_count")

@@ -6,8 +6,8 @@ from telegram_bot.intergration.http.base_http_client import HttpClient
 from telegram_bot.intergration.location.he_location_client import Location
 from telegram_bot.intergration.weather.base_weather_client import WeatherClient
 from telegram_bot.intergration.weather.const import (
-    WEATHER_6H_MESSAGE_TEMPLATE,
     WEATHER_2D_MESSAGE_TEMPLATE,
+    WEATHER_6H_MESSAGE_TEMPLATE,
 )
 from telegram_bot.intergration.weather.models.he_weather_model import HeWeatherModel
 from telegram_bot.intergration.weather.models.warn_model import WarnModel
@@ -22,9 +22,8 @@ class HeWeatherClient(WeatherClient):
     # 和风生活指数选项，随机选择
     LIFE_OPTIONS = tuple(range(1, 17))
 
-    def __init__(self, http_client: HttpClient, key: str):
+    def __init__(self, http_client: HttpClient):
         self.http_client = http_client
-        self.key = key
 
     #################################### 对外接口 ####################################
     @aio_lru_cache_1h
@@ -71,7 +70,8 @@ class HeWeatherClient(WeatherClient):
         d = await self._get_weather_hour(location)
         hour = DateUtil.get_cur_hour(location.tz)
         hours_text = "\n".join(
-            f"{(hour + i) % 24:02d}:00：{d[i]['text']} {d[i]['temp']}℃" for i in range(6)
+            f"{(hour + i) % 24:02d}:00：{d[i]['text']} {d[i]['temp']}℃"
+            for i in range(6)
         )
 
         return WEATHER_6H_MESSAGE_TEMPLATE.format(
@@ -82,40 +82,39 @@ class HeWeatherClient(WeatherClient):
     @tries(times=5)
     async def _do_get(self, api_type, weather_type, params: Dict) -> Dict:
         url = f"https://devapi.qweather.com/v7/{api_type}/{weather_type}"
-        params.update(key=self.key)
+        # params.update(key=self.key)
         return await self.http_client.get(url, params)
+
+    def _build_params(self, location: Location) -> Dict:
+        return {
+            "location": location.get_location(),
+            "key": location.api_key,
+        }
 
     async def _get_weather_3d(self, location: Location) -> List:
         """城市天气API / 逐天天气预报"""
-        result = await self._do_get(
-            "weather", "3d", {"location": location.get_location()}
-        )
+        result = await self._do_get("weather", "3d", self._build_params(location))
         return result.get("daily", [])
 
     async def _get_weather_hour(self, location: Location) -> List:
         """城市天气API / 逐小时天气预报"""
-        result = await self._do_get(
-            "weather", "24h", {"location": location.get_location()}
-        )
+        result = await self._do_get("weather", "24h", self._build_params(location))
         return result.get("hourly", [])
 
     async def _get_indices_1d(self, location: Location, indices_type) -> List:
         """天气指数API / 天气生活指数"""
-        params = {"location": location.get_location(), "type": indices_type}
+        params = {**self._build_params(location), "type": indices_type}
         result = await self._do_get("indices", "1d", params)
         return result.get("daily", [])
 
     async def _get_air_now(self, location: Location) -> Dict:
         """空气API / 实时空气质量"""
-        result = await self._do_get("air", "now", {"location": location.get_location()})
+        result = await self._do_get("air", "now", self._build_params(location))
         return result.get("now", {})
 
     async def _get_warning_now(self, location: Location) -> List[Dict]:
         """天气灾害预警"""
-        result = await self._do_get(
-            "warning", "now", {"location": location.get_location()}
-        )
+        result = await self._do_get("warning", "now", self._build_params(location))
         return result.get("warning", [])
 
-    def get_weather_photo(self, location) -> str:
-        pass
+    def get_weather_photo(self, location) -> str: ...

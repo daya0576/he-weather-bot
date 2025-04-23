@@ -5,18 +5,19 @@ from telegram_bot.database.database import get_db_session
 from telegram_bot.intergration import he_weather
 from telegram_bot.service.telegram import TelegramMessageService
 from telegram_bot.settings import aio_lru_cache_24h
+from telegram_bot.telegram.add_qweather_api_key import update_api_key
 from telegram_bot.telegram.dispatcher import dp
 from telegram_bot.telegram.keyboard.keyboard_markup_factory import (
+    BACK,
+    DISABLE_SUB,
+    ENABLE_SUB,
+    GET_WEATHER,
     HOURS_TEMPLATE,
     REMOVE_LOCATION_PREFIX,
-    KeyboardMarkUpFactory,
-    WELCOME_TEXT,
-    GET_WEATHER,
     UPDATE_LOCATION,
-    ENABLE_SUB,
-    DISABLE_SUB,
     UPDATE_SUB_CRON,
-    BACK,
+    WELCOME_TEXT,
+    KeyboardMarkUpFactory,
     hour_decode,
 )
 from telegram_bot.telegram.update_location import update_location
@@ -28,7 +29,17 @@ def registered(func):
         with get_db_session() as db:
             if not crud.is_user_exists(db, chat_id):
                 return await update_location(message)
+        await func(message)
 
+    return wrapper
+
+
+def api_key_exists(func):
+    async def wrapper(message: types.Message):
+        chat_id = str(message.chat.id)
+        with get_db_session() as db:
+            if not crud.is_user_api_key_exists(db, chat_id):
+                return await update_api_key(message)
         await func(message)
 
     return wrapper
@@ -102,7 +113,9 @@ async def handle_help(message: types.Message) -> None:
 async def handle_sub(message: types.Message) -> None:
     with get_db_session() as db:
         crud.update_user_status(db, message.chat.id, True)
-        await TelegramMessageService.send_text(dp.bot, message.chat.id, "已开启定时订阅")
+        await TelegramMessageService.send_text(
+            dp.bot, message.chat.id, "已开启定时订阅"
+        )
 
         user = crud.get_user(db, message.chat.id)
         reply_markup = KeyboardMarkUpFactory.build_cron_options(user)

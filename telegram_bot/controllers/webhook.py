@@ -1,7 +1,7 @@
 from typing import Any, Dict
 from urllib.parse import urljoin
 
-from aiogram import Dispatcher, Bot
+from aiogram import Bot, Dispatcher
 from aiogram.types import Update
 from fastapi import APIRouter, Body, Depends
 from loguru import logger

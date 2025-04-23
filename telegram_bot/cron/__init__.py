@@ -1,3 +1,4 @@
+import requests
 from apscheduler.events import EVENT_ALL, JobExecutionEvent
 from apscheduler.jobstores.redis import RedisJobStore
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -28,5 +29,17 @@ def my_listener(event: JobExecutionEvent):
         logger.info(f"my_listener: {event}")
 
 
+def task_cron():
+    logger.info("task_cron started...")
+    requests.get("http://localhost:8080/cron")
+
+
+def task_cron_1h():
+    logger.info("task_cron_1h started...")
+    requests.get("http://localhost:8080/cron_1h")
+
+
 scheduler = AsyncIOScheduler(timezone=utc)
+scheduler.add_job(task_cron, "cron", hour="*")
+scheduler.add_job(task_cron_1h, "cron", hour="*")
 scheduler.add_listener(my_listener, EVENT_ALL)

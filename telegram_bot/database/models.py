@@ -2,19 +2,19 @@ from datetime import datetime
 from typing import Iterable, Tuple
 
 from sqlalchemy import (
+    BigInteger,
     Boolean,
     Column,
-    String,
-    BigInteger,
-    Integer,
     DateTime,
-    UniqueConstraint,
     ForeignKey,
+    Integer,
+    String,
+    UniqueConstraint,
 )
 from sqlalchemy.orm import relationship
 
-from .database import Base
 from ..intergration.location.he_location_client import Location
+from .database import Base
 
 
 class Chat(Base):
@@ -33,6 +33,7 @@ class Chat(Base):
     cron_jobs = relationship("CronJobs", backref="parent")
     ding_bot = relationship("DingBots", back_populates="chat", uselist=False)
     locations = relationship("Locations", backref="parent")
+    api_key = relationship("ApiKey", back_populates="chat", uselist=False)
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -44,6 +45,7 @@ class Chat(Base):
             lat=float(self.latitude),
             lon=float(self.longitude),
             tz=self.time_zone,
+            api_key=self.api_key.key,
         )
 
     def is_location_exist(self):
@@ -117,6 +119,7 @@ class Locations(Base):
             lat=float(self.latitude),
             lon=float(self.longitude),
             tz=self.time_zone,
+            api_key=self.parent.api_key.key,
         )
 
     def __str__(self) -> str:
@@ -124,3 +127,21 @@ class Locations(Base):
 
     def __repr__(self) -> str:
         return f"location_{self.chat_id}"
+
+
+class ApiKey(Base):
+    __tablename__ = "api_key"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    chat_id = Column(BigInteger, ForeignKey("users.chat_id"))
+    key = Column(String, index=True)
+
+    chat = relationship("Chat", back_populates="api_key")
+
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __str__(self) -> str:
+        return f"api_key_{self.key}"
+
+    __repr__ = __str__
