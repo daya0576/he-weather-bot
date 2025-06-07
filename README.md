@@ -48,5 +48,3 @@ Q. 如何在群中播报？
 
 [![Powered by DartNode](https://dartnode.com/branding/DN-Open-Source-sm.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
 
-Q. 希望能支持 docker 部署 ，还有说明一下，哪些参数要改？   
-WIP..
