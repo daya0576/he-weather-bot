@@ -46,5 +46,7 @@ Q. 如何在群中播报？
 第二步：在群的输入框输入 / 符号，根据自动提示，点击输入 /help   
 第三步：点击卡片的“定时订阅”修改推送的时间   
 
+[![Powered by DartNode](https://dartnode.com/branding/DN-Open-Source-sm.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
+
 Q. 希望能支持 docker 部署 ，还有说明一下，哪些参数要改？   
 WIP..
