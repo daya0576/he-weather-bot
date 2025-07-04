@@ -3,7 +3,7 @@
 ![Active users](https://weather.changchen.me/users/count)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/daya0576/he-weather-bot?link=https://github.com/daya0576/he-weather-bot/releases/)
 ![](https://img.shields.io/badge/Bot%20API-5.1-blue?logo=telegram)
-![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m787647728-b1a273391c2ad5c526b1c605)
+![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m800876059-8ae4cb4cae57d1200261d8e6)
 
 <img src="https://github.com/daya0576/he-weather-bot/blob/master/static/demo.gif?raw=true" width="600">
 
