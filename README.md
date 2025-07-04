@@ -32,6 +32,51 @@ add_sub_locations - 新增子位置（支持多个）
 delete_sub_locations - 移除子位置
 ```
 
+## ⚡️ 自部署
+docker compose 配置文件参考：
+```shell
+services:
+  app:
+    image: daya0576/he-weather-bot:latest
+    environment:
+      - ENV=production
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/he_weather_bot
+      - TELEGRAM_BOT_WEBHOOK_ENDPOINT=<endpoint>/hook
+      - TELEGRAM_BOT_API_KEY=<token>
+    depends_on:
+      - redis
+      - db
+    ports:
+      - "18880:8080"
+    networks:
+      - app-network
+  redis:
+    image: redis:alpine
+    # ports:
+    #   - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+  db:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+volumes:
+  redis-data:
+  postgres-data:
+networks:
+  app-network:
+    driver: bridge
+```
+
 ## 🚀 实现原理
 
 [《如何零成本制作一个 telegram 机器人》](https://changchen.me/blog/20210221/buld-telegram-bot-from-scratch/)
@@ -45,5 +90,3 @@ Q. 如何在群中播报？
 第一步：在群用户里添加机器人   
 第二步：在群的输入框输入 / 符号，根据自动提示，点击输入 /help   
 第三步：点击卡片的“定时订阅”修改推送的时间   
-
-
